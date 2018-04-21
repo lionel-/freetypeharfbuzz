@@ -1,0 +1,44 @@
+
+$(shell mkdir -p build)
+TARGET_DIR = $(PWD)/target
+BUILD_DIR = $(PWD)/build
+INST_DIR = $(PWD)/../inst
+
+FT_VERSION = 2.9
+
+PKG_CPPFLAGS = -I$(TARGET_DIR)/include/freetype2
+PKG_LIBS = ${TARGET_DIR}/lib/libfreetype.a -lharfbuzz -lbz2 -lz
+
+
+all: freetype $(SHLIB)
+
+$(SHLIB):
+
+
+build-dir:
+	mkdir -p $(BUILD_DIR)
+
+freetype-extract: build-dir
+	test -s $(BUILD_DIR)/freetype-$(FT_VERSION) || ( \
+		cd $(BUILD_DIR) && \
+		tar xvf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz \
+	)
+
+freetype: freetype-extract
+	test -s $(TARGET_DIR)/lib/libfreetype.a || ( \
+		cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
+		./configure --prefix=$(TARGET_DIR) && \
+		make && \
+		make install \
+	)
+
+clean:
+	rm -rf $(BUILD_DIR) $(TARGET_DIR) *.o *.so
+
+
+.PHONY: all freetype clean
+
+
+# Use this to print an envvar:
+# make -f Makevars print-ENVVAR
+print-%: ; @echo $* = $($*)
