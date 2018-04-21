@@ -1,18 +1,22 @@
 
-$(shell mkdir -p build)
 TARGET_DIR = $(PWD)/target
 BUILD_DIR = $(PWD)/build
 INST_DIR = $(PWD)/../inst
 
 FT_VERSION = 2.9
+HB_VERSION = 1.7.6
 
-PKG_CPPFLAGS = -I$(TARGET_DIR)/include/freetype2
-PKG_LIBS = ${TARGET_DIR}/lib/libfreetype.a -lharfbuzz -lbz2 -lz
+PKG_CPPFLAGS  = -I$(TARGET_DIR)/include/freetype2
+PKG_CPPFLAGS += -I$(TARGET_DIR)/include/harfbuzz
 
+PKG_LIBS  = ${TARGET_DIR}/lib/libfreetype.a
+PKG_LIBS += ${TARGET_DIR}/lib/libharfbuzz.a
+PKG_LIBS += -lbz2 -lz -lpng
 
-all: freetype $(SHLIB)
 
 $(SHLIB):
+
+all: freetype harfbuzz $(SHLIB)
 
 
 build-dir:
@@ -24,6 +28,12 @@ freetype-extract: build-dir
 		tar xvf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz \
 	)
 
+harfbuzz-extract: build-dir
+	test -s $(BUILD_DIR)/harfbuzz-$(HB_VERSION) || ( \
+		cd $(BUILD_DIR) && \
+		tar xvf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.bz2 \
+	)
+
 freetype: freetype-extract
 	test -s $(TARGET_DIR)/lib/libfreetype.a || ( \
 		cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
@@ -32,9 +42,17 @@ freetype: freetype-extract
 		make install \
 	)
 
+harfbuzz: harfbuzz-extract
+	test -s $(TARGET_DIR)/lib/libharfbuzz-subset.la || ( \
+		cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
+		./configure --prefix=$(TARGET_DIR) --enable-static=yes && \
+		make && \
+		make install \
+	)
+
+
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET_DIR) *.o *.so
-
 
 .PHONY: all freetype clean
 
