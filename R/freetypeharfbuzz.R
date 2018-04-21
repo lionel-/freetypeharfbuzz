@@ -1,7 +1,7 @@
-#' @useDynLib freetype, .registration = TRUE
+#' @useDynLib freetypeharfbuzz, .registration = TRUE
 NULL
 
-freetype_width <- function(x, font = NULL) {
+string_width <- function(x, font = NULL) {
   if (is.null(font)) {
     font <- fontquiver::font("Liberation", "sans", "regular")$ttf
   }

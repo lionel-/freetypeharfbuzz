@@ -1,4 +1,4 @@
-Package: freetype
+Package: freetypeharfbuzz
 Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
 Authors@R: 'Lionel Henry <lionel.hry@gmail.com> [aut, cre]'
