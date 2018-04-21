@@ -11,7 +11,7 @@ PKG_CPPFLAGS += -I$(TARGET_DIR)/include/harfbuzz
 
 PKG_LIBS  = ${TARGET_DIR}/lib/libfreetype.a
 PKG_LIBS += ${TARGET_DIR}/lib/libharfbuzz.a
-PKG_LIBS += -lbz2 -lz -lpng
+PKG_LIBS += -lbz2 -lz -lpng -fPIC
 
 
 all: freetype harfbuzz $(SHLIB)
@@ -37,15 +37,21 @@ harfbuzz-extract: build-dir
 freetype: freetype-extract
 	test -s $(TARGET_DIR)/lib/libfreetype.a || ( \
 		cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
-		./configure --prefix=$(TARGET_DIR) && \
+		./configure \
+			--prefix=$(TARGET_DIR) \
+			--with-pic=yes && \
 		make && \
 		make install \
 	)
 
 harfbuzz: harfbuzz-extract
-	test -s $(TARGET_DIR)/lib/libharfbuzz-subset.la || ( \
+	test -s $(TARGET_DIR)/lib/libharfbuzz.a || ( \
 		cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
-		./configure --prefix=$(TARGET_DIR) --enable-static=yes && \
+		./configure \
+			--prefix=$(TARGET_DIR) \
+			--enable-static=yes \
+			--with-pic=yes \
+			HAVE_FT_GET_VAR_BLEND_COORDINATES=no && \
 		make && \
 		make install \
 	)
