@@ -14,9 +14,9 @@ PKG_LIBS += ${TARGET_DIR}/lib/libharfbuzz.a
 PKG_LIBS += -lbz2 -lz -lpng
 
 
-$(SHLIB):
-
 all: freetype harfbuzz $(SHLIB)
+
+$(SHLIB): width.c init.c
 
 
 build-dir:
