@@ -40,8 +40,8 @@ freetype: freetype-extract
 		./configure \
 			--prefix=$(TARGET_DIR) \
 			--with-pic=yes && \
-		make && \
-		make install \
+		$(MAKE) && \
+		$(MAKE) install \
 	)
 
 harfbuzz: harfbuzz-extract
@@ -52,8 +52,8 @@ harfbuzz: harfbuzz-extract
 			--enable-static=yes \
 			--with-pic=yes \
 			HAVE_FT_GET_VAR_BLEND_COORDINATES=no && \
-		make && \
-		make install \
+		$(MAKE) && \
+		$(MAKE) install \
 	)
 
 
