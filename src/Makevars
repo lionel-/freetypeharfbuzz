@@ -6,11 +6,11 @@ INST_DIR = $(PWD)/../inst
 FT_VERSION = 2.9
 HB_VERSION = 1.7.6
 
-PKG_CPPFLAGS  = -I$(TARGET_DIR)/include/freetype2
-PKG_CPPFLAGS += -I$(TARGET_DIR)/include/harfbuzz
+PKG_CPPFLAGS  = -I$(TARGET_DIR)/include/harfbuzz
+PKG_CPPFLAGS += -I$(TARGET_DIR)/include/freetype2
 
-PKG_LIBS  = ${TARGET_DIR}/lib/libfreetype.a
-PKG_LIBS += ${TARGET_DIR}/lib/libharfbuzz.a
+PKG_LIBS  = ${TARGET_DIR}/lib/libharfbuzz.a
+PKG_LIBS += ${TARGET_DIR}/lib/libfreetype.a
 PKG_LIBS += -lbz2 -lz -lpng -fPIC
 
 
