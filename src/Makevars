@@ -55,7 +55,7 @@ $(HB_LIB): $(HB_BUILD_PATH)
 $(HB_BUILD_PATH):
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		tar xvf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.bz2
+		tar xvf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.gz
 
 
 .PHONY: clean
