@@ -39,7 +39,10 @@ $(FT_LIB): $(FT_BUILD_PATH)
 $(FT_BUILD_PATH):
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		tar xzvf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz
+		( \
+			tar xzf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz || \
+			gtar xzf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz \
+		)
 
 
 $(HB_LIB): $(HB_BUILD_PATH)
@@ -55,7 +58,10 @@ $(HB_LIB): $(HB_BUILD_PATH)
 $(HB_BUILD_PATH):
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		tar xzvf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.gz
+		( \
+			tar xzf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.gz || \
+			gtar xzf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.gz \
+		)
 
 
 .PHONY: clean
