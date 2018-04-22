@@ -8,7 +8,7 @@ FT_VERSION = 2.9
 HB_VERSION = 1.7.6
 
 FT_BUILD_PATH = $(BUILD_DIR)/freetype-$(FT_VERSION)
-HB_BUILD_PATH = $(BUILD_DIR)/freetype-$(HB_VERSION)
+HB_BUILD_PATH = $(BUILD_DIR)/harfbuzz-$(HB_VERSION)
 
 FT_LIB = $(TARGET_DIR)/lib/libfreetype.a
 HB_LIB = $(TARGET_DIR)/lib/libharfbuzz.a
