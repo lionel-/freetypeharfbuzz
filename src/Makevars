@@ -3,8 +3,16 @@ TARGET_DIR = $(CURDIR)/target
 BUILD_DIR = $(CURDIR)/build
 INST_DIR = $(CURDIR)
 
+
 FT_VERSION = 2.9
 HB_VERSION = 1.7.6
+
+FT_BUILD_PATH = $(BUILD_DIR)/freetype-$(FT_VERSION)
+HB_BUILD_PATH = $(BUILD_DIR)/freetype-$(HB_VERSION)
+
+FT_LIB = $(TARGET_DIR)/lib/libfreetype.a
+HB_LIB = $(TARGET_DIR)/lib/libharfbuzz.a
+
 
 PKG_CPPFLAGS  = -I$(TARGET_DIR)/include/harfbuzz
 PKG_CPPFLAGS += -I$(TARGET_DIR)/include/freetype2
@@ -15,52 +23,39 @@ PKG_LIBS += -lbz2 -lz -lpng -fPIC
 
 
 .PHONY: all
-all: freetype harfbuzz $(SHLIB)
+all: $(FT_LIB) $(HB_LIB) $(SHLIB)
 
-$(SHLIB): width.c init.c freetype harfbuzz
+$(SHLIB): width.c init.c $(FT_LIB) $(HB_LIB)
 
 
-.PHONY: build-dir
-build-dir:
-	mkdir -p $(BUILD_DIR)
-
-.PHONY: freetype-extract
-freetype-extract: build-dir
-	test -s $(BUILD_DIR)/freetype-$(FT_VERSION) || ( \
-		cd $(BUILD_DIR) && \
-		tar xvf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz \
-	)
-
-.PHONY: harfbuzz-extract
-harfbuzz-extract: build-dir
-	test -s $(BUILD_DIR)/harfbuzz-$(HB_VERSION) || ( \
-		cd $(BUILD_DIR) && \
-		tar xvf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.bz2 \
-	)
-
-.PHONY: freetype
-freetype: freetype-extract
-	test -s $(TARGET_DIR)/lib/libfreetype.a || ( \
-		cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
+$(FT_LIB): $(FT_BUILD_PATH)
+	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
 			--with-pic=yes && \
 		$(MAKE) && \
-		$(MAKE) install \
-	)
+		$(MAKE) install
 
-.PHONY: harfbuzz
-harfbuzz: harfbuzz-extract
-	test -s $(TARGET_DIR)/lib/libharfbuzz.a || ( \
-		cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
+$(FT_BUILD_PATH):
+	mkdir -p $(BUILD_DIR) && \
+		cd $(BUILD_DIR) && \
+		tar xvf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz
+
+
+$(HB_LIB): $(HB_BUILD_PATH)
+	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
 			--enable-static=yes \
 			--with-pic=yes \
 			HAVE_FT_GET_VAR_BLEND_COORDINATES=no && \
 		$(MAKE) && \
-		$(MAKE) install \
-	)
+		$(MAKE) install
+
+$(HB_BUILD_PATH):
+	mkdir -p $(BUILD_DIR) && \
+		cd $(BUILD_DIR) && \
+		tar xvf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.bz2
 
 
 .PHONY: clean
