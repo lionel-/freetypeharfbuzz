@@ -32,8 +32,9 @@ $(FT_LIB): $(FT_BUILD_PATH)
 	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
-			--without-harfbuzz \
-			--with-pic=yes && \
+			--enable-static=yes \
+			--with-pic=yes \
+			--without-harfbuzz && \
 		$(MAKE) && \
 		$(MAKE) install
 
@@ -57,6 +58,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 			--prefix=$(TARGET_DIR) \
 			--enable-static=yes \
 			--with-pic=yes \
+			--with-freetype=yes \
 			HAVE_FT_GET_VAR_BLEND_COORDINATES=no && \
 		$(MAKE) && \
 		$(MAKE) install
