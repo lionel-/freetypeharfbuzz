@@ -32,6 +32,7 @@ $(FT_LIB): $(FT_BUILD_PATH)
 	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
+			--without-harfbuzz \
 			--with-pic=yes && \
 		$(MAKE) && \
 		$(MAKE) install
@@ -45,7 +46,12 @@ $(FT_BUILD_PATH):
 		)
 
 
-$(HB_LIB): $(HB_BUILD_PATH)
+HB_LDFLAGS = \
+	$(TARGET_DIR)/lib/libfreetype.a $(FREETYPE_LIBS) \
+	-lz -lpng -lbz2
+
+$(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
+	{ export LDFLAGS="$(HB_LDFLAGS)"; } && \
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
