@@ -7,7 +7,7 @@ Authors@R: c(
     )
 Description: Experimenting With Static Linking of Font Libraries.
 Depends:
-    R (>= 3.4.3)
+    R (>= 3.1)
 Imports:
     fontquiver
 Suggests:
