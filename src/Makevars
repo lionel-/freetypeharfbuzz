@@ -14,26 +14,31 @@ PKG_LIBS += ${TARGET_DIR}/lib/libfreetype.a
 PKG_LIBS += -lbz2 -lz -lpng -fPIC
 
 
+.PHONY: all
 all: freetype harfbuzz $(SHLIB)
 
 $(SHLIB): width.c init.c freetype harfbuzz
 
 
+.PHONY: build-dir
 build-dir:
 	mkdir -p $(BUILD_DIR)
 
+.PHONY: freetype-extract
 freetype-extract: build-dir
 	test -s $(BUILD_DIR)/freetype-$(FT_VERSION) || ( \
 		cd $(BUILD_DIR) && \
 		tar xvf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz \
 	)
 
+.PHONY: harfbuzz-extract
 harfbuzz-extract: build-dir
 	test -s $(BUILD_DIR)/harfbuzz-$(HB_VERSION) || ( \
 		cd $(BUILD_DIR) && \
 		tar xvf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.bz2 \
 	)
 
+.PHONY: freetype
 freetype: freetype-extract
 	test -s $(TARGET_DIR)/lib/libfreetype.a || ( \
 		cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
@@ -44,6 +49,7 @@ freetype: freetype-extract
 		$(MAKE) install \
 	)
 
+.PHONY: harfbuzz
 harfbuzz: harfbuzz-extract
 	test -s $(TARGET_DIR)/lib/libharfbuzz.a || ( \
 		cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
@@ -57,10 +63,9 @@ harfbuzz: harfbuzz-extract
 	)
 
 
+.PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET_DIR) *.o *.so
-
-.PHONY: all freetype clean freetype-extract freetype harfbuzz-extract harfbuzz
 
 
 # Use this to print an envvar:
