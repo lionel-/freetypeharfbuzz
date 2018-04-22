@@ -60,7 +60,7 @@ harfbuzz: harfbuzz-extract
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET_DIR) *.o *.so
 
-.PHONY: all freetype clean
+.PHONY: all freetype clean freetype-extract freetype harfbuzz-extract harfbuzz
 
 
 # Use this to print an envvar:
