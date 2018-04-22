@@ -16,7 +16,7 @@ PKG_LIBS += -lbz2 -lz -lpng -fPIC
 
 all: freetype harfbuzz $(SHLIB)
 
-$(SHLIB): width.c init.c
+$(SHLIB): width.c init.c freetype harfbuzz
 
 
 build-dir:
