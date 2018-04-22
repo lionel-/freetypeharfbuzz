@@ -1,7 +1,7 @@
 
 TARGET_DIR = $(CURDIR)/target
 BUILD_DIR = $(CURDIR)/build
-INST_DIR = $(CURDIR)/../inst
+INST_DIR = $(CURDIR)
 
 FT_VERSION = 2.9
 HB_VERSION = 1.7.6
