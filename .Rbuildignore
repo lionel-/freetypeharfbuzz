@@ -1,2 +1,4 @@
 ^\.travis\.yml$
 ^preinst
+^tools/freetype.*tar\.gz$
+^tools/harfbuzz.*tar\.gz$
