@@ -13,7 +13,7 @@ all: harfbuzz-patched
 harfbuzz-patched: $(HB_ARCHIVE)
 	tar xf $(HB_ARCHIVE) && \
 	cd $(HB) && \
-  patch < ../harfbuzz-pkgconfig.diff && \
+	patch < ../harfbuzz-pkgconfig.diff && \
 	cd .. && \
 	tar cvzf $(HB).tar.gz $(HB) && \
 	$(MAKE) clean

@@ -29,7 +29,7 @@ PKG_CPPFLAGS  = \
 
 PKG_LIBS = \
 	$(HARFBUZZ_STATIC_LIB) \
-  $(FREETYPE_STATIC_LIB) \
+	$(FREETYPE_STATIC_LIB) \
 	-lbz2 -lz -lpng -fPIC
 
 
