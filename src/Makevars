@@ -36,7 +36,7 @@ PKG_LIBS = \
 .PHONY: all
 all: $(FT_LIB) $(HB_LIB) $(SHLIB)
 
-$(SHLIB): width.c init.c $(FT_LIB) $(HB_LIB)
+$(SHLIB): width.c init.c $(FT_LIB) $(HB_LIB) autoclean
 
 
 $(FT_LIB): $(FT_BUILD_PATH)
@@ -90,7 +90,17 @@ clean:
 	rm -rf \
 		$(FT).tar.gz $(HB).tar.gz \
 		$(BUILD_DIR) $(TARGET_DIR) \
-		*.o *.so
+		*.o
+
+.PHONY: distclean
+distclean: clean
+	rm -rf $(SHLIB)
+
+.PHONY: autoclean
+autoclean: $(SHLIB)
+	@if [ -z $(MY_DISABLE_AUTOCLEAN) ]; then \
+		$(MAKE) -f Makevars clean; \
+	fi
 
 
 # Use this to print an envvar:
