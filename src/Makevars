@@ -34,9 +34,10 @@ PKG_LIBS = \
 
 
 .PHONY: all
-all: $(FT_LIB) $(HB_LIB) $(SHLIB)
+all: $(FT_LIB) $(HB_LIB) | $(SHLIB) autoclean
 
-$(SHLIB): width.c init.c $(FT_LIB) $(HB_LIB) autoclean
+
+$(SHLIB): width.c init.c $(FT_LIB) $(HB_LIB)
 
 
 $(FT_LIB): $(FT_BUILD_PATH)
