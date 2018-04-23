@@ -83,7 +83,9 @@ $(HB_BUILD_PATH): $(HB).tar.gz
 		)
 
 $(HB).tar.gz:
-	cd ../tools && $(MAKE) harfbuzz-patched
+	cd ../tools && \
+		$(MAKE) harfbuzz-patched && \
+		mv $(HB).tar.gz ../src
 
 
 .PHONY: clean

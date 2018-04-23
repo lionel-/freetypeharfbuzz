@@ -2,6 +2,7 @@
 HB_VERSION ?= 1.7.6
 
 HB = harfbuzz-$(HB_VERSION)
+HB_ARCHIVE = downloads/$(HB).tar.bz2
 
 
 .PHONY: all
@@ -9,29 +10,33 @@ all: harfbuzz-patched
 
 
 .PHONY: harfbuzz-patched
-harfbuzz-patched: $(HB).tar.bz2
-	tar xf $(HB).tar.bz2 && \
+harfbuzz-patched: $(HB_ARCHIVE)
+	tar xf $(HB_ARCHIVE) && \
 	cd $(HB) && \
   patch < ../harfbuzz-pkgconfig.diff && \
 	cd .. && \
 	tar cvzf $(HB).tar.gz $(HB) && \
-  cp -rf $(HB).tar.gz ../src && \
 	$(MAKE) clean
 
 .PHONY: harfbuzz-vanilla
-harfbuzz-vanilla: $(HB).tar.bz2
-	tar xf $(HB).tar.bz2 && \
+harfbuzz-vanilla: $(HB_ARCHIVE)
+	tar xf $(HB_ARCHIVE) && \
 	tar cvzf $(HB).tar.gz $(HB) && \
-  cp -rf $(HB).tar.gz ../src && \
 	$(MAKE) clean
 
-$(HB).tar.bz2:
+$(HB_ARCHIVE):
+	mkdir -p downloads && \
+	cd downloads && \
 	wget "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/harfbuzz-1.7.6.tar.bz2"
 
 
 .PHONY: clean
 clean:
-	rm -rf $(HB) $(HB).tar.gz
+	rm -rf downloads $(HB)
+
+.PHONY: distclean
+distclean: clean
+	rm -rf $(HB).tar.gz
 
 
 # Use this to print an envvar:
