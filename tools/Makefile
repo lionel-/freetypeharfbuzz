@@ -35,5 +35,5 @@ clean:
 
 
 # Use this to print an envvar:
-# make -f Makevars print-ENVVAR
+# make print-ENVVAR
 print-%: ; @echo $* = $($*)

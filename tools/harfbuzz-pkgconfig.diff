@@ -1,0 +1,13 @@
+--- a/configure	2018-04-22 20:31:22.000000000 +0200
++++ b/configure	2018-04-22 22:18:30.000000000 +0200
+@@ -20623,7 +20623,7 @@
+   with_freetype=auto
+ fi
+ 
+-have_freetype=false
++have_freetype=true
+ FREETYPE_DEPS="freetype2 >= 12.0.6"
+ 
+ if test "x$with_freetype" = "xyes" -o "x$with_freetype" = "xauto"; then
+
+Diff finished.  Sun Apr 22 22:18:34 2018
