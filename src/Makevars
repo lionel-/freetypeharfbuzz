@@ -7,8 +7,11 @@ INST_DIR = $(CURDIR)
 FT_VERSION = 2.9
 HB_VERSION = 1.7.6
 
-FT_BUILD_PATH = $(BUILD_DIR)/freetype-$(FT_VERSION)
-HB_BUILD_PATH = $(BUILD_DIR)/harfbuzz-$(HB_VERSION)
+FT = freetype-$(FT_VERSION)
+HB = harfbuzz-$(HB_VERSION)
+
+FT_BUILD_PATH = $(BUILD_DIR)/$(FT)
+HB_BUILD_PATH = $(BUILD_DIR)/$(HB)
 
 FT_LIB = $(TARGET_DIR)/lib/libfreetype.a
 HB_LIB = $(TARGET_DIR)/lib/libharfbuzz.a
@@ -50,8 +53,8 @@ $(FT_BUILD_PATH):
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
 		( \
-			tar xzf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz || \
-			gtar xzf $(INST_DIR)/freetype-$(FT_VERSION).tar.gz \
+			tar xzf $(INST_DIR)/$(FT).tar.gz || \
+			gtar xzf $(INST_DIR)/$(FT).tar.gz \
 		)
 
 
@@ -75,8 +78,8 @@ $(HB_BUILD_PATH):
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
 		( \
-			tar xzf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.gz || \
-			gtar xzf $(INST_DIR)/harfbuzz-$(HB_VERSION).tar.gz \
+			tar xzf $(INST_DIR)/$(HB).tar.gz || \
+			gtar xzf $(INST_DIR)/$(HB).tar.gz \
 		)
 
 
