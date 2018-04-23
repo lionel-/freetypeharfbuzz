@@ -11,17 +11,11 @@ all: harfbuzz-patched
 
 .PHONY: harfbuzz-patched
 harfbuzz-patched: $(HB_ARCHIVE)
-	tar xf $(HB_ARCHIVE) && \
+	bunzip2 < $(HB_ARCHIVE) | tar xf -
 	cd $(HB) && \
 	patch < ../harfbuzz-pkgconfig.diff && \
 	cd .. && \
-	tar cvzf $(HB).tar.gz $(HB) && \
-	$(MAKE) clean
-
-.PHONY: harfbuzz-vanilla
-harfbuzz-vanilla: $(HB_ARCHIVE)
-	tar xf $(HB_ARCHIVE) && \
-	tar cvzf $(HB).tar.gz $(HB) && \
+	tar cf - $(HB) | gzip -9 > $(HB).tar.gz
 	$(MAKE) clean
 
 $(HB_ARCHIVE):

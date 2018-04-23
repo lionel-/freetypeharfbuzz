@@ -54,10 +54,7 @@ $(FT_LIB): $(FT_BUILD_PATH)
 $(FT_BUILD_PATH): $(FT).tar.gz
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		( \
-			tar xzf $(INST_DIR)/$(FT).tar.gz || \
-			gtar xzf $(INST_DIR)/$(FT).tar.gz \
-		)
+		gunzip < $(INST_DIR)/$(FT).tar.gz | tar xf -
 
 $(FT).tar.gz:
 	../tools/download.sh "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz" $(FT).tar.gz
@@ -81,10 +78,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 $(HB_BUILD_PATH): $(HB).tar.gz
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		( \
-			tar xzf $(INST_DIR)/$(HB).tar.gz || \
-			gtar xzf $(INST_DIR)/$(HB).tar.gz \
-		)
+		gunzip < $(INST_DIR)/$(HB).tar.gz | tar xf -
 
 $(HB).tar.gz:
 	cd ../tools && \
@@ -95,7 +89,7 @@ $(HB).tar.gz:
 .PHONY: clean
 clean:
 	rm -rf \
-		$(FT).tar.gz $(HB).tar.gz \
+		$(FT)* $(HB)* \
 		$(BUILD_DIR) $(TARGET_DIR) \
 		*.o
 
