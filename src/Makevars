@@ -62,7 +62,8 @@ $(FT_BUILD_PATH):
 HB_LDFLAGS = $(FREETYPE_LIBS) -lz -lpng -lbz2
 
 $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
-	{ export LDFLAGS="$(HB_LDFLAGS)"; } && \
+	export LDFLAGS="$(HB_LDFLAGS)" && \
+	export CPPFLAGS="$(FREETYPE_CFLAGS)" && \
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
