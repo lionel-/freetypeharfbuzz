@@ -95,7 +95,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	rm -rf $(SHLIB)
+	rm -rf *.so
 
 .PHONY: autoclean
 autoclean: $(SHLIB)
