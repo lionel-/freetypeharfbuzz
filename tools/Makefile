@@ -27,7 +27,7 @@ harfbuzz-vanilla: $(HB_ARCHIVE)
 $(HB_ARCHIVE):
 	mkdir -p downloads && \
 	cd downloads && \
-	wget "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/harfbuzz-1.7.6.tar.bz2"
+	../download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2
 
 
 .PHONY: clean
