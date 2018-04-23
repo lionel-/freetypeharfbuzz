@@ -74,13 +74,16 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 		$(MAKE) && \
 		$(MAKE) install
 
-$(HB_BUILD_PATH):
+$(HB_BUILD_PATH): $(HB).tar.gz
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
 		( \
 			tar xzf $(INST_DIR)/$(HB).tar.gz || \
 			gtar xzf $(INST_DIR)/$(HB).tar.gz \
 		)
+
+$(HB).tar.gz:
+	cd ../preinst && $(MAKE) harfbuzz-patched
 
 
 .PHONY: clean
