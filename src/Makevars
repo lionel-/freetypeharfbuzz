@@ -13,13 +13,21 @@ HB_BUILD_PATH = $(BUILD_DIR)/harfbuzz-$(HB_VERSION)
 FT_LIB = $(TARGET_DIR)/lib/libfreetype.a
 HB_LIB = $(TARGET_DIR)/lib/libharfbuzz.a
 
+FREETYPE_CFLAGS = -I$(TARGET_DIR)/include/freetype2
+FREETYPE_LIBS = -L$(TARGET_DIR)/lib -lfreetype
+FREETYPE_STATIC_LIB = ${TARGET_DIR}/lib/libfreetype.a
 
-PKG_CPPFLAGS  = -I$(TARGET_DIR)/include/harfbuzz
-PKG_CPPFLAGS += -I$(TARGET_DIR)/include/freetype2
+HARFBUZZ_STATIC_LIB = ${TARGET_DIR}/lib/libharfbuzz.a
 
-PKG_LIBS  = ${TARGET_DIR}/lib/libharfbuzz.a
-PKG_LIBS += ${TARGET_DIR}/lib/libfreetype.a
-PKG_LIBS += -lbz2 -lz -lpng -fPIC
+
+PKG_CPPFLAGS  = \
+	-I$(TARGET_DIR)/include/harfbuzz \
+	-I$(TARGET_DIR)/include/freetype2
+
+PKG_LIBS = \
+	$(HARFBUZZ_STATIC_LIB) \
+  $(FREETYPE_STATIC_LIB) \
+	-lbz2 -lz -lpng -fPIC
 
 
 .PHONY: all
