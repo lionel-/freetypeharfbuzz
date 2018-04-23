@@ -88,7 +88,10 @@ $(HB).tar.gz:
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET_DIR) *.o *.so
+	rm -rf \
+		$(FT).tar.gz $(HB).tar.gz \
+		$(BUILD_DIR) $(TARGET_DIR) \
+		*.o *.so
 
 
 # Use this to print an envvar:
