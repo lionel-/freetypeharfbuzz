@@ -70,7 +70,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 			--enable-shared=yes \
 			--with-pic=yes \
 			--with-freetype=yes && \
-		$(MAKE) && \
+		$(MAKE) V=1 && \
 		$(MAKE) install
 
 $(HB_BUILD_PATH): $(HB).tar.gz
