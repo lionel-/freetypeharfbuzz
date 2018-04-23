@@ -104,7 +104,7 @@ distclean: clean
 
 .PHONY: autoclean
 autoclean: $(SHLIB)
-	@if [ -z $(MY_DISABLE_AUTOCLEAN) ]; then \
+	@if [ ! -e not-cran ]; then \
 		$(MAKE) -f Makevars clean; \
 	fi
 
