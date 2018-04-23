@@ -50,13 +50,16 @@ $(FT_LIB): $(FT_BUILD_PATH)
 		$(MAKE) && \
 		$(MAKE) install
 
-$(FT_BUILD_PATH):
+$(FT_BUILD_PATH): $(FT).tar.gz
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
 		( \
 			tar xzf $(INST_DIR)/$(FT).tar.gz || \
 			gtar xzf $(INST_DIR)/$(FT).tar.gz \
 		)
+
+$(FT).tar.gz:
+	../tools/download.sh "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz" $(FT).tar.gz
 
 
 HB_LDFLAGS = $(FREETYPE_LIBS) -lz -lpng -lbz2
