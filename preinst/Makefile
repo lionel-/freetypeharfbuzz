@@ -1,7 +1,7 @@
 
-HARFBUZZ_VERSION = 1.7.6
+HB_VERSION ?= 1.7.6
 
-HB = harfbuzz-$(HARFBUZZ_VERSION)
+HB = harfbuzz-$(HB_VERSION)
 
 
 .PHONY: all
