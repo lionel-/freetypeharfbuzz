@@ -88,14 +88,11 @@ $(HB).tar.gz:
 
 .PHONY: clean
 clean:
-	rm -rf \
-		$(FT)* $(HB)* \
-		$(BUILD_DIR) $(TARGET_DIR) \
-		*.o
+	rm -rf $(FT)* $(HB)* $(BUILD_DIR) $(TARGET_DIR)
 
 .PHONY: distclean
 distclean: clean
-	rm -rf *.so
+	rm -rf *.so *.o
 
 .PHONY: autoclean
 autoclean: $(SHLIB)
