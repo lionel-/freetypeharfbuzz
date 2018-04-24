@@ -2,6 +2,7 @@
 TARGET_DIR = $(CURDIR)/target
 BUILD_DIR = $(CURDIR)/build
 INST_DIR = $(CURDIR)
+TOOLS_DIR = $(CURDIR)/../tools
 
 
 FT_VERSION = 2.9
@@ -56,10 +57,10 @@ $(FT_LIB): $(FT_BUILD_PATH)
 $(FT_BUILD_PATH): $(FT).tar.gz
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		gunzip < $(INST_DIR)/$(FT).tar.gz | tar xf -
+		$(TOOLS_DIR)/untar.sh $(INST_DIR)/$(FT).tar.gz gzip
 
 $(FT).tar.gz:
-	../tools/download.sh "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz" $(FT).tar.gz
+	$(TOOLS_DIR)/download.sh "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz" $(FT).tar.gz
 
 
 # Export FreeType flags explicitly for working around pkg-config
@@ -86,7 +87,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 $(HB_BUILD_PATH): $(HB).tar.gz
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		gunzip < $(INST_DIR)/$(HB).tar.gz | tar xf -
+		$(TOOLS_DIR)/untar.sh $(INST_DIR)/$(HB).tar.gz gzip
 
 $(HB).tar.gz:
 	cd ../tools && \

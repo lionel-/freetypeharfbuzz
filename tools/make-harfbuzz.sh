@@ -14,7 +14,7 @@ if [ ! -e ${HB_ARCHIVE} ]; then
 fi
 
 
-bunzip2 < ${HB_ARCHIVE} | tar xf -
+./untar.sh ${HB_ARCHIVE} bzip2
 
 # The patch ensures the configure script detects FreeType as R-hub has
 # a very old version of pkg-config that does not seem to work with
