@@ -72,6 +72,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 			--enable-shared=yes \
 			--with-pic=yes \
 			--with-freetype=yes && \
+			HAVE_FT_GET_VAR_BLEND_COORDINATES=no && \
 		$(MAKE) V=1 && \
 		$(MAKE) install
 
