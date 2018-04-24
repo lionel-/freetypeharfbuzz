@@ -88,7 +88,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 			echo "#undef HAVE_FT_SET_VAR_BLEND_COORDINATES" >> config.h; \
 		} && \
 		$(MAKE) V=0 && \
-		$(MAKE) install
+		$(MAKE) install &> /dev/null
 
 $(HB_BUILD_PATH): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
