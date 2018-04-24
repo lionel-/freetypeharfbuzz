@@ -2,7 +2,7 @@
 ^preinst
 ^src/freetype
 ^src/harfbuzz
-^tools/freetype.*tar\.gz$
-^tools/harfbuzz.*tar\.gz$
+^tools/freetype.*
+^tools/harfbuzz.*
 not-cran
 ^tests/.*Rout.*

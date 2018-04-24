@@ -2,7 +2,7 @@
 HB_VERSION ?= 1.7.6
 
 HB = harfbuzz-$(HB_VERSION)
-HB_ARCHIVE = downloads/$(HB).tar.bz2
+HB_ARCHIVE = $(HB).tar.bz2
 
 
 .PHONY: all
@@ -15,14 +15,12 @@ harfbuzz-patched: $(HB_ARCHIVE)
 	$(MAKE) clean
 
 $(HB_ARCHIVE):
-	mkdir -p downloads && \
-	cd downloads && \
-	../download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2
+	./download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2
 
 
 .PHONY: clean
 clean:
-	rm -rf downloads $(HB)
+	rm -rf $(HB_ARCHIVE) $(HB)
 
 .PHONY: distclean
 distclean: clean

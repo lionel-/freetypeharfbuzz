@@ -6,7 +6,7 @@ if [ -z $HB_VERSION ]; then
 fi
 
 HB="harfbuzz-${HB_VERSION}"
-HB_ARCHIVE="downloads/${HB}.tar.bz2"
+HB_ARCHIVE="${HB}.tar.bz2"
 
 if [ ! -e ${HB_ARCHIVE} ]; then
     echo "Please run 'make ${HB_ARCHIVE}'"
@@ -23,9 +23,9 @@ fi
 if ! pkg-config --atleast-pkgconfig-version 0.20 &> /dev/null; then
     # Use gpatch because Solaris 10 `patch` does not support modern diffs
     if [ $(uname) = "SunOS" ]; then
-        (cd ${HB}; gpatch < ../harfbuzz-pkgconfig.diff)
+        (cd ${HB}; gpatch < ../diffs/harfbuzz-pkgconfig.diff)
     else
-        (cd ${HB}; patch < ../harfbuzz-pkgconfig.diff)
+        (cd ${HB}; patch < ../diffs/harfbuzz-pkgconfig.diff)
     fi
 fi
 
