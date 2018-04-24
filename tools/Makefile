@@ -2,29 +2,31 @@
 HB_VERSION ?= 1.7.6
 
 HB = harfbuzz-$(HB_VERSION)
-HB_ARCHIVE = $(HB).tar.bz2
 
 
 .PHONY: all
-all: harfbuzz-patched
+all: $(HB)-vanilla.zip $(HB)-patched.zip
 
 
-.PHONY: harfbuzz-patched
-harfbuzz-patched: $(HB_ARCHIVE)
-	./make-harfbuzz.sh && \
-	$(MAKE) clean
+$(HB)-vanilla.zip: $(HB)
+	zip -r $(HB)-vanilla.zip $(HB)
 
-$(HB_ARCHIVE):
-	./download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2
+$(HB)-patched.zip: $(HB)
+	(cd $(HB) && patch < ../diffs/harfbuzz-pkgconfig.diff) && \
+	zip -r $(HB)-patched.zip $(HB)
+
+$(HB):
+	./download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2 && \
+	tar xf $(HB).tar.bz2
 
 
 .PHONY: clean
 clean:
-	rm -rf $(HB_ARCHIVE) $(HB)
+	rm -rf $(HB).tar.bz2 $(HB)
 
 .PHONY: distclean
 distclean: clean
-	rm -rf $(HB).tar.gz
+	rm -rf $(HB).zip
 
 
 # Use this to print an envvar:
