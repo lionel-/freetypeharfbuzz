@@ -59,7 +59,7 @@ $(FT).tar.gz:
 	../tools/download.sh "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz" $(FT).tar.gz
 
 
-HB_LDFLAGS = $(FREETYPE_LIBS) -lz -lpng -lbz2
+HB_LDFLAGS = $(FREETYPE_LIBS) $(LDFLAGS) -lz -lpng -lbz2
 
 $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 	export LDFLAGS="$(HB_LDFLAGS)" && \
