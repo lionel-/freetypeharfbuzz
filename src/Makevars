@@ -33,6 +33,11 @@ PKG_LIBS = \
 	$(FREETYPE_STATIC_LIB) \
 	-fPIC
 
+ARCHIVES = \
+	$(TOOLS_DIR)/$(FT)-vanilla.tar.gz \
+	$(TOOLS_DIR)/$(HB)-vanilla.tar.gz \
+	$(TOOLS_DIR)/$(HB)-patched.tar.gz
+
 
 .PHONY: all
 all: $(FT_LIB) $(HB_LIB) | $(SHLIB) autoclean
@@ -89,12 +94,6 @@ $(HB_BUILD_PATH): $(ARCHIVES)
 		else \
 			$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz; \
 		fi
-
-
-ARCHIVES = \
-	$(TOOLS_DIR)/$(FT)-vanilla.tar.gz \
-	$(TOOLS_DIR)/$(HB)-vanilla.tar.gz \
-	$(TOOLS_DIR)/$(HB)-patched.tar.gz
 
 $(ARCHIVES):
 	cd $(TOOLS_DIR) && $(MAKE)
