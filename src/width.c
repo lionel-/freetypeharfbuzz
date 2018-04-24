@@ -4,78 +4,83 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+// Explicit semantics
+#define ft_library FT_LibraryRec_
+#define ft_face FT_FaceRec_
+
 #include <hb.h>
 #include <hb-ft.h>
 
 
-SEXP freetype_width(SEXP str, SEXP str_font) {
-  FT_Library library;
-  FT_Face face;
-  int error;
+struct extents {
+  double width;
+  double height;
+};
 
-  error = FT_Init_FreeType(&library);
-  if (error) {
-    Rf_error("FT init error");
+void compute_text_extents(const char* text, const char* font_path,
+                          int size, struct extents* extents) {
+  int error = 0;
+
+  struct ft_library* library;
+  if ((error = FT_Init_FreeType(&library))) {
+    goto ft_library_cleanup;
+  }
+  struct ft_face* face;
+  if ((error = FT_New_Face(library, font_path, 0, &face))) {
+    goto ft_face_cleanup;
   }
 
-  const char* font_path = CHAR(STRING_ELT(str_font, 0));
-  error = FT_New_Face(library, font_path, 0, &face );
-  if (error) {
-    Rf_error("FT face error");
-  }
-
-  int size_pt = 12 * 64;
-  int height = 300;
-  int width = 300;
-  FT_Set_Char_Size(face, 0, size_pt, width, height);
-
-
-  const char* text = CHAR(STRING_ELT(str, 0));
-
-  hb_buffer_t* buf;
-  buf = hb_buffer_create();
-  hb_buffer_add_utf8(buf, text, strlen(text), 0, strlen(text));
-  hb_buffer_guess_segment_properties(buf);
+  int size_pt = size * 64;
+  FT_Set_Char_Size(face, 0, size_pt, 72, 72);
 
   hb_font_t* font = hb_ft_font_create(face, NULL);
-  hb_shape(font, buf, NULL, 0);
-
-  unsigned int len = hb_buffer_get_length (buf);
-  hb_glyph_info_t *info = hb_buffer_get_glyph_infos (buf, NULL);
-  hb_glyph_position_t *pos = hb_buffer_get_glyph_positions (buf, NULL);
-
-  SEXP out = PROTECT(Rf_allocVector(REALSXP, 2));
-
-  {
-    double current_x = 0;
-    double current_y = 0;
-    for (unsigned int i = 0; i < len; i++)
-      {
-        hb_codepoint_t gid   = info[i].codepoint;
-        unsigned int cluster = info[i].cluster;
-        double x_position = current_x + pos[i].x_offset / 64.;
-        double y_position = current_y + pos[i].y_offset / 64.;
-
-
-        char glyphname[32];
-        hb_font_get_glyph_name(font, gid, glyphname, sizeof(glyphname));
-
-        printf ("glyph='%s'	cluster=%d	position=(%g,%g)\n",
-                glyphname, cluster, x_position, y_position);
-
-        current_x += pos[i].x_advance / 64.;
-        current_y += pos[i].y_advance / 64.;
-      }
-
-    REAL(out)[0] = current_x;
-    REAL(out)[1] = current_y;
+  if (!font) {
+    error = 1;
+    goto hb_font_cleanup;
+  }
+  hb_buffer_t* buffer = hb_buffer_create();
+  if (!buffer) {
+    error = 1;
+    goto hb_buffer_cleanup;
   }
 
+  hb_buffer_add_utf8(buffer, text, strlen(text), 0, strlen(text));
+  hb_buffer_guess_segment_properties(buffer);
+  hb_buffer_set_direction(buffer, HB_DIRECTION_LTR);
 
-  hb_buffer_destroy(buf);
+  hb_shape(font, buffer, NULL, 0);
+
+  unsigned int len = hb_buffer_get_length(buffer);
+  hb_glyph_position_t* pos = hb_buffer_get_glyph_positions(buffer, NULL);
+
+  for (unsigned int i = 0; i < len; i++) {
+    extents->width  += pos[i].x_advance / 64.0;
+    extents->height += pos[i].y_advance / 64.0;
+  }
+
+ hb_buffer_cleanup:
+  hb_buffer_destroy(buffer);
+ hb_font_cleanup:
+  hb_font_destroy(font);
+ ft_face_cleanup:
   FT_Done_Face(face);
+ ft_library_cleanup:
   FT_Done_FreeType(library);
 
-  UNPROTECT(1);
+  if (error) {
+    Rf_errorcall(R_NilValue, "Couldn't compute textbox extents");
+  }
+}
+
+SEXP text_extents(SEXP text_input, SEXP font_input) {
+  const char* text = Rf_translateCharUTF8(STRING_ELT(text_input, 0));
+  const char* font_path = CHAR(STRING_ELT(font_input, 0));
+
+  struct extents extents = { 0, 0 };
+  compute_text_extents(text, font_path, 12, &extents);
+
+  SEXP out = Rf_allocVector(REALSXP, 2);
+  REAL(out)[0] = extents.width;
+  REAL(out)[1] = extents.height;
   return out;
 }

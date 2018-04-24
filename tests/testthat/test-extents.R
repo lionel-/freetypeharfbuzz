@@ -1,6 +1,6 @@
 context("extents")
 
 test_that("extents", {
-  extents <- round(string_width("foobar"), 4)
-  expect_identical(extents, c(141.7969, 0.000))
+  extents <- round(text_extents("foobar"), 4)
+  expect_identical(extents, c(34.0156, 0)) # Shouldn't be zero
 })

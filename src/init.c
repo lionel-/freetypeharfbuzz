@@ -3,10 +3,10 @@
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
-extern SEXP freetype_width(SEXP, SEXP);
+extern SEXP text_extents(SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"freetype_width_ptr",  (DL_FUNC) &freetype_width,  2},
+    {"freetypeharfbuzz_text_extents",  (DL_FUNC) &text_extents,  2},
     {NULL, NULL, 0}
 };
 
