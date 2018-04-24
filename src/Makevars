@@ -54,13 +54,10 @@ $(FT_LIB): $(FT_BUILD_PATH)
 		$(MAKE) && \
 		$(MAKE) install
 
-$(FT_BUILD_PATH): $(FT).tar.gz
+$(FT_BUILD_PATH): $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		$(TOOLS_DIR)/untar.sh $(INST_DIR)/$(FT).tar.gz gzip
-
-$(FT).tar.gz:
-	$(TOOLS_DIR)/download.sh "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz" $(FT).tar.gz
+		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
 
 
 # Export FreeType flags explicitly for working around pkg-config
@@ -84,15 +81,18 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 		$(MAKE) V=1 && \
 		$(MAKE) install
 
-$(HB_BUILD_PATH): $(HB).tar.gz
+$(HB_BUILD_PATH):
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		$(TOOLS_DIR)/untar.sh $(INST_DIR)/$(HB).tar.gz gzip
+		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-vanilla.tar.gz
 
-$(HB).tar.gz:
-	cd ../tools && \
-		$(MAKE) harfbuzz-patched && \
-		mv $(HB).tar.gz ../src
+
+ARCHIVES = \
+	$(TOOLS_DIR)/$(FT)-vanilla.tar.gz \
+	$(TOOLS_DIR)/$(HB)-vanilla.tar.gz
+
+$(ARCHIVES):
+	cd $(TOOLS_DIR) && $(MAKE)
 
 
 .PHONY: clean

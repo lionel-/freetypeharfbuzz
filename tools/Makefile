@@ -1,32 +1,38 @@
 
+FT_VERSION ?= 2.9
 HB_VERSION ?= 1.7.6
 
+FT = freetype-$(FT_VERSION)
 HB = harfbuzz-$(HB_VERSION)
 
 
 .PHONY: all
-all: $(HB)-vanilla.zip $(HB)-patched.zip
+all: $(FT)-vanilla.tar.gz $(HB)-vanilla.tar.gz $(HB)-patched.tar.gz
 
 
-$(HB)-vanilla.zip: $(HB)
-	zip -r $(HB)-vanilla.zip $(HB)
+$(FT)-vanilla.tar.gz:
+	./download.sh "https://download.savannah.gnu.org/releases/freetype/$(FT).tar.gz" $(FT)-vanilla.tar.gz
 
-$(HB)-patched.zip: $(HB)
+
+$(HB)-vanilla.tar.gz: $(HB)
+	tar -zcf $(HB)-vanilla.tar.gz $(HB)
+
+$(HB)-patched.tar.gz: $(HB)
 	(cd $(HB) && patch < ../diffs/harfbuzz-pkgconfig.diff) && \
-	zip -r $(HB)-patched.zip $(HB)
+	tar -zcf $(HB)-patched.tar.gz $(HB)
 
 $(HB):
 	./download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2 && \
-	tar xf $(HB).tar.bz2
+	tar -xf $(HB).tar.bz2
 
 
 .PHONY: clean
 clean:
-	rm -rf $(HB).tar.bz2 $(HB)
+	rm -rf $(FT) $(HB) $(HB).tar.bz2
 
 .PHONY: distclean
 distclean: clean
-	rm -rf $(HB).zip
+	rm -rf $(HB).tar.gz
 
 
 # Use this to print an envvar:
