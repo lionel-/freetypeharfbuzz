@@ -16,13 +16,19 @@ fi
 
 bunzip2 < ${HB_ARCHIVE} | tar xf -
 
-# Use gpatch because Solaris 10 `patch` does not support modern diffs.
 # The patch ensures the configure script detects FreeType as R-hub has
 # a very old version of pkg-config that does not seem to work with
-# modern .pc files.
-if [ $(uname) = "SunOS" ]; then
-    (cd ${HB}; gpatch < ../harfbuzz-pkgconfig.diff)
+# modern .pc files. This also handles the case where pkg-config is
+# not installed.
+if ! pkg-config --atleast-pkgconfig-version 0.20 &> /dev/null; then
+    # Use gpatch because Solaris 10 `patch` does not support modern diffs
+    if [ $(uname) = "SunOS" ]; then
+        (cd ${HB}; gpatch < ../harfbuzz-pkgconfig.diff)
+    else
+        (cd ${HB}; patch < ../harfbuzz-pkgconfig.diff)
+    fi
 fi
+
 
 tar cf - ${HB} | gzip -9 > ${HB}.tar.gz
 rm -rf ${HB}
