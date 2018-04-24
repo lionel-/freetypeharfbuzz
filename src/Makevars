@@ -72,9 +72,13 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 				--prefix=$(TARGET_DIR) \
 				--enable-static=yes \
 				--with-pic=yes \
-				--with-freetype=yes && \
-				HAVE_FT_GET_VAR_BLEND_COORDINATES=no; \
+				--with-freetype=yes; \
 			(cp config.log "$(CURDIR)/../tests/harfbuzz-config.log.Rout.fail") \
+		} && \
+		{ \
+			echo "#undef HAVE_FT_DONE_MM_VAR" >> config.h; \
+			echo "#undef HAVE_FT_GET_VAR_BLEND_COORDINATES" >> config.h; \
+			echo "#undef HAVE_FT_SET_VAR_BLEND_COORDINATES" >> config.h; \
 		} && \
 		$(MAKE) V=1 && \
 		$(MAKE) install
