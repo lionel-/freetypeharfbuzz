@@ -30,5 +30,5 @@ if ! pkg-config --atleast-pkgconfig-version 0.20 &> /dev/null; then
 fi
 
 
-tar cf - ${HB} | gzip -9 > ${HB}.tar.gz
+./tar.sh ${HB}.tar.gz ${HB} gzip
 rm -rf ${HB}
