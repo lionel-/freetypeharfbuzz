@@ -54,7 +54,7 @@ $(FT_LIB): $(FT_BUILD_PATH)
 		$(MAKE) && \
 		$(MAKE) install
 
-$(FT_BUILD_PATH): $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
+$(FT_BUILD_PATH): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
 		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
@@ -81,15 +81,20 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 		$(MAKE) V=1 && \
 		$(MAKE) install
 
-$(HB_BUILD_PATH):
+$(HB_BUILD_PATH): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-vanilla.tar.gz
+		if pkg-config --atleast-pkgconfig-version 0.20 &> /dev/null; then \
+			$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-vanilla.tar.gz; \
+		else \
+			$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz; \
+		fi
 
 
 ARCHIVES = \
 	$(TOOLS_DIR)/$(FT)-vanilla.tar.gz \
-	$(TOOLS_DIR)/$(HB)-vanilla.tar.gz
+	$(TOOLS_DIR)/$(HB)-vanilla.tar.gz \
+	$(TOOLS_DIR)/$(HB)-patched.tar.gz
 
 $(ARCHIVES):
 	cd $(TOOLS_DIR) && $(MAKE)
