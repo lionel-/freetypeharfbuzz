@@ -45,7 +45,6 @@ $(FT_LIB): $(FT_BUILD_PATH)
 		./configure \
 			--prefix=$(TARGET_DIR) \
 			--enable-static=yes \
-			--enable-shared=yes \
 			--with-pic=yes \
 			--without-harfbuzz && \
 		$(MAKE) && \
@@ -69,7 +68,6 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 		./configure \
 			--prefix=$(TARGET_DIR) \
 			--enable-static=yes \
-			--enable-shared=yes \
 			--with-pic=yes \
 			--with-freetype=yes && \
 			HAVE_FT_GET_VAR_BLEND_COORDINATES=no && \
