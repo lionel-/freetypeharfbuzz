@@ -30,7 +30,7 @@ PKG_CPPFLAGS  = \
 PKG_LIBS = \
 	$(HARFBUZZ_STATIC_LIB) \
 	$(FREETYPE_STATIC_LIB) \
-	-lbz2 -lz -lpng -fPIC
+	-fPIC
 
 
 .PHONY: all
@@ -46,6 +46,9 @@ $(FT_LIB): $(FT_BUILD_PATH)
 			--prefix=$(TARGET_DIR) \
 			--enable-static=yes \
 			--with-pic=yes \
+			--without-zlib \
+			--without-bzip2 \
+			--without-png \
 			--without-harfbuzz && \
 		$(MAKE) && \
 		$(MAKE) install
@@ -59,11 +62,10 @@ $(FT).tar.gz:
 	../tools/download.sh "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz" $(FT).tar.gz
 
 
-HB_LDFLAGS = $(FREETYPE_LIBS) $(LDFLAGS) -lz -lpng -lbz2
-
+# Export FreeType flags explicitly for working around pkg-config
 $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
-	export LDFLAGS="$(HB_LDFLAGS)" && \
-	export CPPFLAGS="$(FREETYPE_CFLAGS)" && \
+	export LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)" && \
+	export CPPFLAGS="$(FREETYPE_CFLAGS) $(CPPFLAGS)" && \
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 		{ \
 			./configure \
