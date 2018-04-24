@@ -5,3 +5,4 @@
 ^tools/freetype.*tar\.gz$
 ^tools/harfbuzz.*tar\.gz$
 not-cran
+^tests/.*Rout.*
