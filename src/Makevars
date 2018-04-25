@@ -43,7 +43,7 @@ ARCHIVES = \
 all: $(FT_LIB) $(HB_LIB) | $(SHLIB) autoclean
 
 
-$(SHLIB): width.c init.c $(FT_LIB) $(HB_LIB)
+$(SHLIB): width.c utf8.c init.c $(FT_LIB) $(HB_LIB)
 
 
 $(FT_LIB): $(FT_BUILD_PATH)
