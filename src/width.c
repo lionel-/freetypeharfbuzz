@@ -17,13 +17,13 @@ struct extents {
   double height;
 };
 
-void compute_text_extents(const char* text, const char* font_path,
-                          int size, struct extents* extents) {
+int compute_text_extents(const char* text, const char* font_path,
+                         int size, struct extents* extents) {
   int error = 0;
 
   struct ft_library* library;
   if ((error = FT_Init_FreeType(&library))) {
-    return ;
+    goto no_cleanup;
   }
   struct ft_face* face;
   if ((error = FT_New_Face(library, font_path, 0, &face))) {
@@ -64,10 +64,8 @@ void compute_text_extents(const char* text, const char* font_path,
   FT_Done_Face(face);
  ft_library_cleanup:
   FT_Done_FreeType(library);
-
-  if (error) {
-    Rf_errorcall(R_NilValue, "Couldn't compute textbox extents");
-  }
+ no_cleanup:
+  return error;
 }
 
 SEXP text_extents(SEXP text_input, SEXP font_input) {
@@ -75,7 +73,9 @@ SEXP text_extents(SEXP text_input, SEXP font_input) {
   const char* font_path = CHAR(STRING_ELT(font_input, 0));
 
   struct extents extents = { 0, 0 };
-  compute_text_extents(text, font_path, 12, &extents);
+  if (compute_text_extents(text, font_path, 12, &extents)) {
+    Rf_errorcall(R_NilValue, "Couldn't compute textbox extents");
+  }
 
   SEXP out = Rf_allocVector(REALSXP, 2);
   REAL(out)[0] = extents.width;
