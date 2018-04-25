@@ -55,7 +55,6 @@ void compute_text_extents(const char* text, const char* font_path,
 
   for (unsigned int i = 0; i < len; i++) {
     extents->width  += pos[i].x_advance / 64.0;
-    extents->height += pos[i].y_advance / 64.0;
   }
 
   hb_buffer_destroy(buffer);
