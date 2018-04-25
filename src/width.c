@@ -39,10 +39,10 @@ int compute_text_width(const char* text, struct ft_face* face,
 
   hb_shape(font, buffer, NULL, 0);
 
-  unsigned int len = hb_buffer_get_length(buffer);
+  size_t len = hb_buffer_get_length(buffer);
   hb_glyph_position_t* pos = hb_buffer_get_glyph_positions(buffer, NULL);
 
-  for (unsigned int i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     extents->width += pos[i].x_advance / 64.0;
   }
 
