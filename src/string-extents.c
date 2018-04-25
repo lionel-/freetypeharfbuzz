@@ -7,12 +7,9 @@
 // Explicit semantics
 #define ft_library FT_LibraryRec_
 #define ft_face FT_FaceRec_
-#define ft_slot FT_GlyphSlotRec
 
 #include <hb.h>
 #include <hb-ft.h>
-
-#include <math.h>
 
 char* utf8_next_char(const char* str);
 
@@ -114,7 +111,7 @@ SEXP text_extents(SEXP text_input, SEXP font_input) {
   const char* text = Rf_translateCharUTF8(STRING_ELT(text_input, 0));
   const char* font_path = CHAR(STRING_ELT(font_input, 0));
 
-  struct extents extents = { 0, 0 };
+  struct extents extents = { 0.0, 0.0 };
   if (compute_text_extents(text, font_path, 12, &extents)) {
     Rf_errorcall(R_NilValue, "Couldn't compute textbox extents");
   }
