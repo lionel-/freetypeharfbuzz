@@ -23,11 +23,11 @@ void compute_text_extents(const char* text, const char* font_path,
 
   struct ft_library* library;
   if ((error = FT_Init_FreeType(&library))) {
-    goto ft_library_cleanup;
+    return ;
   }
   struct ft_face* face;
   if ((error = FT_New_Face(library, font_path, 0, &face))) {
-    goto ft_face_cleanup;
+    goto ft_library_cleanup;
   }
 
   int size_pt = size * 64;
@@ -36,12 +36,12 @@ void compute_text_extents(const char* text, const char* font_path,
   hb_font_t* font = hb_ft_font_create(face, NULL);
   if (!font) {
     error = 1;
-    goto hb_font_cleanup;
+    goto ft_face_cleanup;
   }
   hb_buffer_t* buffer = hb_buffer_create();
   if (!buffer) {
     error = 1;
-    goto hb_buffer_cleanup;
+    goto hb_font_cleanup;
   }
 
   hb_buffer_add_utf8(buffer, text, strlen(text), 0, strlen(text));
@@ -58,7 +58,6 @@ void compute_text_extents(const char* text, const char* font_path,
     extents->height += pos[i].y_advance / 64.0;
   }
 
- hb_buffer_cleanup:
   hb_buffer_destroy(buffer);
  hb_font_cleanup:
   hb_font_destroy(font);
