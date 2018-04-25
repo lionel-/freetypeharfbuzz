@@ -7,10 +7,14 @@
 // Explicit semantics
 #define ft_library FT_LibraryRec_
 #define ft_face FT_FaceRec_
+#define ft_slot FT_GlyphSlotRec
 
 #include <hb.h>
 #include <hb-ft.h>
 
+#include <math.h>
+
+char* utf8_next_char(const char* str);
 
 
 struct extents {
@@ -53,6 +57,33 @@ int compute_text_width(const char* text, struct ft_face* face,
   return error;
 }
 
+int compute_text_height(const char* text, struct ft_face* face,
+                        struct extents* extents) {
+  FT_Pos max_ascent = 0;
+  FT_Pos max_descent = 0;
+
+  const char* str = text;
+  while (*str) {
+    FT_Load_Char(face, *str, FT_LOAD_DEFAULT);
+    FT_Glyph_Metrics metrics = face->glyph->metrics;
+
+    FT_Pos ascent = metrics.horiBearingY;
+    if (ascent > max_ascent) {
+      max_ascent = ascent;
+    }
+
+    FT_Pos descent = metrics.height - ascent;
+    if (descent > max_descent) {
+      max_descent = descent;
+    }
+
+    str = utf8_next_char(str);
+  }
+
+  extents->height = (max_ascent + max_descent) / 64.0;
+  return 0;
+}
+
 int compute_text_extents(const char* text, const char* font_path,
                          int size, struct extents* extents) {
   int error = 0;
@@ -70,6 +101,7 @@ int compute_text_extents(const char* text, const char* font_path,
   FT_Set_Char_Size(face, 0, size_pt, 72, 72);
 
   error = compute_text_width(text, face, extents);
+  error = compute_text_height(text, face, extents);
 
   FT_Done_Face(face);
  ft_library_cleanup:
