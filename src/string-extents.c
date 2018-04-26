@@ -11,78 +11,18 @@
 #include <hb.h>
 #include <hb-ft.h>
 
-char* utf8_next_char(const char* str);
 
-
-struct extents {
-  double width;
-  double height;
+struct typographical_metrics {
+  double ascender;
+  double descender;
+  double linegap;
 };
 
-int compute_text_width(const char* text, struct ft_face* face,
-                       struct extents* extents) {
-  int error = 0;
-
-  hb_font_t* font = hb_ft_font_create(face, NULL);
-  if (!font) {
-    error = 1;
-    goto no_cleanup;
-  }
-  hb_buffer_t* buffer = hb_buffer_create();
-  if (!buffer) {
-    error = 1;
-    goto hb_font_cleanup;
-  }
-
-  hb_buffer_add_utf8(buffer, text, strlen(text), 0, strlen(text));
-  hb_buffer_guess_segment_properties(buffer);
-  hb_buffer_set_direction(buffer, HB_DIRECTION_LTR);
-
-  hb_shape(font, buffer, NULL, 0);
-
-  size_t len = hb_buffer_get_length(buffer);
-  hb_glyph_position_t* pos = hb_buffer_get_glyph_positions(buffer, NULL);
-
-  for (size_t i = 0; i < len; i++) {
-    extents->width += pos[i].x_advance / 64.0;
-  }
-
-  hb_buffer_destroy(buffer);
- hb_font_cleanup:
-  hb_font_destroy(font);
- no_cleanup:
-  return error;
-}
-
-int compute_text_height(const char* text, struct ft_face* face,
-                        struct extents* extents) {
-  FT_Pos max_ascent = 0;
-  FT_Pos max_descent = 0;
-
-  const char* str = text;
-  while (*str) {
-    FT_Load_Char(face, *str, FT_LOAD_DEFAULT);
-    FT_Glyph_Metrics metrics = face->glyph->metrics;
-
-    FT_Pos ascent = metrics.horiBearingY;
-    if (ascent > max_ascent) {
-      max_ascent = ascent;
-    }
-
-    FT_Pos descent = metrics.height - ascent;
-    if (descent > max_descent) {
-      max_descent = descent;
-    }
-
-    str = utf8_next_char(str);
-  }
-
-  extents->height = (max_ascent + max_descent) / 64.0;
-  return 0;
-}
-
-int compute_text_extents(const char* text, const char* font_path,
-                         int size, struct extents* extents) {
+int compute_string_width(const char* string,
+                         const char* font_path,
+                         int font_size,
+                         double* string_width,
+                         struct typographical_metrics* metrics) {
   int error = 0;
 
   struct ft_library* library;
@@ -94,18 +34,55 @@ int compute_text_extents(const char* text, const char* font_path,
     goto ft_library_cleanup;
   }
 
-  int size_pt = size * 64;
-  FT_Set_Char_Size(face, 0, size_pt, 72, 72);
+  int size_26_6 = font_size * 64;
+  FT_Set_Char_Size(face, 0, size_26_6, 0, 0);
 
-  error = compute_text_width(text, face, extents);
-  error = compute_text_height(text, face, extents);
+  hb_font_t* font = hb_ft_font_create(face, NULL);
+  if (!font) {
+    error = 1;
+    goto ft_face_cleanup;
+  }
+  hb_buffer_t* buffer = hb_buffer_create();
+  if (!buffer) {
+    error = 1;
+    goto hb_font_cleanup;
+  }
 
+  hb_buffer_add_utf8(buffer, string, strlen(string), 0, strlen(string));
+  hb_buffer_guess_segment_properties(buffer);
+  hb_buffer_set_direction(buffer, HB_DIRECTION_LTR);
+
+  hb_shape(font, buffer, NULL, 0);
+
+  size_t len = hb_buffer_get_length(buffer);
+  hb_glyph_position_t* pos = hb_buffer_get_glyph_positions(buffer, NULL);
+
+  for (size_t i = 0; i < len; i++) {
+    *string_width += pos[i].x_advance / 64.0;
+  }
+
+  if (metrics) {
+    hb_font_extents_t hb_extents;
+    hb_font_get_extents_for_direction(font, HB_DIRECTION_LTR, &hb_extents);
+    metrics->ascender = hb_extents.ascender / 64.0;
+    metrics->descender = -hb_extents.descender / 64.0;
+    metrics->linegap = hb_extents.line_gap / 64.0;
+  }
+
+  hb_buffer_destroy(buffer);
+ hb_font_cleanup:
+  hb_font_destroy(font);
+ ft_face_cleanup:
   FT_Done_Face(face);
  ft_library_cleanup:
   FT_Done_FreeType(library);
  no_cleanup:
   return error;
 }
+
+const char* metrics_names[] = {
+  "width", "ascender", "descender", "linegap", ""
+};
 
 SEXP text_extents(SEXP string, SEXP font_size, SEXP font_file) {
   int n_protect = 0;
@@ -129,15 +106,19 @@ SEXP text_extents(SEXP string, SEXP font_size, SEXP font_file) {
   const char* font_path = CHAR(STRING_ELT(font_file, 0));
   int size = INTEGER(font_size)[0];
 
-  struct extents extents = { 0.0, 0.0 };
-  if (compute_text_extents(text, font_path, size, &extents)) {
-    Rf_errorcall(R_NilValue, "Couldn't compute textbox extents");
+  struct typographical_metrics metrics = { 0.0, 0.0, 0.0 };
+
+  SEXP info = PROTECT(Rf_mkNamed(REALSXP, metrics_names)); ++n_protect;
+  double* info_ptr = REAL(info);
+
+  if (compute_string_width(text, font_path, size, info_ptr, &metrics)) {
+    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
   }
 
-  SEXP out = Rf_allocVector(REALSXP, 2);
-  REAL(out)[0] = extents.width;
-  REAL(out)[1] = extents.height;
+  *(++info_ptr) = metrics.ascender;
+  *(++info_ptr) = metrics.descender;
+  *(++info_ptr) = metrics.linegap;
 
   UNPROTECT(n_protect);
-  return out;
+  return info;
 }

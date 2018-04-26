@@ -1,16 +1,16 @@
 context("extents")
 
 test_that("extents", {
-  expect_identical(rounded_extents("foobar"), c(34.0156, 9.000))
-  expect_identical(rounded_extents("o."), c(10.000, 7.000))
-  expect_identical(rounded_extents("."), c(3.3281, 1.000))
+  expect_identical(rounded_width("foobar"), 34.0156)
+  expect_identical(rounded_width("o."), 10.000)
+  expect_identical(rounded_width("."), 3.3281)
 })
 
 test_that("extents takes kerning into account", {
-  expect_identical(rounded_extents("VA"), c(15.1094, 9.000))
-  combined <- rounded_extents("VA")[[1]]
-  separate1 <- rounded_extents("V")[[1]]
-  separate2 <- rounded_extents("V")[[1]]
+  expect_identical(rounded_width("VA"), 15.1094)
+  combined <- rounded_width("VA")
+  separate1 <- rounded_width("V")
+  separate2 <- rounded_width("V")
   expect_true(combined < separate1 + separate2)
 })
 
@@ -26,7 +26,7 @@ test_that("can supply integer or double size", {
 })
 
 test_that("size is taken into account", {
-  height_11 <- text_extents("foo", 11)[[2]]
-  height_12 <- text_extents("foo", 12)[[2]]
-  expect_true(height_11 < height_12)
+  ascender_11 <- text_extents("foo", 11)[["ascender"]]
+  ascender_12 <- text_extents("foo", 12)[["ascender"]]
+  expect_true(ascender_11 < ascender_12)
 })
