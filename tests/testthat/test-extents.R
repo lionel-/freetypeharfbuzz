@@ -15,6 +15,18 @@ test_that("extents takes kerning into account", {
 })
 
 test_that("inputs are type-checked", {
-  expect_error(text_extents("foo", letters), "must be a length 1 character")
-  expect_error(text_extents(globalenv(), "foo"), "must be a length 1 character")
+  expect_error(text_extents("foo", font_file = letters), "must be a length 1 character")
+  expect_error(text_extents(globalenv(), font_file = "foo"), "must be a length 1 character")
+  expect_error(text_extents("foo", font_size = "bar"), "must be a length 1 numeric")
+  expect_error(text_extents("foo", font_size = 1:3), "must be a length 1 numeric")
+})
+
+test_that("can supply integer or double size", {
+  expect_identical(text_extents("foo", 12), text_extents("foo", 12L))
+})
+
+test_that("size is taken into account", {
+  height_11 <- text_extents("foo", 11)[[2]]
+  height_12 <- text_extents("foo", 12)[[2]]
+  expect_true(height_11 < height_12)
 })

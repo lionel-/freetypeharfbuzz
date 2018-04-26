@@ -107,23 +107,37 @@ int compute_text_extents(const char* text, const char* font_path,
   return error;
 }
 
-SEXP text_extents(SEXP string, SEXP font_file) {
+SEXP text_extents(SEXP string, SEXP font_size, SEXP font_file) {
+  int n_protect = 0;
+
   if (TYPEOF(string) != STRSXP || Rf_length(string) != 1) {
     Rf_errorcall(R_NilValue, "`string` must be a length 1 character vector");
   }
   if (TYPEOF(font_file) != STRSXP || Rf_length(font_file) != 1) {
     Rf_errorcall(R_NilValue, "`font_file` must be a length 1 character vector");
   }
+
+  if (TYPEOF(font_size) == REALSXP) {
+    font_size = PROTECT(Rf_coerceVector(font_size, INTSXP));
+    ++n_protect;
+  }
+  if (TYPEOF(font_size) != INTSXP || Rf_length(font_size) != 1) {
+    Rf_errorcall(R_NilValue, "`font_size` must be a length 1 numeric vector");
+  }
+
   const char* text = Rf_translateCharUTF8(STRING_ELT(string, 0));
   const char* font_path = CHAR(STRING_ELT(font_file, 0));
+  int size = INTEGER(font_size)[0];
 
   struct extents extents = { 0.0, 0.0 };
-  if (compute_text_extents(text, font_path, 12, &extents)) {
+  if (compute_text_extents(text, font_path, size, &extents)) {
     Rf_errorcall(R_NilValue, "Couldn't compute textbox extents");
   }
 
   SEXP out = Rf_allocVector(REALSXP, 2);
   REAL(out)[0] = extents.width;
   REAL(out)[1] = extents.height;
+
+  UNPROTECT(n_protect);
   return out;
 }
