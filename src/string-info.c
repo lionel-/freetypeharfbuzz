@@ -11,12 +11,8 @@
 #include <hb.h>
 #include <hb-ft.h>
 
+#include "string-info.h"
 
-struct typographical_metrics {
-  double ascender;
-  double descender;
-  double linegap;
-};
 
 int compute_string_width(const char* string,
                          const char* font_path,

@@ -12,7 +12,12 @@ static const R_CallMethodDef CallEntries[] = {
     {NULL, NULL, 0}
 };
 
+
+#include "string-info.h"
+
 void R_init_freetypeharfbuzz(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
+
+    R_RegisterCCallable("freetypeharfbuzz", "freetypeharfbuzz_compute_string_width", (DL_FUNC) &compute_string_width);
 }
