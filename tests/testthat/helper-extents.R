@@ -1,4 +1,4 @@
 
 rounded_width <- function(text) {
-  round(string_info(text), 4)[["width"]]
+  round(string_width(text), 4)
 }

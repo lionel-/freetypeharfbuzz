@@ -4,9 +4,11 @@
 #include <R_ext/Rdynload.h>
 
 extern SEXP string_info(SEXP, SEXP, SEXP);
+extern SEXP string_width(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"freetypeharfbuzz_string_info",  (DL_FUNC) &string_info,  3},
+    {"freetypeharfbuzz_string_width",  (DL_FUNC) &string_width,  3},
     {NULL, NULL, 0}
 };
 

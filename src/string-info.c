@@ -113,7 +113,8 @@ SEXP string_info(SEXP string, SEXP font_size, SEXP font_file) {
 
   struct typographical_metrics metrics = { 0.0, 0.0, 0.0 };
 
-  SEXP info = PROTECT(Rf_mkNamed(REALSXP, metrics_names)); ++n_protect;
+  SEXP info = PROTECT(Rf_mkNamed(REALSXP, metrics_names));
+  ++n_protect;
   double* info_ptr = REAL(info);
 
   if (compute_string_width(text, font_path, size, info_ptr, &metrics)) {
@@ -123,6 +124,25 @@ SEXP string_info(SEXP string, SEXP font_size, SEXP font_file) {
   *(++info_ptr) = metrics.ascender;
   *(++info_ptr) = metrics.descender;
   *(++info_ptr) = metrics.linegap;
+
+  UNPROTECT(n_protect);
+  return info;
+}
+
+SEXP string_width(SEXP string, SEXP font_size, SEXP font_file) {
+  int n_protect = validate_string_info_inputs(&string, &font_size, &font_file);
+
+  const char* text = Rf_translateCharUTF8(STRING_ELT(string, 0));
+  const char* font_path = CHAR(STRING_ELT(font_file, 0));
+  int size = INTEGER(font_size)[0];
+
+  SEXP info = PROTECT(Rf_allocVector(REALSXP, 1));
+  ++n_protect;
+  double* info_ptr = REAL(info);
+
+  if (compute_string_width(text, font_path, size, info_ptr, NULL)) {
+    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
+  }
 
   UNPROTECT(n_protect);
   return info;
