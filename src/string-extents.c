@@ -107,9 +107,15 @@ int compute_text_extents(const char* text, const char* font_path,
   return error;
 }
 
-SEXP text_extents(SEXP text_input, SEXP font_input) {
-  const char* text = Rf_translateCharUTF8(STRING_ELT(text_input, 0));
-  const char* font_path = CHAR(STRING_ELT(font_input, 0));
+SEXP text_extents(SEXP string, SEXP font_file) {
+  if (TYPEOF(string) != STRSXP || Rf_length(string) != 1) {
+    Rf_errorcall(R_NilValue, "`string` must be a length 1 character vector");
+  }
+  if (TYPEOF(font_file) != STRSXP || Rf_length(font_file) != 1) {
+    Rf_errorcall(R_NilValue, "`font_file` must be a length 1 character vector");
+  }
+  const char* text = Rf_translateCharUTF8(STRING_ELT(string, 0));
+  const char* font_path = CHAR(STRING_ELT(font_file, 0));
 
   struct extents extents = { 0.0, 0.0 };
   if (compute_text_extents(text, font_path, 12, &extents)) {

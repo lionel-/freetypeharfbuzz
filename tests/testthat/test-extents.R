@@ -13,3 +13,8 @@ test_that("extents takes kerning into account", {
   separate2 <- rounded_extents("V")[[1]]
   expect_true(combined < separate1 + separate2)
 })
+
+test_that("inputs are type-checked", {
+  expect_error(text_extents("foo", letters), "must be a length 1 character")
+  expect_error(text_extents(globalenv(), "foo"), "must be a length 1 character")
+})
