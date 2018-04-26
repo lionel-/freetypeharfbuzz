@@ -3,10 +3,10 @@
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
-extern SEXP text_extents(SEXP, SEXP, SEXP);
+extern SEXP string_info(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"freetypeharfbuzz_text_extents",  (DL_FUNC) &text_extents,  3},
+    {"freetypeharfbuzz_string_info",  (DL_FUNC) &string_info,  3},
     {NULL, NULL, 0}
 };
 

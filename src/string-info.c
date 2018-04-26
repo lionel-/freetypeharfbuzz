@@ -84,7 +84,7 @@ const char* metrics_names[] = {
   "width", "ascender", "descender", "linegap", ""
 };
 
-SEXP text_extents(SEXP string, SEXP font_size, SEXP font_file) {
+SEXP string_info(SEXP string, SEXP font_size, SEXP font_file) {
   int n_protect = 0;
 
   if (TYPEOF(string) != STRSXP || Rf_length(string) != 1) {
