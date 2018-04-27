@@ -53,6 +53,7 @@ int compute_string_width(const char* string,
   size_t len = hb_buffer_get_length(buffer);
   hb_glyph_position_t* pos = hb_buffer_get_glyph_positions(buffer, NULL);
 
+  *string_width = 0.0;
   for (size_t i = 0; i < len; i++) {
     *string_width += pos[i].x_advance / 64.0;
   }
