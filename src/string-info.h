@@ -2,10 +2,10 @@
 #define FREETYPEHARFBUZZ_STRING_INFO_H
 
 
-int compute_string_width(const char*,
-                         const char*,
-                         int,
-                         double*);
+int calc_string_width(const char*,
+                      const char*,
+                      int,
+                      double*);
 
 
 #endif

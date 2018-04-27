@@ -1,10 +1,10 @@
 #include "harfbuzz.h"
 #include "string-info.h"
 
-int compute_string_width(const char* string,
-                         const char* font_path,
-                         int font_size,
-                         double* string_width) {
+int calc_string_width(const char* string,
+                      const char* font_path,
+                      int font_size,
+                      double* string_width) {
   int error = 0;;
   hb_font_t* font;
 

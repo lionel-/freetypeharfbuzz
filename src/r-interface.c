@@ -42,7 +42,7 @@ SEXP string_info(SEXP string, SEXP font_size, SEXP font_file) {
   ++n_protect;
   double* info_ptr = REAL(info);
 
-  if (compute_string_width(text, font_path, size, info_ptr)) {
+  if (calc_string_width(text, font_path, size, info_ptr)) {
     Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
   }
 
@@ -65,7 +65,7 @@ SEXP string_width(SEXP string, SEXP font_size, SEXP font_file) {
   ++n_protect;
   double* info_ptr = REAL(info);
 
-  if (compute_string_width(text, font_path, size, info_ptr)) {
+  if (calc_string_width(text, font_path, size, info_ptr)) {
     Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
   }
 

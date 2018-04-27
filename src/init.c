@@ -26,7 +26,7 @@ void R_init_freetypeharfbuzz(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 
-    R_RegisterCCallable("freetypeharfbuzz", "freetypeharfbuzz_compute_string_width", (DL_FUNC) &compute_string_width);
+    R_RegisterCCallable("freetypeharfbuzz", "freetypeharfbuzz_calc_string_width", (DL_FUNC) &calc_string_width);
 }
 
 
