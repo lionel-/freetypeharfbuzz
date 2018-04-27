@@ -25,8 +25,24 @@ test_that("can supply integer or double size", {
   expect_identical(string_info("foo", 12), string_info("foo", 12L))
 })
 
+test_that("can retrieve typographical metrics", {
+  expect_identical(font_info(11), c(ascent = 10, descent = 3, linegap = 0))
+  expect_identical(font_info(12), c(ascent = 11, descent = 3, linegap = 0))
+  expect_identical(font_info(13), c(ascent = 12, descent = 3, linegap = 0))
+
+  font <- fontquiver::font("Bitstream Vera", "sans", "roman")$ttf
+  expect_identical(font_info(11, font), c(ascent = 11, descent = 3, linegap = -1))
+  expect_identical(font_info(12, font), c(ascent = 12, descent = 3, linegap = -1))
+  expect_identical(font_info(13, font), c(ascent = 13, descent = 4, linegap = -2))
+})
+
 test_that("size is taken into account", {
-  ascender_11 <- string_info("foo", 11)[["ascender"]]
-  ascender_12 <- string_info("foo", 12)[["ascender"]]
+  ascender_11 <- font_info(11)[["ascent"]]
+  ascender_12 <- font_info(12)[["ascent"]]
   expect_true(ascender_11 < ascender_12)
+})
+
+test_that("typographical height is monotonically increasing", {
+  gaps <- vapply(1:50, function(size) sum(font_info(size)), double(1))
+  expect_true(all(gaps == cummax(gaps)))
 })

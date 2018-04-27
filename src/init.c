@@ -6,10 +6,12 @@
 SEXP library_load();
 SEXP library_unload();
 
+extern SEXP font_info(SEXP, SEXP);
 extern SEXP string_info(SEXP, SEXP, SEXP);
 extern SEXP string_width(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
+    {"freetypeharfbuzz_font_info", (DL_FUNC) &font_info, 2},
     {"freetypeharfbuzz_library_load", (DL_FUNC) &library_load, 0},
     {"freetypeharfbuzz_library_unload", (DL_FUNC) &library_unload, 0},
     {"freetypeharfbuzz_string_info", (DL_FUNC) &string_info, 3},

@@ -4,8 +4,7 @@
 int compute_string_width(const char* string,
                          const char* font_path,
                          int font_size,
-                         double* string_width,
-                         struct typographical_metrics* metrics) {
+                         double* string_width) {
   int error = 0;;
   hb_font_t* font;
 
@@ -31,14 +30,6 @@ int compute_string_width(const char* string,
   *string_width = 0.0;
   for (size_t i = 0; i < len; i++) {
     *string_width += pos[i].x_advance / 64.0;
-  }
-
-  if (metrics) {
-    hb_font_extents_t hb_extents;
-    hb_font_get_extents_for_direction(font, HB_DIRECTION_LTR, &hb_extents);
-    metrics->ascender = hb_extents.ascender / 64.0;
-    metrics->descender = -hb_extents.descender / 64.0;
-    metrics->linegap = hb_extents.line_gap / 64.0;
   }
 
   hb_buffer_destroy(buffer);
