@@ -1,40 +1,18 @@
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
-// Explicit semantics
-#define ft_library FT_LibraryRec_
-#define ft_face FT_FaceRec_
-
-#include <hb.h>
-#include <hb-ft.h>
-
+#include "harfbuzz.h"
 #include "string-info.h"
-
 
 int compute_string_width(const char* string,
                          const char* font_path,
                          int font_size,
                          double* string_width,
                          struct typographical_metrics* metrics) {
-  int error = 0;
+  int error = 0;;
+  hb_font_t* font;
 
-  struct ft_library* library;
-  if ((error = FT_Init_FreeType(&library))) {
+  if ((error = init_font(font_path, font_size, &font))) {
     goto no_cleanup;
   }
-  struct ft_face* face;
-  if ((error = FT_New_Face(library, font_path, 0, &face))) {
-    goto ft_library_cleanup;
-  }
 
-  int size_26_6 = font_size * 64;
-  FT_Set_Char_Size(face, 0, size_26_6, 0, 0);
-
-  hb_font_t* font = hb_ft_font_create(face, NULL);
-  if (!font) {
-    error = 1;
-    goto ft_face_cleanup;
-  }
   hb_buffer_t* buffer = hb_buffer_create();
   if (!buffer) {
     error = 1;
@@ -66,10 +44,6 @@ int compute_string_width(const char* string,
   hb_buffer_destroy(buffer);
  hb_font_cleanup:
   hb_font_destroy(font);
- ft_face_cleanup:
-  FT_Done_Face(face);
- ft_library_cleanup:
-  FT_Done_FreeType(library);
  no_cleanup:
   return error;
 }
