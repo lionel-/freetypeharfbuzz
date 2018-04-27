@@ -38,17 +38,19 @@ SEXP string_info(SEXP string, SEXP font_size, SEXP font_file) {
   const char* font_path = CHAR(STRING_ELT(font_file, 0));
   int size = INTEGER(font_size)[0];
 
+  struct string_metrics metrics;
+  if (calc_string_info(text, font_path, size, &metrics)) {
+    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
+  }
+
   SEXP info = PROTECT(Rf_mkNamed(REALSXP, string_info_names));
   ++n_protect;
   double* info_ptr = REAL(info);
 
-  if (calc_string_width(text, font_path, size, info_ptr)) {
-    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
-  }
-
-  *(++info_ptr) = 0.0;
-  *(++info_ptr) = 0.0;
-  *(++info_ptr) = 0.0;
+  *info_ptr = metrics.width;
+  *(++info_ptr) = metrics.height;
+  *(++info_ptr) = metrics.ascent;
+  *(++info_ptr) = metrics.descent;
 
   UNPROTECT(n_protect);
   return info;

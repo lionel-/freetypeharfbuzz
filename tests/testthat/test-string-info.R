@@ -46,3 +46,16 @@ test_that("typographical height is monotonically increasing", {
   gaps <- vapply(1:50, function(size) sum(font_info(size)), double(1))
   expect_true(all(gaps == cummax(gaps)))
 })
+
+test_that("string metrics are computed for various edge cases", {
+  # metrics:          width   height  ascent  descent
+  expect_metrics(".", 3.3281, 1.2812, 1.2812, 0.0000)
+  expect_metrics("^", 5.6250, 8.2500, 8.2500, 0.0000)
+  expect_metrics("ô", 6.6719, 8.8594, 8.7344, 0.1250)
+  expect_metrics("˛", 4.0000, 2.5000, 0.0000, 2.5000)
+  expect_metrics("̣", 0.0000, 1.8281, 0.0000, 1.8281)
+  expect_metrics("ç", 6.0000, 9.0000, 6.4531, 2.5469)
+  expect_metrics("c", 6.0000, 6.5781, 6.4531, 0.1250)
+  expect_metrics("ͅ",  0.0000, 2.4844, 0.0000, 2.4844)
+  expect_metrics("͞", 0.0000, 8.4219, 8.4219, 0.0000)
+})
