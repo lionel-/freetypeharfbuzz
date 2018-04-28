@@ -17,19 +17,19 @@ struct fthb_string_info {
 
 extern
 int (*fthb_get_font_info)(const char* font_path,
-                          int font_size,
+                          double font_size,
                           struct fthb_font_info* metrics_out);
 
 extern
 int (*fthb_calc_string_info)(const char* string,
                              const char* font_path,
-                             int font_size,
+                             double font_size,
                              struct fthb_string_info* metrics_out);
 
 extern
 int (*fthb_calc_string_width)(const char* string,
                               const char* font_path,
-                              int font_size,
+                              double font_size,
                               double* width_out);
 
 

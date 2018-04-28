@@ -59,3 +59,12 @@ test_that("string metrics are computed for various edge cases", {
   expect_metrics("ͅ",  0.0000, 2.4844, 0.0000, 2.4844)
   expect_metrics("͞", 0.0000, 8.4219, 8.4219, 0.0000)
 })
+
+test_that("supports fractional font sizes", {
+  widths <- c(
+    string_width("foo", 12),
+    string_width("foo", 12.1),
+    string_width("foo", 12.2)
+  )
+  expect_true(all(widths == cummax(widths)))
+})

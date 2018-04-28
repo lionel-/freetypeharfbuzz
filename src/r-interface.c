@@ -17,11 +17,11 @@ int validate_string_info_inputs(SEXP* string, SEXP* font_size, SEXP* font_file) 
     Rf_errorcall(R_NilValue, "`font_file` must be a length 1 character vector");
   }
 
-  if (TYPEOF(*font_size) == REALSXP) {
-    *font_size = PROTECT(Rf_coerceVector(*font_size, INTSXP));
+  if (TYPEOF(*font_size) == INTSXP) {
+    *font_size = PROTECT(Rf_coerceVector(*font_size, REALSXP));
     ++n_protect;
   }
-  if (TYPEOF(*font_size) != INTSXP || Rf_length(*font_size) != 1) {
+  if (TYPEOF(*font_size) != REALSXP || Rf_length(*font_size) != 1) {
     Rf_errorcall(R_NilValue, "`font_size` must be a length 1 numeric vector");
   }
   return n_protect;
@@ -36,7 +36,7 @@ SEXP string_info(SEXP string, SEXP font_size, SEXP font_file) {
 
   const char* text = Rf_translateCharUTF8(STRING_ELT(string, 0));
   const char* font_path = CHAR(STRING_ELT(font_file, 0));
-  int size = INTEGER(font_size)[0];
+  double size = REAL(font_size)[0];
 
   struct string_metrics metrics;
   if (calc_string_info(text, font_path, size, &metrics)) {
@@ -61,7 +61,7 @@ SEXP string_width(SEXP string, SEXP font_size, SEXP font_file) {
 
   const char* text = Rf_translateCharUTF8(STRING_ELT(string, 0));
   const char* font_path = CHAR(STRING_ELT(font_file, 0));
-  int size = INTEGER(font_size)[0];
+  double size = REAL(font_size)[0];
 
   SEXP info = PROTECT(Rf_allocVector(REALSXP, 1));
   ++n_protect;
@@ -83,7 +83,7 @@ SEXP font_info(SEXP font_size, SEXP font_file) {
   int n_protect = validate_string_info_inputs(NULL, &font_size, &font_file);
 
   const char* font_path = CHAR(STRING_ELT(font_file, 0));
-  int size = INTEGER(font_size)[0];
+  double size = REAL(font_size)[0];
 
   struct font_metrics metrics = { 0.0, 0.0, 0.0 };
 

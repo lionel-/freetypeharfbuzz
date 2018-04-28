@@ -3,7 +3,7 @@
 
 
 int get_font_info(const char* font_path,
-                  int font_size,
+                  double font_size,
                   struct font_metrics* metrics_out) {
   int error = 0;;
 

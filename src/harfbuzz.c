@@ -2,7 +2,7 @@
 #include "harfbuzz.h"
 
 int init_font(const char* font_path,
-              int font_size,
+              double font_size,
               hb_font_t** font_out) {
   int error = 0;
 
@@ -11,7 +11,7 @@ int init_font(const char* font_path,
     goto no_cleanup;
   }
 
-  int size_26_6 = font_size * 64;
+  FT_F26Dot6 size_26_6 = font_size * 64;
   FT_Set_Char_Size(face, 0, size_26_6, 0, 0);
 
   hb_font_t* font = hb_ft_font_create(face, NULL);
