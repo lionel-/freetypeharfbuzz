@@ -7,7 +7,11 @@
 
 int init_font(const char* font_path,
               int font_size,
-              hb_font_t** font);
+              hb_font_t** font_out);
+
+int init_buffer(const char* string,
+                hb_font_t* font,
+                hb_buffer_t** buffer_out);
 
 
 #endif
