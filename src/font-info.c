@@ -4,10 +4,10 @@
 
 int get_font_info(const char* font_path,
                   int font_size,
-                  struct font_metrics* metrics) {
+                  struct font_metrics* metrics_out) {
   int error = 0;;
 
-  if (!metrics) {
+  if (!metrics_out) {
     error = 1;
     goto no_cleanup;
   }
@@ -20,9 +20,9 @@ int get_font_info(const char* font_path,
   hb_font_extents_t hb_extents;
   hb_font_get_extents_for_direction(font, HB_DIRECTION_LTR, &hb_extents);
 
-  metrics->ascent = hb_extents.ascender / 64.0;
-  metrics->descent = -hb_extents.descender / 64.0;
-  metrics->linegap = hb_extents.line_gap / 64.0;
+  metrics_out->ascent = hb_extents.ascender / 64.0;
+  metrics_out->descent = -hb_extents.descender / 64.0;
+  metrics_out->linegap = hb_extents.line_gap / 64.0;
 
  no_cleanup:
   return error;

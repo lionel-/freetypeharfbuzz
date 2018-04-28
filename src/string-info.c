@@ -54,7 +54,7 @@ int calc_string_width(const char* string,
 int calc_string_info(const char* string,
                      const char* font_path,
                      int font_size,
-                     struct string_metrics* metrics) {
+                     struct string_metrics* metrics_out) {
   int error = 0;
 
   hb_font_t* font;
@@ -101,10 +101,10 @@ int calc_string_info(const char* string,
     }
   }
 
-  metrics->width = width / 64.0;
-  metrics->ascent = ascent / 64.0;
-  metrics->descent = descent / 64.0;
-  metrics->height = (ascent + descent) / 64.0;
+  metrics_out->width = width / 64.0;
+  metrics_out->ascent = ascent / 64.0;
+  metrics_out->descent = descent / 64.0;
+  metrics_out->height = (ascent + descent) / 64.0;
 
   hb_buffer_destroy(buffer);
  hb_font_cleanup:

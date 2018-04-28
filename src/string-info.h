@@ -12,12 +12,12 @@ struct string_metrics {
 int calc_string_width(const char* string,
                       const char* font_path,
                       int font_size,
-                      double* metrics);
+                      double* width_out);
 
 int calc_string_info(const char* string,
                      const char* font_path,
                      int font_size,
-                     struct string_metrics* metrics);
+                     struct string_metrics* metrics_out);
 
 
 #endif
