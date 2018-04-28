@@ -1,7 +1,7 @@
 ^\.travis\.yml$
 ^preinst
-^src/freetype
-^src/harfbuzz
+^src/freetype\.[^hc]
+^src/harfbuzz\.[^hc]
 ^tools/freetype.*
 ^tools/harfbuzz.*
 not-cran
