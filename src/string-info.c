@@ -1,6 +1,8 @@
 #include "harfbuzz.h"
 #include "string-info.h"
 
+#include "freetype.h"
+
 
 int calc_string_width(const char* string,
                       const char* font_path,
@@ -28,7 +30,7 @@ int calc_string_width(const char* string,
 
   hb_buffer_destroy(buffer);
  hb_font_cleanup:
-  hb_font_destroy(font);
+  error = my_hb_font_destroy(font);
  no_cleanup:
   return error;
 }
@@ -90,7 +92,7 @@ int calc_string_info(const char* string,
 
   hb_buffer_destroy(buffer);
  hb_font_cleanup:
-  hb_font_destroy(font);
+  error = my_hb_font_destroy(font);
  no_cleanup:
   return error;
 }

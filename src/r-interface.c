@@ -39,8 +39,9 @@ SEXP string_info(SEXP string, SEXP font_size, SEXP font_file) {
   double size = REAL(font_size)[0];
 
   struct string_metrics metrics;
-  if (calc_string_info(text, font_path, size, &metrics)) {
-    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
+  int error = calc_string_info(text, font_path, size, &metrics);
+  if (error) {
+    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics: %d", error);
   }
 
   SEXP info = PROTECT(Rf_mkNamed(REALSXP, string_info_names));
@@ -67,8 +68,9 @@ SEXP string_width(SEXP string, SEXP font_size, SEXP font_file) {
   ++n_protect;
   double* info_ptr = REAL(info);
 
-  if (calc_string_width(text, font_path, size, info_ptr)) {
-    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
+  int error = calc_string_width(text, font_path, size, info_ptr);
+  if (error) {
+    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics: %d", error);
   }
 
   UNPROTECT(n_protect);
@@ -88,7 +90,7 @@ SEXP font_info(SEXP font_size, SEXP font_file) {
   struct font_metrics metrics = { 0.0, 0.0, 0.0 };
 
   if (get_font_info(font_path, size, &metrics)) {
-    Rf_errorcall(R_NilValue, "Couldn't compute textbox metrics");
+    Rf_errorcall(R_NilValue, "Couldn't compute font metrics");
   }
 
   SEXP info = Rf_mkNamed(REALSXP, font_info_names);
