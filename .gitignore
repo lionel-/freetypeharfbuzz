@@ -2,3 +2,5 @@ tests/*Rout*
 windows/
 .Rproj.user
 .Rhistory
+src-i386/
+src-x64/
