@@ -7,3 +7,5 @@
 not-cran
 ^tests/.*Rout.*
 ^windows
+^.*\.Rproj$
+^\.Rproj\.user$

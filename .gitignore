@@ -1,2 +1,4 @@
 tests/*Rout*
 windows/
+.Rproj.user
+.Rhistory
