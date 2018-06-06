@@ -6,3 +6,4 @@
 ^tools/harfbuzz.*
 not-cran
 ^tests/.*Rout.*
+^windows
