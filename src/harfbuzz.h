@@ -13,5 +13,7 @@ int init_buffer(const char* string,
                 hb_font_t* font,
                 hb_buffer_t** buffer_out);
 
+int my_hb_font_destroy(hb_font_t* font);
+
 
 #endif

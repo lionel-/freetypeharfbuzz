@@ -46,3 +46,17 @@ int init_buffer(const char* string,
   *buffer_out = buffer;
   return 0;
 }
+
+int my_hb_font_destroy(hb_font_t* font) {
+  int error = 0;
+
+  struct ft_face* face = hb_ft_font_get_face(font);
+  if (error = FT_Done_Face(face)) {
+    goto no_cleanup;
+  }
+
+  hb_font_destroy(font);
+
+ no_cleanup:
+  return error;
+}
