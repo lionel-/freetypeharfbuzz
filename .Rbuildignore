@@ -9,3 +9,4 @@ not-cran
 ^windows
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^TAGS$
