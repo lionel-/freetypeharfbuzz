@@ -1,6 +1,11 @@
 #include "freetype.h"
 #include "harfbuzz.h"
 
+void ft_destroy_face(void* data) {
+  struct ft_face* face = (struct ft_face*) data;
+  FT_Done_Face(face);
+}
+
 int init_font(const char* font_path,
               double font_size,
               hb_font_t** font_out) {
@@ -14,7 +19,7 @@ int init_font(const char* font_path,
   FT_F26Dot6 size_26_6 = font_size * 64;
   FT_Set_Char_Size(face, 0, size_26_6, 0, 0);
 
-  hb_font_t* font = hb_ft_font_create(face, NULL);
+  hb_font_t* font = hb_ft_font_create(face, &ft_destroy_face);
   if (!font) {
     error = 1;
     goto ft_face_cleanup;
@@ -45,18 +50,4 @@ int init_buffer(const char* string,
 
   *buffer_out = buffer;
   return 0;
-}
-
-int my_hb_font_destroy(hb_font_t* font) {
-  int error = 0;
-
-  struct ft_face* face = hb_ft_font_get_face(font);
-  if (error = FT_Done_Face(face)) {
-    goto no_cleanup;
-  }
-
-  hb_font_destroy(font);
-
- no_cleanup:
-  return error;
 }

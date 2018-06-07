@@ -24,7 +24,7 @@ int get_font_info(const char* font_path,
   metrics_out->descent = -hb_extents.descender / 64.0;
   metrics_out->linegap = hb_extents.line_gap / 64.0;
 
-  error = my_hb_font_destroy(font);
+  hb_font_destroy(font);
  no_cleanup:
   return error;
 }
