@@ -1,11 +1,16 @@
 Package: freetypeharfbuzz
-Title: Experimenting with Static Linking of Font Libraries
-Version: 0.0.0.9000
+Title: Deterministic Computation of Textbox Metrics
+Version: 0.1.0
 Authors@R: c(
     person("Lionel", "Henry", ,"lionel@rstudio.com", c("aut", "cre")),
     person("RStudio", role = "cph")
     )
-Description: Experimenting with static linking of font libraries.
+Description: Unlike other tools that dynamically link to the 'Cairo'
+    stack, 'freetypeharfbuzz' is statically linked to specific
+    versions of the 'FreeType' and 'harfbuzz' libraries (2.9 and 1.7.6
+    respectively). This ensures deterministic computation of textbox
+    extents for situations where reproducibility is crucial (for
+    instance unit tests of graphics).
 Depends:
     R (>= 3.1)
 Imports:
