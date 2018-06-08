@@ -10,3 +10,4 @@ not-cran
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^TAGS$
+^appveyor\.yml$
