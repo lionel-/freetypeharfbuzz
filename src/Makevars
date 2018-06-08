@@ -94,11 +94,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 $(HB_BUILD_PATH): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
 		cd $(BUILD_DIR) && \
-		if pkg-config --atleast-pkgconfig-version 0.20 &> /dev/null; then \
-			$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-vanilla.tar.gz; \
-		else \
-			$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz; \
-		fi
+		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz;
 
 $(ARCHIVES):
 	cd $(TOOLS_DIR) && $(MAKE)
