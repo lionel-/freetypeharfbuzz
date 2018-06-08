@@ -48,6 +48,7 @@ $(SHLIB): string-info.c r-interface.c freetype.c utf8.c init.c \
 
 
 $(FT_LIB): $(FT_BUILD_PATH)
+	export CFLAGS="$(CFLAGS) -g0" && \
 	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
@@ -68,6 +69,7 @@ $(FT_BUILD_PATH): $(ARCHIVES)
 
 # Export FreeType flags explicitly for working around pkg-config
 $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
+	export CFLAGS="$(CFLAGS) -g0" && \
 	export LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)" && \
 	export CPPFLAGS="$(FREETYPE_CFLAGS) $(CPPFLAGS)" && \
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
