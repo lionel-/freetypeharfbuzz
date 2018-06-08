@@ -12,7 +12,7 @@ Description: Unlike other tools that dynamically link to the 'Cairo'
     extents for situations where reproducibility is crucial (for
     instance unit tests of graphics).
 Depends:
-    R (>= 3.1)
+    R (>= 3.2)
 Imports:
     fontquiver
 Suggests:
