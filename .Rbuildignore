@@ -11,3 +11,4 @@ not-cran
 ^\.Rproj\.user$
 ^TAGS$
 ^appveyor\.yml$
+^cran-comments\.md$
