@@ -2,6 +2,8 @@
 ^preinst
 ^src/freetype\.[^hc]
 ^src/harfbuzz\.[^hc]
+^src/build$
+^src/target$
 ^tools/freetype.*
 ^tools/harfbuzz.*
 not-cran
