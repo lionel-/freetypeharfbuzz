@@ -1,4 +1,15 @@
 
+This is a resubmission.
+
+* I have adjusted Authors and Licences to reflect the bundling of
+  FreeType and Harfbuzz.
+
+* I have notified the authors of Harfbuzz that the pedantic warning
+  caused by including their C headers poses issues to get packages
+  accepted in CRAN:
+  <https://github.com/harfbuzz/harfbuzz/issues/504#issuecomment-396052904>
+
+
 ## Test environments
 
 * local OS X install, R release
@@ -22,8 +33,6 @@ This warning comes from including the harfbuzz C headers. See
 discussion on their mailing list:
 
 <https://lists.freedesktop.org/archives/harfbuzz/2014-March/004150.html>
-
-It seems best to ignore this warning.
 
 
 ## Reverse dependencies
