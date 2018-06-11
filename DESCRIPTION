@@ -3,7 +3,20 @@ Title: Deterministic Computation of Text Box Metrics
 Version: 0.1.0
 Authors@R: c(
     person("Lionel", "Henry", ,"lionel@rstudio.com", c("aut", "cre")),
-    person("RStudio", role = "cph")
+    person("RStudio", role = "cph"),
+    person("David", "Turner", role = "aut", comment = "FreeType library"),
+    person("Robert", "Wilhelm", role = "aut", comment = "FreeType library"),
+    person("Werner", "Wilhelm", role = "aut", comment = "FreeType library"),
+    person("Behdad", "Esfahbod", role = "aut", comment = "Harfbuzz library"),
+    person("Simon", "Hausmann", role = "aut", comment = "Harfbuzz library"),
+    person("Martin", "Hosken", role = "aut", comment = "Harfbuzz library"),
+    person("Jonathan", "Kew", role = "aut", comment = "Harfbuzz library"),
+    person("Lars", "Knoll", role = "aut", comment = "Harfbuzz library"),
+    person("Werner", "Lemberg", role = "aut", comment = "Harfbuzz library"),
+    person("Roozbeh", "Pournader", role = "aut", comment = "Harfbuzz library"),
+    person("Owen", "Taylor", role = "aut", comment = "Harfbuzz library"),
+    person("David", "Turner", role = "aut", comment = "Harfbuzz library"),
+    person("Red Hat", role = "cph", comment = "Harfbuzz library")
     )
 Description: Unlike other tools that dynamically link to the 'Cairo'
     stack, 'freetypeharfbuzz' is statically linked to specific
@@ -17,7 +30,7 @@ Imports:
     fontquiver
 Suggests:
     testthat
-License: GPL-3
+License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
