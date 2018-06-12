@@ -7,7 +7,7 @@ HB = harfbuzz-$(HB_VERSION)
 
 
 .PHONY: all
-all: $(FT)-vanilla.tar.gz $(HB)-vanilla.tar.gz $(HB)-patched.tar.gz
+all: $(FT)-vanilla.tar.gz $(HB)-patched.tar.gz
 
 
 $(FT)-vanilla.tar.gz:
