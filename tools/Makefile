@@ -17,7 +17,7 @@ $(HB)-vanilla.tar.gz:
 	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.0.1/tools/$(HB)-vanilla.tar.gz" $(HB)-vanilla.tar.gz
 
 $(HB)-patched.tar.gz:
-	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.0.1/tools/$(HB)-patched.tar.gz" $(HB)-patched.tar.gz
+	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.1.0.9000/tools/$(HB)-patched.tar.gz" $(HB)-patched.tar.gz
 
 
 .PHONY: tarballs
