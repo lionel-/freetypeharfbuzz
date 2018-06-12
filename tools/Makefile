@@ -35,7 +35,7 @@ tarballs-harfbuzz:
 	(cd $(HB) && \
 		patch < ../diffs/harfbuzz-pkgconfig.diff && \
 		patch < ../diffs/harfbuzz-flag.diff && \
-		aclocal && autoconf \
+		./autogen.sh \
 	) && \
 	tar -zcf $(HB)-patched.tar.gz $(HB) && \
 	$(MAKE) clean
