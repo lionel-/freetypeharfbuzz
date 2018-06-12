@@ -32,7 +32,11 @@ tarballs-harfbuzz:
 	./download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2 && \
 	tar -xf $(HB).tar.bz2 && \
 	tar -zcf $(HB)-vanilla.tar.gz $(HB) && \
-	(cd $(HB) && patch < ../diffs/harfbuzz-pkgconfig.diff) && \
+	(cd $(HB) && \
+		patch < ../diffs/harfbuzz-pkgconfig.diff && \
+		patch < ../diffs/harfbuzz-flag.diff && \
+		aclocal && autoconf \
+	) && \
 	tar -zcf $(HB)-patched.tar.gz $(HB) && \
 	$(MAKE) clean
 

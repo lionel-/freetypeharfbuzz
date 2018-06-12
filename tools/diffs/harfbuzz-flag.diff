@@ -1,0 +1,26 @@
+diff -u a/configure b/configure
+--- a/configure	2018-06-12 15:05:46.000000000 -0500
++++ b/configure	2018-06-12 15:05:56.000000000 -0500
+@@ -18896,9 +18896,6 @@
+ 	# Make symbols link locally
+ 	LDFLAGS="$LDFLAGS -Bsymbolic-functions"
+ 
+-	# Assorted warnings
+-	CXXFLAGS="$CXXFLAGS -Wcast-align"
+-
+ 	case "$host" in
+ 		*-*-mingw*)
+ 		;;
+diff -u a/configure.ac b/configure.ac
+--- a/configure.ac	2018-06-12 13:44:48.000000000 -0500
++++ b/configure.ac	2018-06-12 13:45:28.000000000 -0500
+@@ -89,9 +89,6 @@
+ 	# Make symbols link locally
+ 	LDFLAGS="$LDFLAGS -Bsymbolic-functions"
+ 
+-	# Assorted warnings
+-	CXXFLAGS="$CXXFLAGS -Wcast-align"
+-
+ 	case "$host" in
+ 		*-*-mingw*)
+ 		;;
