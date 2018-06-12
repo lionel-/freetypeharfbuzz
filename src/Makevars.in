@@ -1,8 +1,10 @@
 
-TARGET_DIR = $(CURDIR)/target
-BUILD_DIR = $(CURDIR)/build
-INST_DIR = $(CURDIR)
-TOOLS_DIR = $(CURDIR)/../tools
+SRC_DIR = @SRC_DIR@
+
+TARGET_DIR = $(SRC_DIR)/target
+BUILD_DIR = $(SRC_DIR)/build
+INST_DIR = $(SRC_DIR)
+TOOLS_DIR = $(SRC_DIR)/../tools
 
 
 FT_VERSION = 2.9
@@ -83,7 +85,7 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 				--without-cairo \
 				--without-fontconfig \
 				--without-glib; \
-			(cp config.log "$(CURDIR)/../tests/harfbuzz-config.log.Rout.fail") \
+			(cp config.log "$(SRC_DIR)/../tests/harfbuzz-config.log.Rout.fail") \
 		} && \
 		{ \
 			echo "#undef HAVE_FT_DONE_MM_VAR" >> config.h; \

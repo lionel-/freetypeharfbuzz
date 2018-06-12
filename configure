@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Solaris `make` doesn't set CURDIR
+sed -e "s|@SRC_DIR@|`pwd`/src|" src/Makevars.in > src/Makevars
