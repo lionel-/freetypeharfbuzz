@@ -33,9 +33,8 @@ tarballs-harfbuzz:
 	tar -xf $(HB).tar.bz2 && \
 	tar -zcf $(HB)-vanilla.tar.gz $(HB) && \
 	(cd $(HB) && \
-		patch < ../diffs/harfbuzz-pkgconfig.diff && \
 		patch < ../diffs/harfbuzz-flag.diff && \
-		./autogen.sh \
+		patch < ../diffs/harfbuzz-pkgconfig.diff \
 	) && \
 	tar -zcf $(HB)-patched.tar.gz $(HB) && \
 	$(MAKE) clean
