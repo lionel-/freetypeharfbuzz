@@ -50,7 +50,13 @@ $(SHLIB): string-info.c r-interface.c freetype.c utf8.c init.c \
 
 
 $(FT_LIB): $(FT_BUILD_PATH)
+	export AR="$(AR)" && \
+	export CC="$(CC)" && \
 	export CFLAGS="$(CFLAGS) -g0" && \
+	export CPPFLAGS="$(CPPFLAGS)" && \
+	export LIBTOOL="$(LIBTOOL)" && \
+	export LDFLAGS="$(LDFLAGS)" && \
+	export RANLIB="$(RANLIB)" && \
 	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 		./configure \
 			--prefix=$(TARGET_DIR) \
@@ -69,11 +75,17 @@ $(FT_BUILD_PATH): $(ARCHIVES)
 		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
 
 
-# Export FreeType flags explicitly for working around pkg-config
 $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
+	export AR="$(AR)" && \
+	export CC="$(CC)" && \
 	export CFLAGS="$(CFLAGS) -g0" && \
-	export LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)" && \
 	export CPPFLAGS="$(FREETYPE_CFLAGS) $(CPPFLAGS)" && \
+	export CXX="$(CXX)" && \
+	export CXXCPP="$(CXXCPP)" && \
+	export CXXFLAGS="$(CXXFLAGS)" && \
+	export LIBTOOL="$(LIBTOOL)" && \
+	export LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)" && \
+	export RANLIB="$(RANLIB)" && \
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 	if ! ./configure \
 		--prefix=$(TARGET_DIR) \
