@@ -75,25 +75,23 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 	export LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)" && \
 	export CPPFLAGS="$(FREETYPE_CFLAGS) $(CPPFLAGS)" && \
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
-		{ \
-			./configure \
-				--prefix=$(TARGET_DIR) \
-				--enable-static=yes \
-				--with-pic=yes \
-				--with-freetype=yes \
-				--without-icu \
-				--without-cairo \
-				--without-fontconfig \
-				--without-glib; \
-			(cp config.log "$(SRC_DIR)/../tests/harfbuzz-config.log.Rout.fail") \
-		} && \
-		{ \
-			echo "#undef HAVE_FT_DONE_MM_VAR" >> config.h; \
-			echo "#undef HAVE_FT_GET_VAR_BLEND_COORDINATES" >> config.h; \
-			echo "#undef HAVE_FT_SET_VAR_BLEND_COORDINATES" >> config.h; \
-		} && \
-		$(MAKE) V=0 && \
-		$(MAKE) install
+	if ! ./configure \
+		--prefix=$(TARGET_DIR) \
+		--enable-static=yes \
+		--with-pic=yes \
+		--with-freetype=yes \
+		--without-icu \
+		--without-cairo \
+		--without-fontconfig \
+		--without-glib; \
+	then \
+		cp config.log "$(SRC_DIR)/../tests/harfbuzz-config.log.Rout.fail" && false; \
+	fi && \
+	echo "#undef HAVE_FT_DONE_MM_VAR" >> config.h && \
+	echo "#undef HAVE_FT_GET_VAR_BLEND_COORDINATES" >> config.h && \
+	echo "#undef HAVE_FT_SET_VAR_BLEND_COORDINATES" >> config.h && \
+	$(MAKE) V=0 && \
+	$(MAKE) install
 
 $(HB_BUILD_PATH): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
