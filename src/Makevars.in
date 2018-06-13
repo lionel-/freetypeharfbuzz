@@ -45,9 +45,14 @@ SRC_FILES = \
 
 
 .PHONY: all
-all: $(SHLIB) autoclean
+all: $(SHLIB)
+	@if [ ! -e not-cran ]; then \
+		echo Cleaning up && \
+		rm -rf $(BUILD_DIR) $(TARGET_DIR) \
+			"../tests/harfbuzz-config.log.Rout.fail"; \
+	fi
 
-$SHLIB: $(SRC_FILES)
+$(SHLIB): $(SRC_FILES)
 
 $(SRC_FILES): $(FT_LIB) $(HB_LIB)
 
@@ -118,18 +123,10 @@ $(ARCHIVES):
 
 .PHONY: clean
 clean:
-	rm -rf $(FT)* $(HB)* $(BUILD_DIR) $(TARGET_DIR) \
-		"../tests/harfbuzz-config.log.Rout.fail"
 
 .PHONY: distclean
 distclean: clean
 	rm -rf *.so *.o
-
-.PHONY: autoclean
-autoclean: $(SHLIB)
-	@if [ ! -e not-cran ]; then \
-		$(MAKE) -f Makevars clean; \
-	fi
 
 
 # Use this to print an envvar:
