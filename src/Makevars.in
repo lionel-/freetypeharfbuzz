@@ -37,17 +37,19 @@ PKG_LIBS = \
 
 ARCHIVES = \
 	$(TOOLS_DIR)/$(FT)-vanilla.tar.gz \
-	$(TOOLS_DIR)/$(HB)-vanilla.tar.gz \
 	$(TOOLS_DIR)/$(HB)-patched.tar.gz
+
+SRC_FILES = \
+	font-info.c  harfbuzz.c  r-interface.c  utf8.c \
+	freetype.c   init.c      string-info.c
 
 
 .PHONY: all
-all: $(FT_LIB) $(HB_LIB) | $(SHLIB) autoclean
+all: $(SHLIB) autoclean
 
+$SHLIB: $(SRC_FILES)
 
-$(SHLIB): string-info.c r-interface.c freetype.c utf8.c init.c \
-	$(FT_LIB) $(HB_LIB)
-
+$(SRC_FILES): $(FT_LIB) $(HB_LIB)
 
 $(FT_LIB): $(FT_BUILD_PATH)
 	export AR="$(AR)" && \
