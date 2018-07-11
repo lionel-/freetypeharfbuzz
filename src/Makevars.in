@@ -116,7 +116,7 @@ $(ARCHIVES):
 .PHONY: clean
 clean:
 	rm -rf \
-		$(BUILD_DIR) $(TARGET_DIR) \
+		$(BUILD_DIR) \
 		"../tests/harfbuzz-config.log.Rout.fail"
 
 
