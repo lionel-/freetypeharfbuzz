@@ -39,22 +39,14 @@ ARCHIVES = \
 	$(TOOLS_DIR)/$(FT)-vanilla.tar.gz \
 	$(TOOLS_DIR)/$(HB)-patched.tar.gz
 
-SRC_FILES = \
-	font-info.c  harfbuzz.c  r-interface.c  utf8.c \
-	freetype.c   init.c      string-info.c
-
 
 .PHONY: all
 all: $(SHLIB)
 	@if [ ! -e not-cran ]; then \
-		echo Cleaning up && \
-		rm -rf $(BUILD_DIR) $(TARGET_DIR) \
-			"../tests/harfbuzz-config.log.Rout.fail"; \
+		$(MAKE) -f Makevars clean; \
 	fi
 
-$(SHLIB): $(SRC_FILES)
-
-$(SRC_FILES): $(FT_LIB) $(HB_LIB)
+$(OBJECTS): $(FT_LIB) $(HB_LIB)
 
 $(FT_LIB): $(FT_BUILD_PATH)
 	export AR="$(AR)" && \
@@ -65,16 +57,16 @@ $(FT_LIB): $(FT_BUILD_PATH)
 	export LDFLAGS="$(LDFLAGS)" && \
 	export RANLIB="$(RANLIB)" && \
 	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
-		./configure \
-			--prefix=$(TARGET_DIR) \
-			--enable-static=yes \
-			--with-pic=yes \
-			--without-zlib \
-			--without-bzip2 \
-			--without-png \
-			--without-harfbuzz && \
-		$(MAKE) && \
-		$(MAKE) install
+	./configure \
+		--prefix=$(TARGET_DIR) \
+		--enable-static=yes \
+		--with-pic=yes \
+		--without-zlib \
+		--without-bzip2 \
+		--without-png \
+		--without-harfbuzz && \
+	$(MAKE) && \
+	$(MAKE) install
 
 $(FT_BUILD_PATH): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
@@ -123,10 +115,9 @@ $(ARCHIVES):
 
 .PHONY: clean
 clean:
-
-.PHONY: distclean
-distclean: clean
-	rm -rf *.so *.o
+	rm -rf \
+		$(BUILD_DIR) $(TARGET_DIR) \
+		"../tests/harfbuzz-config.log.Rout.fail"
 
 
 # Use this to print an envvar:
