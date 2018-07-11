@@ -48,7 +48,11 @@ all: $(SHLIB)
 
 $(OBJECTS): $(FT_LIB) $(HB_LIB)
 
-$(FT_LIB): $(FT_BUILD_PATH)
+$(FT_LIB): $(ARCHIVES)
+	mkdir -p $(BUILD_DIR) && \
+	cd $(BUILD_DIR) && \
+	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz && \
+	cd freetype-$(FT_VERSION) && \
 	AR="$(AR)"							&& export AR && \
 	CC="$(CC)"							&& export CC && \
 	CFLAGS="$(CFLAGS) -g0"	&& export CFLAGS && \
@@ -56,7 +60,6 @@ $(FT_LIB): $(FT_BUILD_PATH)
 	LIBTOOL="$(LIBTOOL)"		&& export LIBTOOL && \
 	LDFLAGS="$(LDFLAGS)"		&& export LDFLAGS && \
 	RANLIB="$(RANLIB)"			&& export RANLIB && \
-	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 	./configure \
 		--prefix=$(TARGET_DIR) \
 		--enable-static=yes \
@@ -68,13 +71,11 @@ $(FT_LIB): $(FT_BUILD_PATH)
 	$(MAKE) && \
 	$(MAKE) install
 
-$(FT_BUILD_PATH): $(ARCHIVES)
+$(HB_LIB): $(FT_LIB) $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
-		cd $(BUILD_DIR) && \
-		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
-
-
-$(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
+	cd $(BUILD_DIR) && \
+	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz && \
+	cd harfbuzz-$(HB_VERSION) && \
 	AR="$(AR)"																&& export AR && \
 	CC="$(CC)"																&& export CC && \
 	CFLAGS="$(CFLAGS) -g0"										&& export CFLAGS && \
@@ -85,7 +86,6 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 	LIBTOOL="$(LIBTOOL)"											&& export LIBTOOL && \
 	LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)"			&& export LDFLAGS && \
 	RANLIB="$(RANLIB)"												&& export RANLIB && \
-	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 	if ! ./configure \
 		--prefix=$(TARGET_DIR) \
 		--enable-static=yes \
@@ -103,11 +103,6 @@ $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
 	echo "#undef HAVE_FT_SET_VAR_BLEND_COORDINATES" >> config.h && \
 	$(MAKE) V=0 && \
 	$(MAKE) install
-
-$(HB_BUILD_PATH): $(ARCHIVES)
-	mkdir -p $(BUILD_DIR) && \
-		cd $(BUILD_DIR) && \
-		$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz;
 
 $(ARCHIVES):
 	cd $(TOOLS_DIR) && $(MAKE)
