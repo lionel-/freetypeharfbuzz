@@ -49,13 +49,13 @@ all: $(SHLIB)
 $(OBJECTS): $(FT_LIB) $(HB_LIB)
 
 $(FT_LIB): $(FT_BUILD_PATH)
-	export AR="$(AR)" && \
-	export CC="$(CC)" && \
-	export CFLAGS="$(CFLAGS) -g0" && \
-	export CPPFLAGS="$(CPPFLAGS)" && \
-	export LIBTOOL="$(LIBTOOL)" && \
-	export LDFLAGS="$(LDFLAGS)" && \
-	export RANLIB="$(RANLIB)" && \
+	AR="$(AR)"							&& export AR && \
+	CC="$(CC)"							&& export CC && \
+	CFLAGS="$(CFLAGS) -g0"	&& export CFLAGS && \
+	CPPFLAGS="$(CPPFLAGS)"	&& export CPPFLAGS && \
+	LIBTOOL="$(LIBTOOL)"		&& export LIBTOOL && \
+	LDFLAGS="$(LDFLAGS)"		&& export LDFLAGS && \
+	RANLIB="$(RANLIB)"			&& export RANLIB && \
 	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 	./configure \
 		--prefix=$(TARGET_DIR) \
@@ -75,16 +75,16 @@ $(FT_BUILD_PATH): $(ARCHIVES)
 
 
 $(HB_LIB): $(FT_LIB) $(HB_BUILD_PATH)
-	export AR="$(AR)" && \
-	export CC="$(CC)" && \
-	export CFLAGS="$(CFLAGS) -g0" && \
-	export CPPFLAGS="$(FREETYPE_CFLAGS) $(CPPFLAGS)" && \
-	export CXX="$(CXX)" && \
-	export CXXCPP="$(CXXCPP)" && \
-	export CXXFLAGS="$(CXXFLAGS)" && \
-	export LIBTOOL="$(LIBTOOL)" && \
-	export LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)" && \
-	export RANLIB="$(RANLIB)" && \
+	AR="$(AR)"																&& export AR && \
+	CC="$(CC)"																&& export CC && \
+	CFLAGS="$(CFLAGS) -g0"										&& export CFLAGS && \
+	CPPFLAGS="$(FREETYPE_CFLAGS) $(CPPFLAGS)" && export CPPFLAGS && \
+	CXX="$(CXX)"															&& export CXX && \
+	CXXCPP="$(CXXCPP)"												&& export CXXCPP && \
+	CXXFLAGS="$(CXXFLAGS)"										&& export CXXFLAGS && \
+	LIBTOOL="$(LIBTOOL)"											&& export LIBTOOL && \
+	LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)"			&& export LDFLAGS && \
+	RANLIB="$(RANLIB)"												&& export RANLIB && \
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 	if ! ./configure \
 		--prefix=$(TARGET_DIR) \
