@@ -1,28 +1,25 @@
 
-$(INCLUDE_DIR): $(INCLUDE_ARCHIVE)
+$(INCLUDE_DIR):
 	cd $(TARGET_DIR) && \
+	$(TOOLS_DIR)/download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.2.0/src/target/include.tar.gz" include.tar.gz && \
 	$(TOOLS_DIR)/untar.sh include.tar.gz
-
-$(INCLUDE_ARCHIVE):
-	cd $(TARGET_DIR) && \
-	$(TOOLS_DIR)/download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.2.0/src/target/include.tar.gz" include.tar.gz
 
 
 LIBS_ARCHIVE_FILE = @STATIC_FILE@
 LIBS_ARCHIVE = $(TARGET_DIR)/$(LIBS_ARCHIVE_FILE)
 
-$(STATIC_LIBS): $(LIBS_ARCHIVE)
+$(STATIC_LIBS):
 	cd $(TARGET_DIR) && \
+	$(TOOLS_DIR)/download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.2.0/src/target/$(LIBS_ARCHIVE_FILE)" $(LIBS_ARCHIVE_FILE) && \
 	$(TOOLS_DIR)/untar.sh $(LIBS_ARCHIVE_FILE)
-
-$(LIBS_ARCHIVE):
-	cd $(TARGET_DIR) && \
-	$(TOOLS_DIR)/download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.2.0/src/target/$(LIBS_ARCHIVE_FILE)" $(LIBS_ARCHIVE_FILE)
 
 
 .PHONY: clean
 clean:
-	rm -rf $(TARGET_DIR)/*
+	rm -rf \
+		$(TARGET_DIR)/bin \
+		$(TARGET_DIR)/share \
+		$(TARGET_DIR)/include/*
 
 
 # Local Variables:

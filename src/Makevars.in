@@ -39,7 +39,7 @@ all: $(SHLIB)
 $(OBJECTS): $(STATIC_LIBS) $(INCLUDE_DIR)
 
 
-# This must define STATIC_LIBS, INCLUDE_DIR, and phony clean targets
+# This must define STATIC_LIBS, phony INCLUDE_DIR and phony clean targets
 include @MK_FILE@
 
 
