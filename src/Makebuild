@@ -11,8 +11,6 @@ ARCHIVES = \
 $(INCLUDE_DIR):
 
 
-FT_CFLAGS = -I$(TARGET_DIR)/include/freetype2
-
 $(FT_STATIC_LIB): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
 	cd $(BUILD_DIR) && \
@@ -37,6 +35,10 @@ $(FT_STATIC_LIB): $(ARCHIVES)
 	$(MAKE) install
 
 
+HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -g0 $(CFLAGS)
+HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -g0 $(CXXFLAGS)
+HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
+
 $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
 	cd $(BUILD_DIR) && \
@@ -44,17 +46,18 @@ $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(ARCHIVES)
 	cd harfbuzz-$(HB_VERSION) && \
 	AR="$(AR)"																&& export AR && \
 	CC="$(CC)"																&& export CC && \
-	CFLAGS="$(CFLAGS) -g0"										&& export CFLAGS && \
-	CPPFLAGS="$(FT_CFLAGS) $(CPPFLAGS)" 			&& export CPPFLAGS && \
+	CFLAGS="$(HB_CFLAGS)"											&& export CFLAGS && \
+	CPPFLAGS="$(CPPFLAGS)" 										&& export CPPFLAGS && \
 	CXX="$(CXX)"															&& export CXX && \
 	CXXCPP="$(CXXCPP)"												&& export CXXCPP && \
-	CXXFLAGS="$(CXXFLAGS)"										&& export CXXFLAGS && \
+	CXXFLAGS="$(HB_CXXFLAGS)"									&& export CXXFLAGS && \
 	LIBTOOL="$(LIBTOOL)"											&& export LIBTOOL && \
-	LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)"			&& export LDFLAGS && \
+	LDFLAGS="$(HB_LDFLAGS)"										&& export LDFLAGS && \
 	RANLIB="$(RANLIB)"												&& export RANLIB && \
 	if ! ./configure \
 		--prefix=$(TARGET_DIR) \
 		--enable-static=yes \
+		--enable-shared=no \
 		--with-pic=yes \
 		--with-freetype=yes \
 		--without-icu \
