@@ -1,0 +1,30 @@
+
+$(INCLUDE_DIR): $(INCLUDE_ARCHIVE)
+	cd $(TARGET_DIR) && \
+	$(TOOLS_DIR)/untar.sh include.tar.gz
+
+$(INCLUDE_ARCHIVE):
+	cd $(TARGET_DIR) && \
+	$(TOOLS_DIR)/download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.2.0/src/target/include.tar.gz" include.tar.gz
+
+
+LIBS_ARCHIVE_FILE = fthb-apple-static.tar.gz
+LIBS_ARCHIVE = $(TARGET)/$(LIBS_ARCHIVE_FILE)
+
+$(STATIC_LIBS): $(LIBS_ARCHIVE)
+	cd $(TARGET_DIR) && \
+	$(TOOLS_DIR)/untar.sh $(LIBS_ARCHIVE_FILE)
+
+$(LIBS_ARCHIVE):
+	cd $(TARGET_DIR) && \
+	$(TOOLS_DIR)/download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.2.0/src/target/$(LIBS_ARCHIVE_FILE)" $(LIBS_ARCHIVE_FILE)
+
+
+.PHONY: clean
+clean:
+	rm -rf $(TARGET_DIR)/*
+
+
+# Local Variables:
+# mode: makefile
+# End:

@@ -1,0 +1,87 @@
+
+BUILD_DIR = $(SRC_DIR)/build
+FT_BUILD_PATH = $(BUILD_DIR)/$(FT)
+HB_BUILD_PATH = $(BUILD_DIR)/$(HB)
+
+ARCHIVES = \
+	$(TOOLS_DIR)/$(FT)-vanilla.tar.gz \
+	$(TOOLS_DIR)/$(HB)-patched.tar.gz
+
+
+$(INCLUDE_DIR):
+
+
+FT_CFLAGS = -I$(TARGET_DIR)/include/freetype2
+
+$(FT_STATIC_LIB): $(ARCHIVES)
+	mkdir -p $(BUILD_DIR) && \
+	cd $(BUILD_DIR) && \
+	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz && \
+	cd freetype-$(FT_VERSION) && \
+	AR="$(AR)"							&& export AR && \
+	CC="$(CC)"							&& export CC && \
+	CFLAGS="$(CFLAGS) -g0"	&& export CFLAGS && \
+	CPPFLAGS="$(CPPFLAGS)"	&& export CPPFLAGS && \
+	LIBTOOL="$(LIBTOOL)"		&& export LIBTOOL && \
+	LDFLAGS="$(LDFLAGS)"		&& export LDFLAGS && \
+	RANLIB="$(RANLIB)"			&& export RANLIB && \
+	./configure \
+		--prefix=$(TARGET_DIR) \
+		--enable-static=yes \
+		--with-pic=yes \
+		--without-zlib \
+		--without-bzip2 \
+		--without-png \
+		--without-harfbuzz && \
+	$(MAKE) && \
+	$(MAKE) install
+
+
+$(HB_STATIC_LIB): $(FT_STATIC_LIB) $(ARCHIVES)
+	mkdir -p $(BUILD_DIR) && \
+	cd $(BUILD_DIR) && \
+	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz && \
+	cd harfbuzz-$(HB_VERSION) && \
+	AR="$(AR)"																&& export AR && \
+	CC="$(CC)"																&& export CC && \
+	CFLAGS="$(CFLAGS) -g0"										&& export CFLAGS && \
+	CPPFLAGS="$(FT_CFLAGS) $(CPPFLAGS)" 			&& export CPPFLAGS && \
+	CXX="$(CXX)"															&& export CXX && \
+	CXXCPP="$(CXXCPP)"												&& export CXXCPP && \
+	CXXFLAGS="$(CXXFLAGS)"										&& export CXXFLAGS && \
+	LIBTOOL="$(LIBTOOL)"											&& export LIBTOOL && \
+	LDFLAGS="$(FREETYPE_LIBS) $(LDFLAGS)"			&& export LDFLAGS && \
+	RANLIB="$(RANLIB)"												&& export RANLIB && \
+	if ! ./configure \
+		--prefix=$(TARGET_DIR) \
+		--enable-static=yes \
+		--with-pic=yes \
+		--with-freetype=yes \
+		--without-icu \
+		--without-cairo \
+		--without-fontconfig \
+		--without-glib; \
+	then \
+		cp config.log "$(SRC_DIR)/../tests/harfbuzz-config.log.Rout.fail" && false; \
+	fi && \
+	echo "#undef HAVE_FT_DONE_MM_VAR" >> config.h && \
+	echo "#undef HAVE_FT_GET_VAR_BLEND_COORDINATES" >> config.h && \
+	echo "#undef HAVE_FT_SET_VAR_BLEND_COORDINATES" >> config.h && \
+	$(MAKE) V=0 && \
+	$(MAKE) install
+
+
+$(ARCHIVES):
+	cd $(TOOLS_DIR) && $(MAKE)
+
+.PHONY: clean
+clean:
+	rm -rf \
+		$(BUILD_DIR) \
+		$(TARGET_DIR)/*
+		"../tests/harfbuzz-config.log.Rout.fail"
+
+
+# Local Variables:
+# mode: makefile
+# End:
