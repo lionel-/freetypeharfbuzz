@@ -11,18 +11,20 @@ ARCHIVES = \
 $(INCLUDE_DIR):
 
 
+FT_CFLAGS = -DNDEBUG -g0 $(CFLAGS)
+
 $(FT_STATIC_LIB): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
 	cd $(BUILD_DIR) && \
 	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz && \
 	cd freetype-$(FT_VERSION) && \
-	AR="$(AR)"							&& export AR && \
-	CC="$(CC)"							&& export CC && \
-	CFLAGS="$(CFLAGS) -g0"	&& export CFLAGS && \
-	CPPFLAGS="$(CPPFLAGS)"	&& export CPPFLAGS && \
-	LIBTOOL="$(LIBTOOL)"		&& export LIBTOOL && \
-	LDFLAGS="$(LDFLAGS)"		&& export LDFLAGS && \
-	RANLIB="$(RANLIB)"			&& export RANLIB && \
+	AR="$(AR)"						 && export AR && \
+	CC="$(CC)"						 && export CC && \
+	CFLAGS="$(FT_CFLAGS)"	 && export CFLAGS && \
+	CPPFLAGS="$(CPPFLAGS)" && export CPPFLAGS && \
+	LIBTOOL="$(LIBTOOL)"	 && export LIBTOOL && \
+	LDFLAGS="$(LDFLAGS)"	 && export LDFLAGS && \
+	RANLIB="$(RANLIB)"		 && export RANLIB && \
 	./configure \
 		--prefix=$(TARGET_DIR) \
 		--enable-static=yes \
@@ -35,8 +37,8 @@ $(FT_STATIC_LIB): $(ARCHIVES)
 	$(MAKE) install
 
 
-HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -g0 $(CFLAGS)
-HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -g0 $(CXXFLAGS)
+HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(CFLAGS)
+HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(CXXFLAGS)
 HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
 
 $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(ARCHIVES)
@@ -44,16 +46,16 @@ $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(ARCHIVES)
 	cd $(BUILD_DIR) && \
 	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz && \
 	cd harfbuzz-$(HB_VERSION) && \
-	AR="$(AR)"																&& export AR && \
-	CC="$(CC)"																&& export CC && \
-	CFLAGS="$(HB_CFLAGS)"											&& export CFLAGS && \
-	CPPFLAGS="$(CPPFLAGS)" 										&& export CPPFLAGS && \
-	CXX="$(CXX)"															&& export CXX && \
-	CXXCPP="$(CXXCPP)"												&& export CXXCPP && \
-	CXXFLAGS="$(HB_CXXFLAGS)"									&& export CXXFLAGS && \
-	LIBTOOL="$(LIBTOOL)"											&& export LIBTOOL && \
-	LDFLAGS="$(HB_LDFLAGS)"										&& export LDFLAGS && \
-	RANLIB="$(RANLIB)"												&& export RANLIB && \
+	AR="$(AR)"								&& export AR && \
+	CC="$(CC)"								&& export CC && \
+	CFLAGS="$(HB_CFLAGS)"			&& export CFLAGS && \
+	CPPFLAGS="$(CPPFLAGS)" 		&& export CPPFLAGS && \
+	CXX="$(CXX)"							&& export CXX && \
+	CXXCPP="$(CXXCPP)"				&& export CXXCPP && \
+	CXXFLAGS="$(HB_CXXFLAGS)"	&& export CXXFLAGS && \
+	LIBTOOL="$(LIBTOOL)"			&& export LIBTOOL && \
+	LDFLAGS="$(HB_LDFLAGS)"		&& export LDFLAGS && \
+	RANLIB="$(RANLIB)"				&& export RANLIB && \
 	if ! ./configure \
 		--prefix=$(TARGET_DIR) \
 		--enable-static=yes \

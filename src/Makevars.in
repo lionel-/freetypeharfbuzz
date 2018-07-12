@@ -18,6 +18,7 @@ STATIC_LIBS = $(FT_STATIC_LIB) $(HB_STATIC_LIB)
 INCLUDE_DIR = $(TARGET_DIR)/include
 INCLUDE_ARCHIVE = $(TARGET_DIR)/include.tar.gz
 
+PKG_CFLAGS = -DNDEBUG
 
 PKG_CPPFLAGS  = \
 	-I$(TARGET_DIR)/include/harfbuzz \
