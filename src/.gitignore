@@ -5,3 +5,4 @@ freetype-*
 *.so
 *.dll
 Makevars
+Makestatic
