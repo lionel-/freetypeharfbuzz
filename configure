@@ -11,3 +11,5 @@ else
 fi
 
 ${SED} -e "s|@MK_FILE@|$MK_FILE|" src/Makevars.in > src/Makevars
+
+mkdir -p src/target
