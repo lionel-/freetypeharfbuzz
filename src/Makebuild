@@ -78,7 +78,9 @@ $(ARCHIVES):
 clean:
 	rm -rf \
 		$(BUILD_DIR) \
-		$(TARGET_DIR)/* \
+		$(TARGET_DIR)/bin \
+		$(TARGET_DIR)/share \
+		$(TARGET_DIR)/include \
 		"$(SRC_DIR)/../tests/harfbuzz-config.log.Rout.fail"
 
 
