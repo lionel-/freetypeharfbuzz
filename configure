@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # We sed in SRC_DIR because Solaris `make` doesn't set SRC_DIR
 SRC_DIR="`pwd`"
