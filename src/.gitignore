@@ -1,5 +1,8 @@
 build/
-target/
+target/lib
+target/bin
+target/share
+target/include
 harfbuzz-*
 freetype-*
 *.o
