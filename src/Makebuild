@@ -78,8 +78,8 @@ $(ARCHIVES):
 clean:
 	rm -rf \
 		$(BUILD_DIR) \
-		$(TARGET_DIR)/*
-		"../tests/harfbuzz-config.log.Rout.fail"
+		$(TARGET_DIR)/* \
+		"$(SRC_DIR)/../tests/harfbuzz-config.log.Rout.fail"
 
 
 # Local Variables:
