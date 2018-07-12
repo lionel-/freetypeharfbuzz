@@ -1,5 +1,9 @@
 
-This release is meant to fix the CRAN check failures.
+This release should fix the CRAN check failures:
+
+* Forward relevant env vars (CC, CFLAGS, etc) to sub builds
+* Add GNU make to sysreqs
+* Correctly set up make deps to fix parallel builds
 
 
 ## Test environments
