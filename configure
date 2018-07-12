@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
-# We sed in SRC_DIR because Solaris `make` doesn't set CURDIR
-SED="sed -e s|@SRC_DIR@|"`pwd`"/src|"
+# We sed in SRC_DIR because Solaris `make` doesn't set SRC_DIR
+SRC_DIR="`pwd`"
+SED="sed -e s|@SRC_DIR@|${SRC_DIR}/src|"
 
 if [ $(uname) = Darwin ]; then
     MK_FILE="Makeapple"
