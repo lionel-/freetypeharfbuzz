@@ -11,6 +11,8 @@ ARCHIVES = \
 $(INCLUDE_DIR):
 
 
+FT_CFLAGS = -DNDEBUG -g0 $(CFLAGS)
+
 $(FT_STATIC_LIB): $(ARCHIVES)
 	mkdir -p $(BUILD_DIR) && \
 	cd $(BUILD_DIR) && \
@@ -18,7 +20,7 @@ $(FT_STATIC_LIB): $(ARCHIVES)
 	cd freetype-$(FT_VERSION) && \
 	AR="$(AR)"							&& export AR && \
 	CC="$(CC)"							&& export CC && \
-	CFLAGS="$(CFLAGS) -g0"	&& export CFLAGS && \
+	CFLAGS="$(FT_CFLAGS)"		&& export CFLAGS && \
 	CPPFLAGS="$(CPPFLAGS)"	&& export CPPFLAGS && \
 	LIBTOOL="$(LIBTOOL)"		&& export LIBTOOL && \
 	LDFLAGS="$(LDFLAGS)"		&& export LDFLAGS && \
@@ -35,7 +37,7 @@ $(FT_STATIC_LIB): $(ARCHIVES)
 	$(MAKE) install
 
 
-HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -g0 $(CFLAGS)
+HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -g0 -DNDEBUG $(CFLAGS)
 HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -g0 $(CXXFLAGS)
 HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
 
