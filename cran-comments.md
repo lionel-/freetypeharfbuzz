@@ -1,13 +1,5 @@
 
-This is a resubmission.
-
-* I have adjusted Authors and Licences to reflect the bundling of
-  FreeType and Harfbuzz.
-
-* I have notified the authors of Harfbuzz that the pedantic warning
-  caused by including their C headers poses issues to get packages
-  accepted in CRAN:
-  <https://github.com/harfbuzz/harfbuzz/issues/504#issuecomment-396052904>
+This release is meant to fix the CRAN check failures.
 
 
 ## Test environments
@@ -20,9 +12,14 @@ This is a resubmission.
 
 ## R CMD check results
 
-0 errors | 1 warning | 0 notes
+0 errors | 1 warning | 2 notes
 
-The following warning occurs when compiling with `-pedantic`:
+NOTE: information on .o files is not available
+NOTE: installed size is > 5Mb
+
+
+WARNING: As discussed previously the following warning occurs when
+compiling with `-pedantic`:
 
 ```
 Found the following significant warnings during compilation:
