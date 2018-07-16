@@ -11,8 +11,9 @@ HB_VERSION = 1.7.6
 FT = freetype-$(FT_VERSION)
 HB = harfbuzz-$(HB_VERSION)
 
-FT_STATIC_LIB = ${TARGET_DIR}/lib/libfreetype.a
-HB_STATIC_LIB = ${TARGET_DIR}/lib/libharfbuzz.a
+LIB_DIR = $(TARGET_DIR)/lib
+FT_STATIC_LIB = $(LIB_DIR)/libfreetype.a
+HB_STATIC_LIB = $(LIB_DIR)/libharfbuzz.a
 STATIC_LIBS = $(FT_STATIC_LIB) $(HB_STATIC_LIB)
 
 INCLUDE_DIR = $(TARGET_DIR)/include
@@ -36,10 +37,10 @@ all: $(SHLIB)
 		$(MAKE) -f Makevars clean; \
 	fi
 
-$(OBJECTS): $(STATIC_LIBS) $(INCLUDE_DIR)
+$(OBJECTS): $(LIB_DIR) $(INCLUDE_DIR)
 
 
-# This must define STATIC_LIBS, phony INCLUDE_DIR and phony clean targets
+# This must define LIB_DIR, INCLUDE_DIR and phony clean targets
 include @MK_FILE@
 
 
