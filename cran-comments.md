@@ -1,4 +1,6 @@
 
+This is a resubmission with exported functions + examples.
+
 This release should fix the CRAN check failures:
 
 * Forward relevant env vars (CC, CFLAGS, etc) to sub builds
