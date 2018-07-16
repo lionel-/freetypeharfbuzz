@@ -1,4 +1,9 @@
 
+# freetypeharfbuzz 0.2.1
+
+* Export `font_info()`, `str_info()` and `str_width()`.
+
+
 # freetypeharfbuzz 0.2.0
 
 * Fixes to the build system

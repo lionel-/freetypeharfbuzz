@@ -15,14 +15,14 @@ test_that("extents takes kerning into account", {
 })
 
 test_that("inputs are type-checked", {
-  expect_error(string_info("foo", font_file = letters), "must be a length 1 character")
-  expect_error(string_info(globalenv(), font_file = "foo"), "must be a length 1 character")
-  expect_error(string_info("foo", font_size = "bar"), "must be a length 1 numeric")
-  expect_error(string_info("foo", font_size = 1:3), "must be a length 1 numeric")
+  expect_error(str_info("foo", font_file = letters), "must be a length 1 character")
+  expect_error(str_info(globalenv(), font_file = "foo"), "must be a length 1 character")
+  expect_error(str_info("foo", font_size = "bar"), "must be a length 1 numeric")
+  expect_error(str_info("foo", font_size = 1:3), "must be a length 1 numeric")
 })
 
 test_that("can supply integer or double size", {
-  expect_identical(string_info("foo", 12), string_info("foo", 12L))
+  expect_identical(str_info("foo", 12), str_info("foo", 12L))
 })
 
 test_that("can retrieve typographical metrics", {
@@ -62,9 +62,9 @@ test_that("string metrics are computed for various edge cases", {
 
 test_that("supports fractional font sizes", {
   widths <- c(
-    string_width("foo", 12),
-    string_width("foo", 12.1),
-    string_width("foo", 12.2)
+    str_width("foo", 12),
+    str_width("foo", 12.1),
+    str_width("foo", 12.2)
   )
   expect_true(all(widths == cummax(widths)))
 })
