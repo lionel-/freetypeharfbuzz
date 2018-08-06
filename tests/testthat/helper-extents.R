@@ -5,5 +5,5 @@ rounded_width <- function(text) {
 
 expect_metrics <- function(string, w, h, a, d) {
   metrics <- round(str_info(string), 4)
-  expect_identical(metrics, c(width = w, height = h, ascent = a, descent = d))
+  expect_equal(metrics, c(width = w, height = h, ascent = a, descent = d))
 }

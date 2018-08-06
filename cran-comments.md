@@ -1,8 +1,10 @@
 
 This is a resubmission with exported functions + examples.
 
-This release should fix the CRAN check failures:
+This release should fix the CRAN check issues:
 
+* Now exports functions and examples
+* Uses equality test rather than identical to fix --without-long-double
 * Forward relevant env vars (CC, CFLAGS, etc) to sub builds
 * Add GNU make to sysreqs
 * Correctly set up make deps to fix parallel builds

@@ -1,6 +1,7 @@
 
-# freetypeharfbuzz 0.2.1
+# freetypeharfbuzz 0.2.2
 
+* Maintenance release for CRAN checks
 * Export `font_info()`, `str_info()` and `str_width()`.
 
 
