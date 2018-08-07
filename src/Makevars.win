@@ -8,12 +8,17 @@ PKG_CPPFLAGS = \
 PKG_LIBS = -L${RWINLIB}/lib${R_ARCH} -lharfbuzz -lfreetype -lpng \
  -lbz2 -lz
 
-all: clean winlibs
+.PHONY: all
+all: winlibs teardown
 
+.PHONY: winlibs
 winlibs:
 	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R" ${VERSION}
 
+.PHONY: teardown
+teardown: $(SHLIB)
+	rm -rf ../windows
+
+.PHONY: clean
 clean:
-	rm -f $(SHLIB) $(OBJECTS)
-
-
+	rm -rf $(SHLIB) $(OBJECTS) ../windows

@@ -6,7 +6,7 @@
 ^src/target$
 ^tools/freetype.*
 ^tools/harfbuzz.*
-not-cran
+^src/not-cran$
 ^tests/.*Rout.*
 ^windows
 ^.*\.Rproj$

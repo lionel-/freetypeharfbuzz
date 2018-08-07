@@ -9,8 +9,10 @@ ARCHIVES = $(FT_ARCHIVE) $(HB_ARCHIVE)
 
 
 $(INCLUDE_DIR):
-$(LIB_DIR): $(FT_STATIC_LIB) $(HB_STATIC_LIB)
 
+
+$(FT_ARCHIVE):
+	cd $(TOOLS_DIR) && $(MAKE)
 
 FT_CFLAGS = -DNDEBUG -g0 $(CFLAGS)
 
@@ -77,14 +79,13 @@ $(HB_STATIC_LIB): $(FT_STATIC_LIB)
 	$(MAKE) install
 
 
-$(FT_ARCHIVE):
-	cd $(TOOLS_DIR) && $(MAKE)
-
-.PHONY: clean
-clean:
+.PHONY: teardown
+teardown: $(SHLIB)
 	rm -rf \
 		$(BUILD_DIR) \
-		$(TARGET_DIR) \
+		$(TARGET_DIR)/bin \
+		$(TARGET_DIR)/include \
+		$(TARGET_DIR)/share \
 		"$(SRC_DIR)/../tests/harfbuzz-config.log.Rout.fail"
 
 

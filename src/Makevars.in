@@ -32,15 +32,13 @@ PKG_LIBS = \
 
 
 .PHONY: all
-all: $(SHLIB)
-	@if [ ! -e not-cran ]; then \
-		$(MAKE) -f Makevars clean; \
-	fi
+all: $(SHLIB) teardown
 
-$(OBJECTS): $(LIB_DIR) $(INCLUDE_DIR)
+$(OBJECTS): $(FT_STATIC_LIB) $(HB_STATIC_LIB) $(INCLUDE_DIR)
 
 
-# This must define LIB_DIR, INCLUDE_DIR and phony clean targets
+# This must define FT_STATIC_LIB, HB_STATIC_LIB, INCLUDE_DIR and
+# teardown targets
 include @MK_FILE@
 
 
