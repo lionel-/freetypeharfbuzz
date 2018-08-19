@@ -1,7 +1,7 @@
 
 BUILD_DIR = $(SRC_DIR)/build
-FT_BUILD_PATH = $(BUILD_DIR)/$(FT)
-HB_BUILD_PATH = $(BUILD_DIR)/$(HB)
+FT_BUILD_DIR = $(BUILD_DIR)/$(FT)
+HB_BUILD_DIR = $(BUILD_DIR)/$(HB)
 
 FT_ARCHIVE = $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
 HB_ARCHIVE = $(TOOLS_DIR)/$(HB)-patched.tar.gz
@@ -40,15 +40,17 @@ $(FT_STATIC_LIB): $(FT_ARCHIVE)
 	$(MAKE) install
 
 
+$(HB_BUILD_DIR): $(FT_ARCHIVE)
+	mkdir -p $(BUILD_DIR) && \
+	cd $(BUILD_DIR) && \
+	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz
+
 HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(CFLAGS)
 HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(CXXFLAGS)
 HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
 
-$(HB_STATIC_LIB): $(FT_STATIC_LIB)
-	mkdir -p $(BUILD_DIR) && \
-	cd $(BUILD_DIR) && \
-	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz && \
-	cd harfbuzz-$(HB_VERSION) && \
+$(HB_STATIC_LIB): $(FT_STATIC_LIB) $(HB_BUILD_DIR)
+	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
 	AR="$(AR)"								&& export AR && \
 	CC="$(CC)"								&& export CC && \
 	CFLAGS="$(HB_CFLAGS)"			&& export CFLAGS && \
