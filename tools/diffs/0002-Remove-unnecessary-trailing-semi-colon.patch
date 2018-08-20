@@ -1,0 +1,89 @@
+From 0dcc97a5a266c0b198b58a3c33e2e9e83ee15e24 Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Sun, 19 Aug 2018 17:00:50 +0200
+Subject: [PATCH 2/5] Remove unnecessary trailing semi-colon
+
+---
+ src/hb-buffer-private.hh           | 8 ++++----
+ src/hb-ot-layout-common-private.hh | 2 +-
+ src/hb-ot-layout-private.hh        | 4 ++--
+ src/hb-ot-map-private.hh           | 2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/hb-buffer-private.hh b/src/hb-buffer-private.hh
+index af4767f5..f6ae36c5 100644
+--- a/src/hb-buffer-private.hh
++++ b/src/hb-buffer-private.hh
+@@ -58,9 +58,9 @@
+ static_assert ((sizeof (hb_glyph_info_t) == 20), "");
+ static_assert ((sizeof (hb_glyph_info_t) == sizeof (hb_glyph_position_t)), "");
+ 
+-HB_MARK_AS_FLAG_T (hb_buffer_flags_t);
+-HB_MARK_AS_FLAG_T (hb_buffer_serialize_flags_t);
+-HB_MARK_AS_FLAG_T (hb_buffer_diff_flags_t);
++HB_MARK_AS_FLAG_T (hb_buffer_flags_t)
++HB_MARK_AS_FLAG_T (hb_buffer_serialize_flags_t)
++HB_MARK_AS_FLAG_T (hb_buffer_diff_flags_t)
+ 
+ enum hb_buffer_scratch_flags_t {
+   HB_BUFFER_SCRATCH_FLAG_DEFAULT			= 0x00000000u,
+@@ -77,7 +77,7 @@ enum hb_buffer_scratch_flags_t {
+   HB_BUFFER_SCRATCH_FLAG_COMPLEX2			= 0x04000000u,
+   HB_BUFFER_SCRATCH_FLAG_COMPLEX3			= 0x08000000u,
+ };
+-HB_MARK_AS_FLAG_T (hb_buffer_scratch_flags_t);
++HB_MARK_AS_FLAG_T (hb_buffer_scratch_flags_t)
+ 
+ 
+ /*
+diff --git a/src/hb-ot-layout-common-private.hh b/src/hb-ot-layout-common-private.hh
+index c5e7f521..c655f03f 100644
+--- a/src/hb-ot-layout-common-private.hh
++++ b/src/hb-ot-layout-common-private.hh
+@@ -580,7 +580,7 @@ struct LookupFlag : HBUINT16
+ 
+ } /* namespace OT */
+ /* This has to be outside the namespace. */
+-HB_MARK_AS_FLAG_T (OT::LookupFlag::Flags);
++HB_MARK_AS_FLAG_T (OT::LookupFlag::Flags)
+ namespace OT {
+ 
+ struct Lookup
+diff --git a/src/hb-ot-layout-private.hh b/src/hb-ot-layout-private.hh
+index 870ba73f..e9ea66de 100644
+--- a/src/hb-ot-layout-private.hh
++++ b/src/hb-ot-layout-private.hh
+@@ -66,7 +66,7 @@ enum hb_ot_layout_glyph_props_flags_t
+ 					  HB_OT_LAYOUT_GLYPH_PROPS_LIGATED |
+ 					  HB_OT_LAYOUT_GLYPH_PROPS_MULTIPLIED
+ };
+-HB_MARK_AS_FLAG_T (hb_ot_layout_glyph_props_flags_t);
++HB_MARK_AS_FLAG_T (hb_ot_layout_glyph_props_flags_t)
+ 
+ 
+ /*
+@@ -265,7 +265,7 @@ enum hb_unicode_props_flags_t {
+   UPROPS_MASK_Cf_ZWJ	= 0x0100u,
+   UPROPS_MASK_Cf_ZWNJ	= 0x0200u
+ };
+-HB_MARK_AS_FLAG_T (hb_unicode_props_flags_t);
++HB_MARK_AS_FLAG_T (hb_unicode_props_flags_t)
+ 
+ static inline void
+ _hb_glyph_info_set_unicode_props (hb_glyph_info_t *info, hb_buffer_t *buffer)
+diff --git a/src/hb-ot-map-private.hh b/src/hb-ot-map-private.hh
+index e6bd8ea5..78afa6ac 100644
+--- a/src/hb-ot-map-private.hh
++++ b/src/hb-ot-map-private.hh
+@@ -160,7 +160,7 @@ enum hb_ot_map_feature_flags_t {
+   F_MANUAL_ZWJ		= 0x0008u, /* Don't skip over ZWJ when matching **input**. */
+   F_GLOBAL_SEARCH	= 0x0010u  /* If feature not found in LangSys, look for it in global feature list and pick one. */
+ };
+-HB_MARK_AS_FLAG_T (hb_ot_map_feature_flags_t);
++HB_MARK_AS_FLAG_T (hb_ot_map_feature_flags_t)
+ /* Macro version for where const is desired. */
+ #define F_COMBINE(l,r) (hb_ot_map_feature_flags_t ((unsigned int) (l) | (unsigned int) (r)))
+ 
+-- 
+2.15.2 (Apple Git-101.1)
+

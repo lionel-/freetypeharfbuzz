@@ -1,0 +1,28 @@
+From 4c2fcb80701dd96cd1fec6777872792004063aab Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Mon, 20 Aug 2018 14:43:45 +0200
+Subject: [PATCH 5/5] Silence gcc warning
+
+Might cause UB in some circumstances
+https://lists.freedesktop.org/archives/harfbuzz/2014-March/004159.html
+---
+ src/hb-common.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/hb-common.h b/src/hb-common.h
+index 26200ce1..d35a1db6 100644
+--- a/src/hb-common.h
++++ b/src/hb-common.h
+@@ -325,7 +325,8 @@ typedef enum
+    *
+    *   http://lists.freedesktop.org/archives/harfbuzz/2014-March/004150.html
+    */
+-  _HB_SCRIPT_MAX_VALUE				= HB_TAG_MAX, /*< skip >*/
++  _HB_SCRIPT_MAX_VALUE                          = 0x7FFFFFF,
++  _HB_SCRIPT_NEG                                = -1,
+   _HB_SCRIPT_MAX_VALUE_SIGNED			= HB_TAG_MAX_SIGNED /*< skip >*/
+ 
+ } hb_script_t;
+-- 
+2.15.2 (Apple Git-101.1)
+

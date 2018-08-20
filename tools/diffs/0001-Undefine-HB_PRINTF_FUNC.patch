@@ -1,0 +1,25 @@
+From c49af05f9bedda086e56af04c86626e475161cfa Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Sun, 19 Aug 2018 16:58:08 +0200
+Subject: [PATCH 1/5] Undefine HB_PRINTF_FUNC()
+
+---
+ src/hb-private.hh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/hb-private.hh b/src/hb-private.hh
+index daa496e9..6e8f5ce6 100644
+--- a/src/hb-private.hh
++++ b/src/hb-private.hh
+@@ -108,7 +108,7 @@ extern "C" void  hb_free_impl(void *ptr);
+ #if __GNUC__ >= 3
+ #define HB_PURE_FUNC	__attribute__((pure))
+ #define HB_CONST_FUNC	__attribute__((const))
+-#define HB_PRINTF_FUNC(format_idx, arg_idx) __attribute__((__format__ (__printf__, format_idx, arg_idx)))
++#define HB_PRINTF_FUNC(format_idx, arg_idx)
+ #else
+ #define HB_PURE_FUNC
+ #define HB_CONST_FUNC
+-- 
+2.15.2 (Apple Git-101.1)
+

@@ -1,0 +1,34 @@
+From d1ea0b3ecb1739a8ebf168038dc5d664aed88206 Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Sun, 19 Aug 2018 17:13:14 +0200
+Subject: [PATCH 3/5] Initialise offsets
+
+---
+ src/hb-subset-glyf.cc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/hb-subset-glyf.cc b/src/hb-subset-glyf.cc
+index 0b84c856..0a01468e 100644
+--- a/src/hb-subset-glyf.cc
++++ b/src/hb-subset-glyf.cc
+@@ -48,7 +48,7 @@ _calculate_glyf_and_loca_prime_size (const OT::glyf::accelerator_t &glyf,
+     *instruction_start = 0;
+     *instruction_end = 0;
+ 
+-    unsigned int start_offset, end_offset;
++    unsigned int start_offset = 0, end_offset = 0;
+     if (unlikely (!(glyf.get_offsets(next_glyph, &start_offset, &end_offset)
+                     && glyf.remove_padding(start_offset, &end_offset))))
+     {
+@@ -167,7 +167,7 @@ _write_glyf_and_loca_prime (hb_subset_plan_t              *plan,
+   bool success = true;
+   for (unsigned int i = 0; i < glyph_ids.len; i++)
+   {
+-    unsigned int start_offset, end_offset;
++    unsigned int start_offset = 0, end_offset = 0;
+     if (unlikely (!(glyf.get_offsets (glyph_ids[i], &start_offset, &end_offset)
+                     && glyf.remove_padding(start_offset, &end_offset))))
+       end_offset = start_offset = 0;
+-- 
+2.15.2 (Apple Git-101.1)
+

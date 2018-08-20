@@ -34,7 +34,12 @@ tarballs-harfbuzz:
 	tar -zcf $(HB)-vanilla.tar.gz $(HB) && \
 	(cd $(HB) && \
 		patch < ../diffs/harfbuzz-flag.diff && \
-		patch < ../diffs/harfbuzz-pkgconfig.diff \
+		patch < ../diffs/harfbuzz-pkgconfig.diff && \
+		patch -p1 < ../diffs/0001-Undefine-HB_PRINTF_FUNC.patch && \
+		patch -p1 < ../diffs/0002-Remove-unnecessary-trailing-semi-colon.patch && \
+		patch -p1 < ../diffs/0003-Initialise-offsets.patch && \
+		patch -p1 < ../diffs/0004-Cast-to-void-before-memset.patch && \
+		patch -p1 < ../diffs/0005-Silence-gcc-warning.patch \
 	) && \
 	tar -zcf $(HB)-patched.tar.gz $(HB) && \
 	$(MAKE) clean

@@ -1,0 +1,28 @@
+From e33920b336cb531fea9d6f618a0d5b40c7b3d75a Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Mon, 20 Aug 2018 14:24:06 +0200
+Subject: [PATCH 4/5] Cast to void* before memset
+
+To avoid -Wclass-memaccess warning
+---
+ src/hb-set-private.hh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/hb-set-private.hh b/src/hb-set-private.hh
+index 3615c50e..eba3e85d 100644
+--- a/src/hb-set-private.hh
++++ b/src/hb-set-private.hh
+@@ -50,8 +50,8 @@ struct hb_set_t
+ 
+   struct page_t
+   {
+-    inline void init0 (void) { memset (&v, 0, sizeof (v)); }
+-    inline void init1 (void) { memset (&v, 0xff, sizeof (v)); }
++    inline void init0 (void) { memset ((void*) &v, 0, sizeof (v)); }
++    inline void init1 (void) { memset ((void*) &v, 0xff, sizeof (v)); }
+ 
+     inline unsigned int len (void) const
+     { return ARRAY_LENGTH_CONST (v); }
+-- 
+2.15.2 (Apple Git-101.1)
+
