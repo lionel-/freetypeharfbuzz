@@ -21,13 +21,13 @@ $(FT_STATIC_LIB): $(FT_ARCHIVE)
 	cd $(BUILD_DIR) && \
 	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz && \
 	cd freetype-$(FT_VERSION) && \
-	AR="$(AR)"						 && export AR && \
-	CC="$(CC)"						 && export CC && \
-	CFLAGS="$(FT_CFLAGS)"	 && export CFLAGS && \
-	CPPFLAGS="$(CPPFLAGS)" && export CPPFLAGS && \
-	LIBTOOL="$(LIBTOOL)"	 && export LIBTOOL && \
-	LDFLAGS="$(LDFLAGS)"	 && export LDFLAGS && \
-	RANLIB="$(RANLIB)"		 && export RANLIB && \
+	AR="$(AR)"		&& export AR && \
+	CC="$(CC)"		&& export CC && \
+	CFLAGS="$(FT_CFLAGS)"	&& export CFLAGS && \
+	CPPFLAGS="$(CPPFLAGS)"	&& export CPPFLAGS && \
+	LIBTOOL="$(LIBTOOL)"	&& export LIBTOOL && \
+	LDFLAGS="$(LDFLAGS)"	&& export LDFLAGS && \
+	RANLIB="$(RANLIB)"	&& export RANLIB && \
 	./configure \
 		--prefix=$(TARGET_DIR) \
 		--enable-static=yes \
@@ -51,16 +51,16 @@ HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
 
 $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(HB_BUILD_DIR)
 	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
-	AR="$(AR)"								&& export AR && \
-	CC="$(CC)"								&& export CC && \
-	CFLAGS="$(HB_CFLAGS)"			&& export CFLAGS && \
+	AR="$(AR)"			&& export AR && \
+	CC="$(CC)"			&& export CC && \
+	CFLAGS="$(HB_CFLAGS)"		&& export CFLAGS && \
 	CPPFLAGS="$(CPPFLAGS)" 		&& export CPPFLAGS && \
-	CXX="$(CXX)"							&& export CXX && \
-	CXXCPP="$(CXXCPP)"				&& export CXXCPP && \
+	CXX="$(CXX)"			&& export CXX && \
+	CXXCPP="$(CXXCPP)"		&& export CXXCPP && \
 	CXXFLAGS="$(HB_CXXFLAGS)"	&& export CXXFLAGS && \
-	LIBTOOL="$(LIBTOOL)"			&& export LIBTOOL && \
+	LIBTOOL="$(LIBTOOL)"		&& export LIBTOOL && \
 	LDFLAGS="$(HB_LDFLAGS)"		&& export LDFLAGS && \
-	RANLIB="$(RANLIB)"				&& export RANLIB && \
+	RANLIB="$(RANLIB)"		&& export RANLIB && \
 	if ! ./configure \
 		--prefix=$(TARGET_DIR) \
 		--enable-static=yes \
