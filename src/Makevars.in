@@ -4,7 +4,7 @@ SRC_DIR = @SRC_DIR@
 TARGET_DIR = $(SRC_DIR)/target
 TOOLS_DIR = $(SRC_DIR)/../tools
 
-
+FTHB_VERSION = 0.2.2
 FT_VERSION = 2.9
 HB_VERSION = 1.7.6
 
@@ -32,13 +32,20 @@ PKG_LIBS = \
 
 
 .PHONY: all
-all: $(SHLIB) teardown
+all: $(SHLIB)
 
 $(OBJECTS): $(FT_STATIC_LIB) $(HB_STATIC_LIB) $(INCLUDE_DIR)
 
 
-# This must define FT_STATIC_LIB, HB_STATIC_LIB, INCLUDE_DIR and
-# teardown targets
+INCLUDE_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/src/target/include.tar.gz"
+
+$(INCLUDE_DIR): $(HB_STATIC_LIB)
+	cd $(TARGET_DIR) && \
+	$(TOOLS_DIR)/download.sh $(INCLUDE_URL) include.tar.gz && \
+	$(TOOLS_DIR)/untar.sh include.tar.gz
+
+
+# This must define FT_STATIC_LIB and HB_STATIC_LIB targets
 include @MK_FILE@
 
 
