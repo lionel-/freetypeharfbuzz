@@ -12,6 +12,7 @@ if (!file.exists(sprintf("../windows/cairo-%s/include/cairo/cairo.h", VERSION)))
   dir.create("../windows", showWarnings = FALSE)
   unzip("lib.zip", exdir = "../windows")
   unlink("lib.zip")
+
+  unlink(sprintf("../windows/cairo-%s/include", VERSION), recursive = TRUE)
+  unzip("../tools/include-windows.zip", exdir = sprintf("../windows/cairo-%s", VERSION))
 }
-
-
