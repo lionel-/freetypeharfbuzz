@@ -14,8 +14,6 @@ matrix:
     - r: devel
     - os: osx
       latex: false
-  allow_failures:
-    - os: osx
 
 after_success:
   - if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi
