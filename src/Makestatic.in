@@ -14,6 +14,16 @@ $(HB_STATIC_LIB): $(LIBS_ARCHIVE_FILE)
 	$(TOOLS_DIR)/untar.sh $(LIBS_ARCHIVE_FILE)
 
 
+INCLUDE_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/src/target/include.tar.gz"
+INCLUDE_FILE = $(TARGET_DIR)/include.tar.gz
+
+$(INCLUDE_FILE):
+	$(TOOLS_DIR)/download.sh $(INCLUDE_URL) $(INCLUDE_FILE)
+
+$(INCLUDE_DIR): $(HB_STATIC_LIB) $(INCLUDE_FILE)
+	cd $(TARGET_DIR) && $(TOOLS_DIR)/untar.sh include.tar.gz
+
+
 # Local Variables:
 # mode: makefile
 # End:

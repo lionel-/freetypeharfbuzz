@@ -76,8 +76,11 @@ $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(HB_BUILD_DIR)
 	echo "#undef HAVE_FT_SET_VAR_BLEND_COORDINATES" >> config.h && \
 	echo "#define NDEBUG 1" >> config.h && \
 	$(MAKE) V=0 && \
-	$(MAKE) install && \
-	rm -rf $(BUILD_DIR) $(TARGET_DIR)/bin $(TARGET_DIR)/include $(TARGET_DIR)/share
+	$(MAKE) install
+
+
+# Installed above
+$(INCLUDE_DIR):
 
 
 # Local Variables:
