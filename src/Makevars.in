@@ -38,11 +38,13 @@ $(OBJECTS): $(FT_STATIC_LIB) $(HB_STATIC_LIB) $(INCLUDE_DIR)
 
 
 INCLUDE_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/src/target/include.tar.gz"
+INCLUDE_FILE = $(TARGET_DIR)/include.tar.gz
 
-$(INCLUDE_DIR): $(HB_STATIC_LIB)
-	cd $(TARGET_DIR) && \
-	$(TOOLS_DIR)/download.sh $(INCLUDE_URL) include.tar.gz && \
-	$(TOOLS_DIR)/untar.sh include.tar.gz
+$(INCLUDE_FILE):
+	$(TOOLS_DIR)/download.sh $(INCLUDE_URL) $(INCLUDE_FILE)
+
+$(INCLUDE_DIR): $(HB_STATIC_LIB) $(INCLUDE_FILE)
+	cd $(TARGET_DIR) && $(TOOLS_DIR)/untar.sh include.tar.gz
 
 
 # This must define FT_STATIC_LIB and HB_STATIC_LIB targets

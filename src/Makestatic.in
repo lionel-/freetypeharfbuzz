@@ -7,7 +7,7 @@ STATIC_LIBS_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSI
 $(FT_STATIC_LIB):
 
 $(LIBS_ARCHIVE_FILE):
-	$(TOOLS_DIR)/download.sh $(STATIC_LIBS_URL) $(LIBS_ARCHIVE_FILE)
+	$(TOOLS_DIR)/download.sh $(STATIC_LIBS_URL) $(TARGET_DIR)/$(LIBS_ARCHIVE_FILE)
 
 $(HB_STATIC_LIB): $(LIBS_ARCHIVE_FILE)
 	cd $(TARGET_DIR) && \
