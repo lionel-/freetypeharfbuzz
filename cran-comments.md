@@ -1,13 +1,5 @@
 
-This is a resubmission with exported functions + examples.
-
-This release should fix the CRAN check issues:
-
-* Now exports functions and examples
-* Uses equality test rather than identical to fix --without-long-double
-* Forward relevant env vars (CC, CFLAGS, etc) to sub builds
-* Add GNU make to sysreqs
-* Correctly set up make deps to fix parallel builds
+This release should fix all warnings.
 
 
 ## Test environments
@@ -20,24 +12,9 @@ This release should fix the CRAN check issues:
 
 ## R CMD check results
 
-0 errors | 1 warning | 2 notes
+0 errors | 0 warnings | 1 note
 
-NOTE: information on .o files is not available
 NOTE: installed size is > 5Mb
-
-
-WARNING: As discussed previously the following warning occurs when
-compiling with `-pedantic`:
-
-```
-Found the following significant warnings during compilation:
-ISO C restricts enumerator values to range of 'int' [-Wpedantic]
-```
-
-This warning comes from including the harfbuzz C headers. See
-discussion on their mailing list:
-
-<https://lists.freedesktop.org/archives/harfbuzz/2014-March/004150.html>
 
 
 ## Reverse dependencies
