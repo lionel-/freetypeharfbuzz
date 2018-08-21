@@ -16,7 +16,7 @@ FT_CFLAGS = -DNDEBUG -g0 $(CFLAGS)
 $(FT_STATIC_LIB): $(FT_ARCHIVE)
 	mkdir -p $(BUILD_DIR) && \
 	cd $(BUILD_DIR) && \
-	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-vanilla.tar.gz && \
+	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-patched.tar.gz && \
 	cd freetype-$(FT_VERSION) && \
 	AR="$(AR)"		&& export AR && \
 	CC="$(CC)"		&& export CC && \

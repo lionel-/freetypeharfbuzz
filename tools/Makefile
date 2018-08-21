@@ -1,4 +1,6 @@
 
+FTHB_VERSION = 0.2.2
+
 FT_VERSION ?= 2.9
 HB_VERSION ?= 1.7.6
 
@@ -7,17 +9,20 @@ HB = harfbuzz-$(HB_VERSION)
 
 
 .PHONY: all
-all: $(FT)-vanilla.tar.gz $(HB)-patched.tar.gz
+all: $(FT)-patched.tar.gz $(HB)-patched.tar.gz
 
 
 $(FT)-vanilla.tar.gz:
-	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.0.1/tools/$(FT)-vanilla.tar.gz" $(FT)-vanilla.tar.gz
+	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(FT)-vanilla.tar.gz" $(FT)-vanilla.tar.gz
+
+$(FT)-patched.tar.gz:
+	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(FT)-patched.tar.gz" $(FT)-vanilla.tar.gz
 
 $(HB)-vanilla.tar.gz:
-	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.0.1/tools/$(HB)-vanilla.tar.gz" $(HB)-vanilla.tar.gz
+	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(HB)-vanilla.tar.gz" $(HB)-vanilla.tar.gz
 
 $(HB)-patched.tar.gz:
-	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v0.1.0.9000/tools/$(HB)-patched.tar.gz" $(HB)-patched.tar.gz
+	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(HB)-patched.tar.gz" $(HB)-patched.tar.gz
 
 
 .PHONY: tarballs
