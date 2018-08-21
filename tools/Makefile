@@ -25,7 +25,13 @@ tarballs: tarballs-freetype tarballs-harfbuzz
 
 .PHONY: tarballs-freetype
 tarballs-freetype:
-	./download.sh "https://download.savannah.gnu.org/releases/freetype/$(FT).tar.gz" $(FT)-vanilla.tar.gz
+	./download.sh "https://download.savannah.gnu.org/releases/freetype/$(FT).tar.gz" $(FT)-vanilla.tar.gz && \
+	tar -xf $(FT)-vanilla.tar.gz $(FT) && \
+	(cd $(FT) && \
+		patch -p1 < ../diffs/freetype/0001-Remove-pragma-diagnostics.patch \
+	) && \
+	tar -zcf $(FT)-patched.tar.gz $(FT) && \
+	$(MAKE) clean
 
 .PHONY: tarballs-harfbuzz
 tarballs-harfbuzz:
@@ -53,6 +59,7 @@ clean:
 distclean: clean
 	rm -rf \
 		$(FT)-vanilla.tar.gz \
+		$(FT)-patched.tar.gz \
 		$(HB)-vanilla.tar.gz \
 		$(HB)-patched.tar.gz
 

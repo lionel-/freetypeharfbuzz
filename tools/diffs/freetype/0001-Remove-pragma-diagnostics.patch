@@ -1,0 +1,37 @@
+From 1ee7ede8b408cc91e7092f0478a2975ef4fca8e8 Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Tue, 21 Aug 2018 11:39:58 +0200
+Subject: [PATCH] Remove pragma diagnostics
+
+---
+ builds/unix/ftconfig.in | 1 -
+ builds/vms/ftconfig.h   | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/builds/unix/ftconfig.in b/builds/unix/ftconfig.in
+index 5159693..070db2b 100644
+--- a/builds/unix/ftconfig.in
++++ b/builds/unix/ftconfig.in
+@@ -301,7 +301,6 @@ FT_BEGIN_HEADER
+ #elif ( FT_SIZEOF_LONG == 4 )       && \
+       defined( HAVE_LONG_LONG_INT ) && \
+       defined( __GNUC__ )
+-#pragma GCC diagnostic ignored "-Wlong-long"
+ #define FT_LONG64
+ #define FT_INT64   long long int
+ #define FT_UINT64  unsigned long long int
+diff --git a/builds/vms/ftconfig.h b/builds/vms/ftconfig.h
+index fa4aa11..d7b66bd 100644
+--- a/builds/vms/ftconfig.h
++++ b/builds/vms/ftconfig.h
+@@ -253,7 +253,6 @@ FT_BEGIN_HEADER
+ #elif ( FT_SIZEOF_LONG == 4 )       && \
+       defined( HAVE_LONG_LONG_INT ) && \
+       defined( __GNUC__ )
+-#pragma GCC diagnostic ignored "-Wlong-long"
+ #define FT_LONG64
+ #define FT_INT64   long long int
+ #define FT_UINT64  unsigned long long int
+-- 
+2.15.2 (Apple Git-101.1)
+
