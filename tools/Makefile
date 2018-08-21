@@ -1,5 +1,5 @@
 
-FTHB_VERSION = 0.2.2
+FTHB_VERSION = 0.2.2.9000
 
 FT_VERSION ?= 2.9
 HB_VERSION ?= 1.7.6
@@ -16,7 +16,7 @@ $(FT)-vanilla.tar.gz:
 	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(FT)-vanilla.tar.gz" $(FT)-vanilla.tar.gz
 
 $(FT)-patched.tar.gz:
-	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(FT)-patched.tar.gz" $(FT)-vanilla.tar.gz
+	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(FT)-patched.tar.gz" $(FT)-patched.tar.gz
 
 $(HB)-vanilla.tar.gz:
 	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(HB)-vanilla.tar.gz" $(HB)-vanilla.tar.gz
