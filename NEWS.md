@@ -1,4 +1,6 @@
 
+# freetypeharfbuzz 0.2.2.9000
+
 # freetypeharfbuzz 0.2.2
 
 * Maintenance release for CRAN checks
