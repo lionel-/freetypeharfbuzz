@@ -10,7 +10,7 @@ if [ -n "$FTHB_BUILD" ]; then
 elif [ $(uname) = Darwin ]; then
     MK_FILE="Makestatic"
     sed -e "s|@STATIC_FILE@|fthb-apple-static.tar.gz|" src/Makestatic.in > src/Makestatic
-elif [ false && $(uname) = Linux ] && [ $(arch) = x86_64 ]; then
+elif [ $(uname) = LinuxDisabledForNow ] && [ $(arch) = x86_64 ]; then
     MK_FILE="Makestatic"
     sed -e "s|@STATIC_FILE@|fthb-linux-static.tar.gz|" src/Makestatic.in > src/Makestatic
 else
