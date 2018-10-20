@@ -29,6 +29,7 @@ Depends:
 Imports:
     fontquiver
 Suggests:
+    covr,
     testthat
 SystemRequirements:
     GNU make
