@@ -33,7 +33,8 @@ tarballs-freetype:
 	./download.sh "https://download.savannah.gnu.org/releases/freetype/$(FT).tar.gz" $(FT)-vanilla.tar.gz && \
 	tar -xf $(FT)-vanilla.tar.gz $(FT) && \
 	(cd $(FT) && \
-		patch -p1 < ../diffs/freetype/0001-Remove-pragma-diagnostics.patch \
+		patch -p1 < ../diffs/freetype/0001-Remove-pragma-diagnostics.patch && \
+		patch -p1 < ../diffs/freetype/0002-Remove-amiga-files.patch \
 	) && \
 	tar -zcf $(FT)-patched.tar.gz $(FT) && \
 	$(MAKE) clean

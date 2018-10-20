@@ -1,0 +1,2133 @@
+From 281e6d3e6fa61081a79b5740cf9206c8258582d1 Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Sat, 20 Oct 2018 18:55:44 +0200
+Subject: [PATCH] Remove amiga files
+
+Caused a CMD check grep warning related to encoding
+---
+ builds/amiga/README                    | 110 -----
+ builds/amiga/include/config/ftconfig.h |  55 ---
+ builds/amiga/include/config/ftmodule.h | 160 --------
+ builds/amiga/makefile                  | 299 --------------
+ builds/amiga/makefile.os4              | 303 --------------
+ builds/amiga/smakefile                 | 303 --------------
+ builds/amiga/src/base/ftdebug.c        | 297 --------------
+ builds/amiga/src/base/ftsystem.c       | 530 -------------------------
+ 8 files changed, 2057 deletions(-)
+ delete mode 100644 builds/amiga/README
+ delete mode 100644 builds/amiga/include/config/ftconfig.h
+ delete mode 100644 builds/amiga/include/config/ftmodule.h
+ delete mode 100644 builds/amiga/makefile
+ delete mode 100644 builds/amiga/makefile.os4
+ delete mode 100644 builds/amiga/smakefile
+ delete mode 100644 builds/amiga/src/base/ftdebug.c
+ delete mode 100644 builds/amiga/src/base/ftsystem.c
+
+diff --git a/builds/amiga/README b/builds/amiga/README
+deleted file mode 100644
+index 29e97d6..0000000
+--- a/builds/amiga/README
++++ /dev/null
+@@ -1,110 +0,0 @@
+-
+-README for the builds/amiga subdirectory.
+-
+-Copyright 2005-2018 by
+-Werner Lemberg and Detlef Würkner.
+-
+-This file is part of the FreeType project, and may only be used, modified,
+-and distributed under the terms of the FreeType project license,
+-LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+-indicate that you have read the license and understand and accept it
+-fully.
+-
+-
+-The makefile.os4 is for the AmigaOS4 SDK.  To use it, type
+-"make -f makefile.os4", it produces a link library libft2_ppc.a.
+-
+-The makefile is for ppc-morphos-gcc-2.95.3-bin.tgz (gcc 2.95.3 hosted on
+-68k-Amiga producing MorphOS-PPC-binaries from http://www.morphos.de).
+-To use it, type "make assign", then "make"; it produces a link library
+-libft2_ppc.a.
+-
+-The smakefile is a makefile for Amiga SAS/C 6.58 (no longer available,
+-latest sold version was 6.50, updates can be found in Aminet).  It is
+-based on the version found in the sourcecode of ttf.library 0.83b for
+-FreeType 1.3.1 from Richard Griffith (ragriffi@sprynet.com,
+-http://ragriffi.home.sprynet.com).
+-
+-You will also need the latest include files and amiga.lib from the
+-Amiga web site (http://www.amiga.com/3.9/download/NDK3.9.lha) for
+-AmigaOS 3.9; the generated code should work under AmigaOS 2.04 and up.
+-
+-To use it, call "smake assign" and then "smake" from the builds/amiga
+-directory.  The results are:
+-
+-- A link library "ft2_680x0.lib" (where x depends on the setting of
+-  the CPU entry in the smakefile) containing all FreeType2 parts
+-  except of the init code, debugging code, and the system interface
+-  code.
+-
+-- ftsystem.o, an object module containing the standard version of the
+-  system interface code which uses fopen() fclose() fread() fseek()
+-  ftell() malloc() realloc() and free() from lib:sc.lib (not pure).
+-
+-- ftsystempure.o, an object module containing the pure version of the
+-  system interface code which uses Open() Close() Read() Seek()
+-  ExamineFH() AsmAllocPooled() AsmFreePooled() etc.  This version can
+-  be used in both normal programs and in Amiga run-time shared system
+-  librarys (can be linked with lib:libinit.o, no copying of DATA and
+-  BSS hunks for each OpenLibrary() necessary).  Source code is in
+-  src/base/ftsystem.c.
+-
+-- ftdebug.o, an object module containing the standard version of the
+-  debugging code which uses vprintf() and exit() (not pure).
+-  Debugging can be turned on in FT:include/freetype/config/ftoption.h
+-  and with FT_SetTraceLevel().
+-
+-- ftdebugpure.o, an object module containing the pure version of the
+-  debugging code which uses KVPrintf() from lib:debug.lib and no
+-  exit().  For debugging of Amiga run-time shared system libraries.
+-  Source code is in src/base/ftdebug.c.
+-
+-- NO ftinit.o.  Because linking with a link library should result in
+-  linking only the needed object modules in it, but standard
+-  ftsystem.o would force ALL FreeType2 modules to be linked to your
+-  program, I decided to use a different scheme: You must #include
+-  FT:src/base/ftinit.c in your sourcecode and specify with #define
+-  statements which modules you need.  See
+-  include/freetype/config/ftmodule.h.
+-
+-
+-To use in your own programs:
+-
+-- Insert the #define and #include statements from top of
+-  include/freetype/config/ftmodule.h in your source code and
+-  uncomment the #define statements for the FreeType2 modules you need.
+-
+-- You can use either PARAMETERS=REGISTER or PARAMETERS=STACK for
+-  calling the FreeType2 functions, because the link library and the
+-  object files are compiled with PARAMETERS=BOTH.
+-
+-- "smake assign" (assign "FT:" to the FreeType2 main directory).
+-
+-- Compile your program.
+-
+-- Link with either ftsystem.o or ftsystempure.o, if debugging enabled
+-  with either ftdebug.o or (ftdebugpure.o and lib:debug.lib), and with
+-  ft2_680x0.lib as link library.
+-
+-
+-To adapt to other compilers:
+-
+-- The standard ANSI C maximum length of 31 significant characters in
+-  identifiers is not enough for FreeType2.  Check if your compiler has
+-  a minimum length of 40 significant characters or can be switched to
+-  it.  "idlen=40" is the option for SAS/C.  Setting #define
+-  HAVE_LIMIT_ON_IDENTS in an include file may also work (not tested).
+-
+-- Make sure that the include directory in builds/amiga is searched
+-  before the normal FreeType2 include directory, so you are able to
+-  replace problematic include files with your own version (same may be
+-  useful for the src directory).
+-
+-- An example of how to replace/workaround a problematic include file
+-  is include/freetype/config/ftconfig.h; it changes a #define that
+-  would prevent SAS/C from generating XDEF's where it should do that and
+-  then includes the standard FreeType2 include file.
+-
+-Local Variables:
+-coding: latin-1
+-End:
+diff --git a/builds/amiga/include/config/ftconfig.h b/builds/amiga/include/config/ftconfig.h
+deleted file mode 100644
+index 0217e0e..0000000
+--- a/builds/amiga/include/config/ftconfig.h
++++ /dev/null
+@@ -1,55 +0,0 @@
+-/***************************************************************************/
+-/*                                                                         */
+-/*  ftconfig.h                                                             */
+-/*                                                                         */
+-/*    Amiga-specific configuration file (specification only).              */
+-/*                                                                         */
+-/*  Copyright 2005-2018 by                                                 */
+-/*  Werner Lemberg and Detlef Würkner.                                     */
+-/*                                                                         */
+-/*  This file is part of the FreeType project, and may only be used,       */
+-/*  modified, and distributed under the terms of the FreeType project      */
+-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+-/*  this file you indicate that you have read the license and              */
+-/*  understand and accept it fully.                                        */
+-/*                                                                         */
+-/***************************************************************************/
+-
+-/*
+- * This is an example how to override the default FreeType2 header files
+- * with Amiga-specific changes. When the compiler searches this directory
+- * before the default directory, we can do some modifications.
+- *
+- * Here we must change FT_EXPORT_DEF so that SAS/C does
+- * generate the needed XDEFs.
+- */
+-
+-#if 0
+-#define FT_EXPORT_DEF( x )  extern  x
+-#endif
+-
+-#undef FT_EXPORT_DEF
+-#define FT_EXPORT_DEF( x )  x
+-
+-/* Now include the original file */
+-#ifndef __MORPHOS__
+-#ifdef __SASC
+-#include "FT:include/freetype/config/ftconfig.h"
+-#else
+-#include "/FT/include/freetype/config/ftconfig.h"
+-#endif
+-#else
+-/* We must define that, it seems that
+- * lib/gcc-lib/ppc-morphos/2.95.3/include/syslimits.h is missing in
+- * ppc-morphos-gcc-2.95.3-bin.tgz (gcc for 68k producing MorphOS PPC elf
+- * binaries from http://www.morphos.de)
+- */
+-#define _LIBC_LIMITS_H_
+-#include "/FT/include/freetype/config/ftconfig.h"
+-#endif
+-
+-/*
+-Local Variables:
+-coding: latin-1
+-End:
+-*/
+diff --git a/builds/amiga/include/config/ftmodule.h b/builds/amiga/include/config/ftmodule.h
+deleted file mode 100644
+index f8baab5..0000000
+--- a/builds/amiga/include/config/ftmodule.h
++++ /dev/null
+@@ -1,160 +0,0 @@
+-/***************************************************************************/
+-/*                                                                         */
+-/*  ftmodule.h                                                             */
+-/*                                                                         */
+-/*    Amiga-specific FreeType module selection.                            */
+-/*                                                                         */
+-/*  Copyright 2005-2018 by                                                 */
+-/*  Werner Lemberg and Detlef Würkner.                                     */
+-/*                                                                         */
+-/*  This file is part of the FreeType project, and may only be used,       */
+-/*  modified, and distributed under the terms of the FreeType project      */
+-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+-/*  this file you indicate that you have read the license and              */
+-/*  understand and accept it fully.                                        */
+-/*                                                                         */
+-/***************************************************************************/
+-
+-/*
+- * To avoid that all your programs include all FreeType modules,
+- * you copy the following piece of source code into your own
+- * source file and specify which modules you really need in your
+- * application by uncommenting the appropriate lines.
+- */
+-/*
+-//#define FT_USE_AUTOFIT // autofitter
+-//#define FT_USE_RASTER  // monochrome rasterizer
+-//#define FT_USE_SMOOTH  // anti-aliasing rasterizer
+-//#define FT_USE_TT      // truetype font driver
+-//#define FT_USE_T1      // type1 font driver
+-//#define FT_USE_T42     // type42 font driver
+-//#define FT_USE_T1CID   // cid-keyed type1 font driver  // no cmap support
+-//#define FT_USE_CFF     // opentype font driver
+-//#define FT_USE_BDF     // bdf bitmap font driver
+-//#define FT_USE_PCF     // pcf bitmap font driver
+-//#define FT_USE_PFR     // pfr font driver
+-//#define FT_USE_WINFNT  // windows .fnt|.fon bitmap font driver
+-//#define FT_USE_OTV     // opentype validator
+-//#define FT_USE_GXV     // truetype gx validator
+-#include "FT:src/base/ftinit.c"
+-*/
+-
+-/* Make sure that the needed support modules are built in.
+- * Dependencies can be found by searching for FT_Get_Module.
+- */
+-
+-#ifdef FT_USE_T42
+-#define FT_USE_TT
+-#endif
+-
+-#ifdef FT_USE_TT
+-#define FT_USE_SFNT
+-#endif
+-
+-#ifdef FT_USE_CFF
+-#define FT_USE_SFNT
+-#define FT_USE_PSHINT
+-#define FT_USE_PSNAMES
+-#endif
+-
+-#ifdef FT_USE_T1
+-#define FT_USE_PSAUX
+-#define FT_USE_PSHINT
+-#define FT_USE_PSNAMES
+-#endif
+-
+-#ifdef FT_USE_T1CID
+-#define FT_USE_PSAUX
+-#define FT_USE_PSHINT
+-#define FT_USE_PSNAMES
+-#endif
+-
+-#ifdef FT_USE_PSAUX
+-#define FT_USE_PSNAMES
+-#endif
+-
+-#ifdef FT_USE_SFNT
+-#define FT_USE_PSNAMES
+-#endif
+-
+-/* Now include the modules */
+-
+-#ifdef FT_USE_AUTOFIT
+-FT_USE_MODULE( FT_Module_Class, autofit_module_class )
+-#endif
+-
+-#ifdef FT_USE_TT
+-FT_USE_MODULE( FT_Driver_ClassRec, tt_driver_class )
+-#endif
+-
+-#ifdef FT_USE_T1
+-FT_USE_MODULE( FT_Driver_ClassRec, t1_driver_class )
+-#endif
+-
+-#ifdef FT_USE_CFF
+-FT_USE_MODULE( FT_Driver_ClassRec, cff_driver_class )
+-#endif
+-
+-#ifdef FT_USE_T1CID
+-FT_USE_MODULE( FT_Driver_ClassRec, t1cid_driver_class )
+-#endif
+-
+-#ifdef FT_USE_PFR
+-FT_USE_MODULE( FT_Driver_ClassRec, pfr_driver_class )
+-#endif
+-
+-#ifdef FT_USE_T42
+-FT_USE_MODULE( FT_Driver_ClassRec, t42_driver_class )
+-#endif
+-
+-#ifdef FT_USE_WINFNT
+-FT_USE_MODULE( FT_Driver_ClassRec, winfnt_driver_class )
+-#endif
+-
+-#ifdef FT_USE_PCF
+-FT_USE_MODULE( FT_Driver_ClassRec, pcf_driver_class )
+-#endif
+-
+-#ifdef FT_USE_PSAUX
+-FT_USE_MODULE( FT_Module_Class, psaux_module_class )
+-#endif
+-
+-#ifdef FT_USE_PSNAMES
+-FT_USE_MODULE( FT_Module_Class, psnames_module_class )
+-#endif
+-
+-#ifdef FT_USE_PSHINT
+-FT_USE_MODULE( FT_Module_Class, pshinter_module_class )
+-#endif
+-
+-#ifdef FT_USE_RASTER
+-FT_USE_MODULE( FT_Renderer_Class, ft_raster1_renderer_class )
+-#endif
+-
+-#ifdef FT_USE_SFNT
+-FT_USE_MODULE( FT_Module_Class, sfnt_module_class )
+-#endif
+-
+-#ifdef FT_USE_SMOOTH
+-FT_USE_MODULE( FT_Renderer_Class, ft_smooth_renderer_class )
+-FT_USE_MODULE( FT_Renderer_Class, ft_smooth_lcd_renderer_class )
+-FT_USE_MODULE( FT_Renderer_Class, ft_smooth_lcdv_renderer_class )
+-#endif
+-
+-#ifdef FT_USE_OTV
+-FT_USE_MODULE( FT_Module_Class, otv_module_class )
+-#endif
+-
+-#ifdef FT_USE_BDF
+-FT_USE_MODULE( FT_Driver_ClassRec, bdf_driver_class )
+-#endif
+-
+-#ifdef FT_USE_GXV
+-FT_USE_MODULE( FT_Module_Class, gxv_module_class )
+-#endif
+-
+-/*
+-Local Variables:
+-coding: latin-1
+-End:
+-*/
+diff --git a/builds/amiga/makefile b/builds/amiga/makefile
+deleted file mode 100644
+index 6367438..0000000
+--- a/builds/amiga/makefile
++++ /dev/null
+@@ -1,299 +0,0 @@
+-#
+-# Makefile for FreeType2 link library using ppc-morphos-gcc-2.95.3-bin.tgz
+-# (gcc 2.95.3 hosted on 68k-Amiga producing MorphOS-PPC-binaries from
+-# http://www.morphos.de)
+-#
+-
+-
+-# Copyright 2005-2018 by
+-# Werner Lemberg and Detlef Würkner.
+-#
+-# This file is part of the FreeType project, and may only be used, modified,
+-# and distributed under the terms of the FreeType project license,
+-# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+-# indicate that you have read the license and understand and accept it
+-# fully.
+-
+-
+-#
+-# to build from the builds/amiga directory call
+-#
+-#  make assign
+-#  make
+-#
+-# Your programs source code should start with this
+-# (uncomment the parts you do not need to keep the program small):
+-# ---8<---
+-#define FT_USE_AUTOFIT // autofitter
+-#define FT_USE_RASTER  // monochrome rasterizer
+-#define FT_USE_SMOOTH  // anti-aliasing rasterizer
+-#define FT_USE_TT      // truetype font driver
+-#define FT_USE_T1      // type1 font driver
+-#define FT_USE_T42     // type42 font driver
+-#define FT_USE_T1CID   // cid-keyed type1 font driver
+-#define FT_USE_CFF     // opentype font driver
+-#define FT_USE_BDF     // bdf bitmap font driver
+-#define FT_USE_PCF     // pcf bitmap font driver
+-#define FT_USE_PFR     // pfr font driver
+-#define FT_USE_WINFNT  // windows .fnt|.fon bitmap font driver
+-#define FT_USE_OTV     // opentype validator
+-#define FT_USE_GXV     // truetype gx validator
+-#include "FT:src/base/ftinit.c"
+-# ---8<---
+-#
+-# link your programs with libft2_ppc.a and either ftsystem.ppc.o or ftsystempure.ppc.o
+-# (and either ftdebug.ppc.o or ftdebugpure.ppc.o if you enabled FT_DEBUG_LEVEL_ERROR or
+-# FT_DEBUG_LEVEL_TRACE in include/freetype/config/ftoption.h).
+-
+-all:	libft2_ppc.a ftsystem.ppc.o ftsystempure.ppc.o
+-
+-assign:
+-	assign FT: //
+-
+-FTSRC = /FT/src
+-
+-CC =     ppc-morphos-gcc
+-AR =     ppc-morphos-ar rc
+-RANLIB = ppc-morphos-ranlib
+-LD =     ppc-morphos-ld
+-CFLAGS = -DFT2_BUILD_LIBRARY -O2 -I/emu/emulinclude/includegcc -I/emu/include -Iinclude -I$(FTSRC) -I/FT/include
+-
+-#
+-# FreeType2 library base
+-#
+-ftbase.ppc.o: $(FTSRC)/base/ftbase.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftinit.ppc.o: $(FTSRC)/base/ftinit.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftsystem.ppc.o: $(FTSRC)/base/ftsystem.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-# pure version for use in run-time library etc
+-ftsystempure.ppc.o: src/base/ftsystem.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftdebug.ppc.o: $(FTSRC)/base/ftdebug.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-# pure version for use in run-time library etc
+-ftdebugpure.ppc.o: src/base/ftdebug.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library base extensions
+-#
+-ftbbox.ppc.o: $(FTSRC)/base/ftbbox.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftbdf.ppc.o: $(FTSRC)/base/ftbdf.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftbitmap.ppc.o: $(FTSRC)/base/ftbitmap.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftcid.ppc.o: $(FTSRC)/base/ftcid.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftfntfmt.ppc.o: $(FTSRC)/base/ftfntfmt.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftfstype.ppc.o: $(FTSRC)/base/ftfstype.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftgasp.ppc.o: $(FTSRC)/base/ftgasp.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftglyph.ppc.o: $(FTSRC)/base/ftglyph.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftgxval.ppc.o: $(FTSRC)/base/ftgxval.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftlcdfil.ppc.o: $(FTSRC)/base/ftlcdfil.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftmm.ppc.o: $(FTSRC)/base/ftmm.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftotval.ppc.o: $(FTSRC)/base/ftotval.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftpatent.ppc.o: $(FTSRC)/base/ftpatent.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftpfr.ppc.o: $(FTSRC)/base/ftpfr.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftstroke.ppc.o: $(FTSRC)/base/ftstroke.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftsynth.ppc.o: $(FTSRC)/base/ftsynth.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-fttype1.ppc.o: $(FTSRC)/base/fttype1.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-ftwinfnt.ppc.o: $(FTSRC)/base/ftwinfnt.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library autofitting module
+-#
+-autofit.ppc.o: $(FTSRC)/autofit/autofit.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library postscript hinting module
+-#
+-pshinter.ppc.o: $(FTSRC)/pshinter/pshinter.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library PS support module
+-#
+-psaux.ppc.o: $(FTSRC)/psaux/psaux.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library PS glyph names module
+-#
+-psnames.ppc.o: $(FTSRC)/psnames/psnames.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library monochrome raster module
+-#
+-raster.ppc.o: $(FTSRC)/raster/raster.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library anti-aliasing raster module
+-#
+-smooth.ppc.o: $(FTSRC)/smooth/smooth.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library 'sfnt' module
+-#
+-sfnt.ppc.o: $(FTSRC)/sfnt/sfnt.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library glyph and image caching system
+-#
+-ftcache.ppc.o: $(FTSRC)/cache/ftcache.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library OpenType font driver
+-#
+-cff.ppc.o: $(FTSRC)/cff/cff.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library TrueType font driver
+-#
+-truetype.ppc.o: $(FTSRC)/truetype/truetype.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library Type1 font driver
+-#
+-type1.ppc.o: $(FTSRC)/type1/type1.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library Type42 font driver
+-#
+-type42.ppc.o: $(FTSRC)/type42/type42.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library CID-keyed Type1 font driver
+-#
+-type1cid.ppc.o: $(FTSRC)/cid/type1cid.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library BDF bitmap font driver
+-#
+-bdf.ppc.o: $(FTSRC)/bdf/bdf.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library PCF bitmap font driver
+-#
+-pcf.ppc.o: $(FTSRC)/pcf/pcf.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library gzip support for compressed PCF bitmap fonts
+-#
+-gzip.ppc.o: $(FTSRC)/gzip/ftgzip.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-# FreeType2 library bzip2 support for compressed PCF bitmap fonts
+-#
+-bzip2.ppc.o: $(FTSRC)/bzip2/ftbzip2.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library compress support for compressed PCF bitmap fonts
+-#
+-lzw.ppc.o: $(FTSRC)/lzw/ftlzw.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library PFR font driver
+-#
+-pfr.ppc.o: $(FTSRC)/pfr/pfr.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library Windows FNT/FON bitmap font driver
+-#
+-winfnt.ppc.o: $(FTSRC)/winfonts/winfnt.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library TrueTypeGX Validator
+-#
+-gxvalid.ppc.o: $(FTSRC)/gxvalid/gxvalid.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-#
+-# FreeType2 library OpenType validator
+-#
+-otvalid.ppc.o: $(FTSRC)/otvalid/otvalid.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
+-
+-BASEPPC = ftbase.ppc.o ftbbox.ppc.o ftbdf.ppc.o ftbitmap.ppc.o ftcid.ppc.o \
+-	  ftfntfmt.ppc.oftfstype.ppc.o ftgasp.ppc.o ftglyph.ppc.o          \
+-	  ftgxval.ppc.o ftlcdfil.ppc.o ftmm.ppc.o ftotval.ppc.o            \
+-	  ftpatent.ppc.o ftpfr.ppc.o ftstroke.ppc.o ftsynth.ppc.o          \
+-	  fttype1.ppc.o ftwinfnt.ppc.o
+-
+-DEBUGPPC = ftdebug.ppc.o ftdebugpure.ppc.o
+-
+-AFITPPC = autofit.ppc.o
+-
+-GXVPPC = gxvalid.ppc.o
+-
+-OTVPPC = otvalid.ppc.o
+-
+-PSPPC = psaux.ppc.o psnames.ppc.o pshinter.ppc.o
+-
+-RASTERPPC = raster.ppc.o smooth.ppc.o
+-
+-FONTDPPC = cff.ppc.o type1.ppc.o type42.ppc.o type1cid.ppc.o truetype.ppc.o\
+-	   bdf.ppc.o pcf.ppc.o pfr.ppc.o winfnt.ppc.o
+-
+-libft2_ppc.a:    $(BASEPPC) $(AFITPPC) $(GXVPPC) $(OTVPPC) $(PSPPC) $(RASTERPPC) sfnt.ppc.o ftcache.ppc.o $(FONTDPPC) gzip.ppc.o bzip2.ppc.o lzw.ppc.o
+-	$(AR) $@ $(BASEPPC) $(AFITPPC) $(GXVPPC) $(OTVPPC) $(PSPPC) $(RASTERPPC) sfnt.ppc.o ftcache.ppc.o $(FONTDPPC) gzip.ppc.o bzip2.ppc.o lzw.ppc.o
+-	-@ ($(RANLIB) $@ || true) >/dev/null 2>&1
+-
+-#Local Variables:
+-#coding: latin-1
+-#End:
+diff --git a/builds/amiga/makefile.os4 b/builds/amiga/makefile.os4
+deleted file mode 100644
+index c07e181..0000000
+--- a/builds/amiga/makefile.os4
++++ /dev/null
+@@ -1,303 +0,0 @@
+-#
+-# Makefile for FreeType2 link library using gcc 4.0.3 from the
+-# AmigaOS4 SDK
+-#
+-
+-
+-# Copyright 2005-2018 by
+-# Werner Lemberg and Detlef Würkner.
+-#
+-# This file is part of the FreeType project, and may only be used, modified,
+-# and distributed under the terms of the FreeType project license,
+-# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+-# indicate that you have read the license and understand and accept it
+-# fully.
+-
+-
+-# to build from the builds/amiga directory call
+-#
+-#  make -f makefile.os4
+-#
+-# Your programs source code should start with this
+-# (uncomment the parts you do not need to keep the program small):
+-# ---8<---
+-#define FT_USE_AUTOFIT // autofitter
+-#define FT_USE_RASTER  // monochrome rasterizer
+-#define FT_USE_SMOOTH  // anti-aliasing rasterizer
+-#define FT_USE_TT      // truetype font driver
+-#define FT_USE_T1      // type1 font driver
+-#define FT_USE_T42     // type42 font driver
+-#define FT_USE_T1CID   // cid-keyed type1 font driver
+-#define FT_USE_CFF     // opentype font driver
+-#define FT_USE_BDF     // bdf bitmap font driver
+-#define FT_USE_PCF     // pcf bitmap font driver
+-#define FT_USE_PFR     // pfr font driver
+-#define FT_USE_WINFNT  // windows .fnt|.fon bitmap font driver
+-#define FT_USE_OTV     // opentype validator
+-#define FT_USE_GXV     // truetype gx validator
+-#include "FT:src/base/ftinit.c"
+-# ---8<---
+-#
+-# link your programs with libft2_ppc.a and either ftsystem.ppc.o or ftsystempure.ppc.o
+-# (and either ftdebug.ppc.o or ftdebugpure.ppc.o if you enabled FT_DEBUG_LEVEL_ERROR or
+-# FT_DEBUG_LEVEL_TRACE in include/freetype/config/ftoption.h).
+-
+-all:	assign libft2_ppc.a ftsystem.ppc.o ftsystempure.ppc.o
+-
+-assign:
+-	assign FT: //
+-
+-CC =     ppc-amigaos-gcc
+-AR =     ppc-amigaos-ar
+-RANLIB = ppc-amigaos-ranlib
+-
+-DIRFLAGS  = -Iinclude -I/FT/src -I/FT/include -I/SDK/include
+-
+-WARNINGS = -Wall -W -Wundef -Wpointer-arith -Wbad-function-cast \
+-	   -Waggregate-return -Wwrite-strings -Wshadow
+-
+-OPTIONS  = -DFT2_BUILD_LIBRARY -DNDEBUG -fno-builtin
+-OPTIMIZE = -O2 -fomit-frame-pointer -fstrength-reduce -finline-functions
+-
+-CFLAGS   = -mcrt=clib2 $(DIRFLAGS) $(WARNINGS) $(FT2FLAGS) $(OPTIONS) $(OPTIMIZE)
+-
+-#
+-# FreeType2 library base
+-#
+-ftbase.ppc.o: FT:src/base/ftbase.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftbase.c
+-
+-ftinit.ppc.o: FT:src/base/ftinit.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftinit.c
+-
+-ftsystem.ppc.o: FT:src/base/ftsystem.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftsystem.c
+-
+-# pure version for use in run-time library etc
+-ftsystempure.ppc.o: src/base/ftsystem.c
+-	$(CC) -c $(CFLAGS) -o $@ src/base/ftsystem.c
+-
+-#
+-# FreeType2 library base extensions
+-#
+-ftbbox.ppc.o: FT:src/base/ftbbox.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftbbox.c
+-
+-ftbdf.ppc.o: FT:src/base/ftbdf.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftbdf.c
+-
+-ftbitmap.ppc.o: FT:src/base/ftbitmap.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftbitmap.c
+-
+-ftcid.ppc.o: FT:src/base/ftcid.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftcid.c
+-
+-ftdebug.ppc.o: FT:src/base/ftdebug.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftdebug.c
+-
+-# pure version for use in run-time library etc
+-ftdebugpure.ppc.o: src/base/ftdebug.c
+-	$(CC) -c $(CFLAGS) -o $@ src/base/ftdebug.c
+-
+-ftfntfmt.ppc.o: FT:src/base/ftfntfmt.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftfntfmt.c
+-
+-ftfstype.ppc.o: FT:src/base/ftfstype.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftfstype.c
+-
+-ftgasp.ppc.o: FT:src/base/ftgasp.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftgasp.c
+-
+-ftglyph.ppc.o: FT:src/base/ftglyph.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftglyph.c
+-
+-ftgxval.ppc.o: FT:src/base/ftgxval.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftgxval.c
+-
+-ftlcdfil.ppc.o: FT:src/base/ftlcdfil.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftlcdfil.c
+-
+-ftmm.ppc.o: FT:src/base/ftmm.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftmm.c
+-
+-ftotval.ppc.o: FT:src/base/ftotval.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftotval.c
+-
+-ftpatent.ppc.o: FT:src/base/ftpatent.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftpatent.c
+-
+-ftpfr.ppc.o: FT:src/base/ftpfr.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftpfr.c
+-
+-ftstroke.ppc.o: FT:src/base/ftstroke.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftstroke.c
+-
+-ftsynth.ppc.o: FT:src/base/ftsynth.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftsynth.c
+-
+-fttype1.ppc.o: FT:src/base/fttype1.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/fttype1.c
+-
+-ftwinfnt.ppc.o: FT:src/base/ftwinfnt.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftwinfnt.c
+-
+-#
+-# FreeType2 library autofitting module
+-#
+-autofit.ppc.o: FT:src/autofit/autofit.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/autofit/autofit.c
+-
+-#
+-# FreeType2 library postscript hinting module
+-#
+-pshinter.ppc.o: FT:src/pshinter/pshinter.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/pshinter/pshinter.c
+-
+-#
+-# FreeType2 library PS support module
+-#
+-psaux.ppc.o: FT:src/psaux/psaux.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/psaux/psaux.c
+-
+-#
+-# FreeType2 library PS glyph names module
+-#
+-psnames.ppc.o: FT:src/psnames/psnames.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/psnames/psnames.c
+-
+-#
+-# FreeType2 library monochrome raster module
+-#
+-raster.ppc.o: FT:src/raster/raster.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/raster/raster.c
+-
+-#
+-# FreeType2 library anti-aliasing raster module
+-#
+-smooth.ppc.o: FT:src/smooth/smooth.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/smooth/smooth.c
+-
+-#
+-# FreeType2 library 'sfnt' module
+-#
+-sfnt.ppc.o: FT:src/sfnt/sfnt.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/sfnt/sfnt.c
+-
+-#
+-# FreeType2 library glyph and image caching system
+-#
+-ftcache.ppc.o: FT:src/cache/ftcache.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/cache/ftcache.c
+-
+-#
+-# FreeType2 library OpenType font driver
+-#
+-cff.ppc.o: FT:src/cff/cff.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/cff/cff.c
+-
+-#
+-# FreeType2 library TrueType font driver
+-#
+-truetype.ppc.o: FT:src/truetype/truetype.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/truetype/truetype.c
+-
+-#
+-# FreeType2 library Type1 font driver
+-#
+-type1.ppc.o: FT:src/type1/type1.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/type1/type1.c
+-
+-#
+-# FreeType2 library Type42 font driver
+-#
+-type42.ppc.o: FT:src/type42/type42.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/type42/type42.c
+-
+-#
+-# FreeType2 library CID-keyed Type1 font driver
+-#
+-type1cid.ppc.o: FT:src/cid/type1cid.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/cid/type1cid.c
+-
+-#
+-# FreeType2 library BDF bitmap font driver
+-#
+-bdf.ppc.o: FT:src/bdf/bdf.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/bdf/bdf.c
+-
+-#
+-# FreeType2 library PCF bitmap font driver
+-#
+-pcf.ppc.o: FT:src/pcf/pcf.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/pcf/pcf.c
+-
+-#
+-# FreeType2 library gzip support for compressed PCF bitmap fonts
+-#
+-gzip.ppc.o: FT:src/gzip/ftgzip.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/gzip/ftgzip.c
+-
+-#
+-# FreeType2 library bzip2 support for compressed PCF bitmap fonts
+-#
+-bzip2.ppc.o: FT:src/bzip2/ftbzip2.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/bzip2/ftbzip2.c
+-
+-#
+-# FreeType2 library compress support for compressed PCF bitmap fonts
+-#
+-lzw.ppc.o: FT:src/lzw/ftlzw.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/lzw/ftlzw.c
+-
+-#
+-# FreeType2 library PFR font driver
+-#
+-pfr.ppc.o: FT:src/pfr/pfr.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/pfr/pfr.c
+-
+-#
+-# FreeType2 library Windows FNT/FON bitmap font driver
+-#
+-winfnt.ppc.o: FT:src/winfonts/winfnt.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/winfonts/winfnt.c
+-
+-#
+-# FreeType2 library TrueTypeGX Validator
+-#
+-gxvalid.ppc.o: FT:src/gxvalid/gxvalid.c
+-	$(CC) -c $(CFLAGS) -Wno-aggregate-return -o $@ /FT/src/gxvalid/gxvalid.c
+-
+-#
+-# FreeType2 library OpenType validator
+-#
+-otvalid.ppc.o: FT:src/otvalid/otvalid.c
+-	$(CC) -c $(CFLAGS) -o $@ /FT/src/otvalid/otvalid.c
+-
+-BASE = ftbase.ppc.o ftbbox.ppc.o ftbdf.ppc.o ftbitmap.ppc.o ftcid.ppc.o \
+-       ftfntfmt.ppc.o ftfstype.ppc.o ftgasp.ppc.o ftglyph.ppc.o         \
+-       ftgxval.ppc.o ftlcdfil.ppc.o ftmm.ppc.o ftotval.ppc.o            \
+-       ftpatent.ppc.o ftpfr.ppc.o ftstroke.ppc.o ftsynth.ppc.o          \
+-       fttype1.ppc.o ftwinfnt.ppc.o
+-
+-DEBUG = ftdebug.ppc.o ftdebugpure.ppc.o
+-
+-AFIT = autofit.ppc.o
+-
+-GXV = gxvalid.ppc.o
+-
+-OTV = otvalid.ppc.o
+-
+-PS = psaux.ppc.o psnames.ppc.o pshinter.ppc.o
+-
+-RASTER = raster.ppc.o smooth.ppc.o
+-
+-FONTD = cff.ppc.o type1.ppc.o type42.ppc.o type1cid.ppc.o truetype.ppc.o\
+-	bdf.ppc.o pcf.ppc.o pfr.ppc.o winfnt.ppc.o
+-
+-libft2_ppc.a:      $(BASE) $(AFIT) $(GXV) $(OTV) $(PS) $(RASTER) sfnt.ppc.o ftcache.ppc.o $(FONTD) gzip.ppc.o lzw.ppc.o
+-	$(AR) r $@ $(BASE) $(AFIT) $(GXV) $(OTV) $(PS) $(RASTER) sfnt.ppc.o ftcache.ppc.o $(FONTD) gzip.ppc.o lzw.ppc.o
+-	$(RANLIB) $@
+-
+-#Local Variables:
+-#coding: latin-1
+-#End:
+diff --git a/builds/amiga/smakefile b/builds/amiga/smakefile
+deleted file mode 100644
+index 29a31e4..0000000
+--- a/builds/amiga/smakefile
++++ /dev/null
+@@ -1,303 +0,0 @@
+-#
+-# Makefile for FreeType2 link library using Amiga SAS/C 6.58
+-#
+-
+-
+-# Copyright 2005-2018 by
+-# Werner Lemberg and Detlef Würkner.
+-#
+-# This file is part of the FreeType project, and may only be used, modified,
+-# and distributed under the terms of the FreeType project license,
+-# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+-# indicate that you have read the license and understand and accept it
+-# fully.
+-
+-
+-# to build from the builds/amiga directory call
+-#
+-#  smake assign
+-#  smake
+-#
+-# Your programs source code should start with this
+-# (uncomment the parts you do not need to keep the program small):
+-# ---8<---
+-#define FT_USE_AUTOFIT // autofitter
+-#define FT_USE_RASTER  // monochrome rasterizer
+-#define FT_USE_SMOOTH  // anti-aliasing rasterizer
+-#define FT_USE_TT      // truetype font driver
+-#define FT_USE_T1      // type1 font driver
+-#define FT_USE_T42     // type42 font driver
+-#define FT_USE_T1CID   // cid-keyed type1 font driver
+-#define FT_USE_CFF     // opentype font driver
+-#define FT_USE_BDF     // bdf bitmap font driver
+-#define FT_USE_PCF     // pcf bitmap font driver
+-#define FT_USE_PFR     // pfr font driver
+-#define FT_USE_WINFNT  // windows .fnt|.fon bitmap font driver
+-#define FT_USE_OTV     // opentype validator
+-#define FT_USE_GXV     // truetype gx validator
+-#include "FT:src/base/ftinit.c"
+-# ---8<---
+-#
+-# link your programs with ft2_680x0.lib and either ftsystem.o or ftsystempure.o
+-# (and either ftdebug.o or ftdebugpure.o if you enabled FT_DEBUG_LEVEL_ERROR or
+-# FT_DEBUG_LEVEL_TRACE in include/freetype/config/ftoption.h).
+-
+-OBJBASE = ftbase.o ftbbox.o ftbdf.o ftbitmap.o ftcid.o ftfntfmt.o ftfstype.o \
+-	  ftgasp.o ftglyph.o ftgxval.o ftlcdfil.o ftmm.o ftotval.o           \
+-	  ftpatent.o ftpfr.o ftstroke.o ftsynth.o fttype1.o ftwinfnt.o
+-
+-OBJSYSTEM = ftsystem.o ftsystempure.o
+-
+-OBJDEBUG = ftdebug.o ftdebugpure.o
+-
+-OBJAFIT = autofit.o
+-
+-OBJGXV = gxvalid.o
+-
+-OBJOTV = otvalid.o
+-
+-OBJPS = psaux.o psnames.o pshinter.o
+-
+-OBJRASTER = raster.o smooth.o
+-
+-OBJSFNT = sfnt.o
+-
+-OBJCACHE = ftcache.o
+-
+-OBJFONTD = cff.o type1.o type42.o type1cid.o\
+-	   truetype.o winfnt.o bdf.o pcf.o pfr.o
+-
+-CORE = FT:src/
+-
+-CPU       = 68000
+-#CPU      = 68020
+-#CPU      = 68030
+-#CPU      = 68040
+-#CPU      = 68060
+-
+-OPTIMIZER = optinlocal
+-
+-SCFLAGS = optimize opttime optsched strmerge data=faronly idlen=50 cpu=$(CPU)\
+-	  idir=include/ idir=$(CORE) idir=FT:include/ nostackcheck nochkabort\
+-	  noicons ignore=79,85,110,306 parameters=both define=FT2_BUILD_LIBRARY
+-
+-LIB  = ft2_$(CPU).lib
+-
+-# sample linker options
+-OPTS = link lib=$(LIB),lib:sc.lib,lib:amiga.lib,lib:debug.lib\
+-       smallcode smalldata noicons utillib
+-
+-# sample program entry
+-#myprog: myprog.c ftsystem.o $(LIB)
+-#	sc $< programname=$@ ftsystem.o $(SCFLAGS) $(OPTS)
+-
+-all:	$(LIB) $(OBJSYSTEM) $(OBJDEBUG)
+-
+-assign:
+-	assign FT: //
+-
+-# uses separate object modules in lib to make for easier debugging
+-# also, can make smaller programs if entire engine is not used
+-ft2_$(CPU).lib:  $(OBJBASE) $(OBJAFIT) $(OBJOTV) $(OBJPS) $(OBJRASTER) $(OBJSFNT) $(OBJCACHE) $(OBJFONTD) lzw.o gzip.o bzip2.o
+-	oml $@ r $(OBJBASE) $(OBJAFIT) $(OBJOTV) $(OBJPS) $(OBJRASTER) $(OBJSFNT) $(OBJCACHE) $(OBJFONTD) lzw.o gzip.o bzip2.o
+-
+-clean:
+-	-delete \#?.o
+-
+-realclean: clean
+-	-delete ft2$(CPU).lib
+-
+-#
+-# freetype library base
+-#
+-ftbase.o: $(CORE)base/ftbase.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftinit.o: $(CORE)base/ftinit.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftsystem.o: $(CORE)base/ftsystem.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftsystempure.o: src/base/ftsystem.c	## pure version for use in run-time library etc
+-	sc $(SCFLAGS) objname=$@ $<
+-ftdebug.o: $(CORE)base/ftdebug.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftdebugpure.o: src/base/ftdebug.c	## pure version for use in run-time library etc
+-	sc $(SCFLAGS) objname=$@ $<
+-#
+-# freetype library base extensions
+-#
+-ftbbox.o: $(CORE)base/ftbbox.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftbdf.o: $(CORE)base/ftbdf.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftbitmap.o: $(CORE)base/ftbitmap.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftcid.o: $(CORE)base/ftcid.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftfntfmt.o: $(CORE)base/ftfntfmt.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftfstype.o: $(CORE)base/ftfstype.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftgasp.o: $(CORE)base/ftgasp.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftglyph.o: $(CORE)base/ftglyph.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftgxval.o: $(CORE)base/ftgxval.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftlcdfil.o: $(CORE)base/ftlcdfil.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftmm.o: $(CORE)base/ftmm.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftotval.o: $(CORE)base/ftotval.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftpatent.o: $(CORE)base/ftpatent.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftpfr.o: $(CORE)base/ftpfr.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftstroke.o: $(CORE)base/ftstroke.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftsynth.o: $(CORE)base/ftsynth.c
+-	sc $(SCFLAGS) objname=$@ $<
+-fttype1.o: $(CORE)base/fttype1.c
+-	sc $(SCFLAGS) objname=$@ $<
+-ftwinfnt.o: $(CORE)base/ftwinfnt.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library autofitter module
+-#
+-autofit.o: $(CORE)autofit/autofit.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library PS hinting module
+-#
+-pshinter.o: $(CORE)pshinter/pshinter.c
+-	sc $(SCFLAGS) objname=$@ $<
+-#
+-# freetype library PS support module
+-#
+-psaux.o: $(CORE)psaux/psaux.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library PS glyph names module
+-#
+-psnames.o: $(CORE)psnames/psnames.c
+-	sc $(SCFLAGS) code=far objname=$@ $<
+-
+-#
+-# freetype library monochrome raster module
+-#
+-raster.o: $(CORE)raster/raster.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library anti-aliasing raster module
+-#
+-smooth.o: $(CORE)smooth/smooth.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library 'sfnt' module
+-#
+-sfnt.o: $(CORE)sfnt/sfnt.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library glyph and image caching system (still experimental)
+-#
+-ftcache.o: $(CORE)cache/ftcache.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library OpenType font driver
+-#
+-cff.o: $(CORE)cff/cff.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library TrueType font driver
+-#
+-truetype.o: $(CORE)truetype/truetype.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library Type1 font driver
+-#
+-type1.o: $(CORE)type1/type1.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# FreeType2 library Type42 font driver
+-#
+-type42.o: $(CORE)type42/type42.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library CID-keyed Type1 font driver
+-#
+-type1cid.o: $(CORE)cid/type1cid.c
+-	sc $(SCFLAGS) objname=$@ $<
+-#
+-# freetype library CID-keyed Type1 font driver extensions
+-#
+-#cidafm.o: $(CORE)cid/cidafm.c
+-#	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library BDF bitmap font driver
+-#
+-bdf.o: $(CORE)bdf/bdf.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library PCF bitmap font driver
+-#
+-pcf.o: $(CORE)pcf/pcf.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library gzip support for compressed PCF bitmap fonts
+-#
+-gzip.o: $(CORE)gzip/ftgzip.c
+-	sc $(SCFLAGS) define FAR objname=$@ $<
+-
+-#
+-# freetype library bzip2 support for compressed PCF bitmap fonts
+-#
+-bzip2.o: $(CORE)bzip2/ftbzip2.c
+-	sc $(SCFLAGS) define FAR objname=$@ $<
+-
+-#
+-# freetype library compress support for compressed PCF bitmap fonts
+-#
+-lzw.o: $(CORE)lzw/ftlzw.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library PFR font driver
+-#
+-pfr.o: $(CORE)pfr/pfr.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library Windows FNT/FON bitmap font driver
+-#
+-winfnt.o: $(CORE)winfonts/winfnt.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library TrueTypeGX validator
+-#
+-gxvalid.o: $(CORE)gxvalid/gxvalid.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#
+-# freetype library OpenType validator
+-#
+-otvalid.o: $(CORE)otvalid/otvalid.c
+-	sc $(SCFLAGS) objname=$@ $<
+-
+-#Local Variables:
+-#coding: latin-1
+-#End:
+diff --git a/builds/amiga/src/base/ftdebug.c b/builds/amiga/src/base/ftdebug.c
+deleted file mode 100644
+index f3ba48c..0000000
+--- a/builds/amiga/src/base/ftdebug.c
++++ /dev/null
+@@ -1,297 +0,0 @@
+-/***************************************************************************/
+-/*                                                                         */
+-/*  ftdebug.c                                                              */
+-/*                                                                         */
+-/*    Debugging and logging component for amiga (body).                    */
+-/*                                                                         */
+-/*  Copyright 1996-2018 by                                                 */
+-/*  David Turner, Robert Wilhelm, Werner Lemberg and Detlef Würkner.       */
+-/*                                                                         */
+-/*  This file is part of the FreeType project, and may only be used,       */
+-/*  modified, and distributed under the terms of the FreeType project      */
+-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+-/*  this file you indicate that you have read the license and              */
+-/*  understand and accept it fully.                                        */
+-/*                                                                         */
+-/***************************************************************************/
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* This component contains various macros and functions used to ease the */
+-  /* debugging of the FreeType engine.  Its main purpose is in assertion   */
+-  /* checking, tracing, and error detection.                               */
+-  /*                                                                       */
+-  /* There are now three debugging modes:                                  */
+-  /*                                                                       */
+-  /* - trace mode                                                          */
+-  /*                                                                       */
+-  /*   Error and trace messages are sent to the log file (which can be the */
+-  /*   standard error output).                                             */
+-  /*                                                                       */
+-  /* - error mode                                                          */
+-  /*                                                                       */
+-  /*   Only error messages are generated.                                  */
+-  /*                                                                       */
+-  /* - release mode:                                                       */
+-  /*                                                                       */
+-  /*   No error message is sent or generated.  The code is free from any   */
+-  /*   debugging parts.                                                    */
+-  /*                                                                       */
+-  /*************************************************************************/
+-
+-
+-  /*
+-   * Based on the default ftdebug.c,
+-   * replaced vprintf() with KVPrintF(),
+-   * commented out exit(),
+-   * replaced getenv() with GetVar().
+-   */
+-
+-#include <exec/types.h>
+-#include <utility/tagitem.h>
+-#include <dos/exall.h>
+-#include <dos/var.h>
+-#define __NOLIBBASE__
+-#define __NOLOBALIFACE__
+-#define __USE_INLINE__
+-#include <proto/dos.h>
+-#include <clib/debug_protos.h>
+-
+-#ifndef __amigaos4__
+-  extern struct Library *DOSBase;
+-#else
+-  extern struct DOSIFace *IDOS;
+-#endif
+-
+-
+-#include <ft2build.h>
+-#include FT_FREETYPE_H
+-#include FT_INTERNAL_DEBUG_H
+-
+-
+-#if defined( FT_DEBUG_LEVEL_ERROR )
+-
+-  /* documentation is in ftdebug.h */
+-
+-  FT_BASE_DEF( void )
+-  FT_Message( const char*  fmt,
+-              ... )
+-  {
+-    va_list  ap;
+-
+-
+-    va_start( ap, fmt );
+-    KVPrintF( fmt, ap );
+-    va_end( ap );
+-  }
+-
+-
+-  /* documentation is in ftdebug.h */
+-
+-  FT_BASE_DEF( void )
+-  FT_Panic( const char*  fmt,
+-            ... )
+-  {
+-    va_list  ap;
+-
+-
+-    va_start( ap, fmt );
+-    KVPrintF( fmt, ap );
+-    va_end( ap );
+-
+-/*  exit( EXIT_FAILURE ); */
+-  }
+-
+-
+-  /* documentation is in ftdebug.h */
+-
+-  FT_BASE_DEF( int )
+-  FT_Throw( FT_Error     error,
+-            int          line,
+-            const char*  file )
+-  {
+-    FT_UNUSED( error );
+-    FT_UNUSED( line );
+-    FT_UNUSED( file );
+-
+-    return 0;
+-  }
+-
+-#endif /* FT_DEBUG_LEVEL_ERROR */
+-
+-
+-
+-#ifdef FT_DEBUG_LEVEL_TRACE
+-
+-  /* array of trace levels, initialized to 0 */
+-  int  ft_trace_levels[trace_count];
+-
+-
+-  /* define array of trace toggle names */
+-#define FT_TRACE_DEF( x )  #x ,
+-
+-  static const char*  ft_trace_toggles[trace_count + 1] =
+-  {
+-#include FT_INTERNAL_TRACE_H
+-    NULL
+-  };
+-
+-#undef FT_TRACE_DEF
+-
+-
+-  /* documentation is in ftdebug.h */
+-
+-  FT_BASE_DEF( FT_Int )
+-  FT_Trace_Get_Count( void )
+-  {
+-    return trace_count;
+-  }
+-
+-
+-  /* documentation is in ftdebug.h */
+-
+-  FT_BASE_DEF( const char * )
+-  FT_Trace_Get_Name( FT_Int  idx )
+-  {
+-    int  max = FT_Trace_Get_Count();
+-
+-
+-    if ( idx < max )
+-      return ft_trace_toggles[idx];
+-    else
+-      return NULL;
+-  }
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* Initialize the tracing sub-system.  This is done by retrieving the    */
+-  /* value of the `FT2_DEBUG' environment variable.  It must be a list of  */
+-  /* toggles, separated by spaces, `;', or `,'.  Example:                  */
+-  /*                                                                       */
+-  /*    export FT2_DEBUG="any:3 memory:7 stream:5"                         */
+-  /*                                                                       */
+-  /* This requests that all levels be set to 3, except the trace level for */
+-  /* the memory and stream components which are set to 7 and 5,            */
+-  /* respectively.                                                         */
+-  /*                                                                       */
+-  /* See the file `include/freetype/internal/fttrace.h' for details of the */
+-  /* available toggle names.                                               */
+-  /*                                                                       */
+-  /* The level must be between 0 and 7; 0 means quiet (except for serious  */
+-  /* runtime errors), and 7 means _very_ verbose.                          */
+-  /*                                                                       */
+-  FT_BASE_DEF( void )
+-  ft_debug_init( void )
+-  {
+-/*  const char*  ft2_debug = getenv( "FT2_DEBUG" ); */
+-    char         buf[256];
+-    const char*  ft2_debug = &buf[0];
+-
+-
+-/*  if ( ft2_debug ) */
+-    if ( GetVar( "FT2_DEBUG", (STRPTR)ft2_debug, 256, LV_VAR ) > 0 )
+-    {
+-      const char*  p = ft2_debug;
+-      const char*  q;
+-
+-
+-      for ( ; *p; p++ )
+-      {
+-        /* skip leading whitespace and separators */
+-        if ( *p == ' ' || *p == '\t' || *p == ',' || *p == ';' || *p == '=' )
+-          continue;
+-
+-        /* read toggle name, followed by ':' */
+-        q = p;
+-        while ( *p && *p != ':' )
+-          p++;
+-
+-        if ( !*p )
+-          break;
+-
+-        if ( *p == ':' && p > q )
+-        {
+-          FT_Int  n, i, len = (FT_Int)( p - q );
+-          FT_Int  level = -1, found = -1;
+-
+-
+-          for ( n = 0; n < trace_count; n++ )
+-          {
+-            const char*  toggle = ft_trace_toggles[n];
+-
+-
+-            for ( i = 0; i < len; i++ )
+-            {
+-              if ( toggle[i] != q[i] )
+-                break;
+-            }
+-
+-            if ( i == len && toggle[i] == 0 )
+-            {
+-              found = n;
+-              break;
+-            }
+-          }
+-
+-          /* read level */
+-          p++;
+-          if ( *p )
+-          {
+-            level = *p - '0';
+-            if ( level < 0 || level > 7 )
+-              level = -1;
+-          }
+-
+-          if ( found >= 0 && level >= 0 )
+-          {
+-            if ( found == trace_any )
+-            {
+-              /* special case for `any' */
+-              for ( n = 0; n < trace_count; n++ )
+-                ft_trace_levels[n] = level;
+-            }
+-            else
+-              ft_trace_levels[found] = level;
+-          }
+-        }
+-      }
+-    }
+-  }
+-
+-
+-#else  /* !FT_DEBUG_LEVEL_TRACE */
+-
+-
+-  FT_BASE_DEF( void )
+-  ft_debug_init( void )
+-  {
+-    /* nothing */
+-  }
+-
+-
+-  FT_BASE_DEF( FT_Int )
+-  FT_Trace_Get_Count( void )
+-  {
+-    return 0;
+-  }
+-
+-
+-  FT_BASE_DEF( const char * )
+-  FT_Trace_Get_Name( FT_Int  idx )
+-  {
+-    FT_UNUSED( idx );
+-
+-    return NULL;
+-  }
+-
+-
+-#endif /* !FT_DEBUG_LEVEL_TRACE */
+-
+-/*
+-Local Variables:
+-coding: latin-1
+-End:
+-*/
+-/* END */
+diff --git a/builds/amiga/src/base/ftsystem.c b/builds/amiga/src/base/ftsystem.c
+deleted file mode 100644
+index babaeeb..0000000
+--- a/builds/amiga/src/base/ftsystem.c
++++ /dev/null
+@@ -1,530 +0,0 @@
+-/***************************************************************************/
+-/*                                                                         */
+-/*  ftsystem.c                                                             */
+-/*                                                                         */
+-/*    Amiga-specific FreeType low-level system interface (body).           */
+-/*                                                                         */
+-/*  Copyright 1996-2018 by                                                 */
+-/*  David Turner, Robert Wilhelm, Werner Lemberg and Detlef Würkner.       */
+-/*                                                                         */
+-/*  This file is part of the FreeType project, and may only be used,       */
+-/*  modified, and distributed under the terms of the FreeType project      */
+-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+-/*  this file you indicate that you have read the license and              */
+-/*  understand and accept it fully.                                        */
+-/*                                                                         */
+-/***************************************************************************/
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* This file contains the Amiga interface used by FreeType to access     */
+-  /* low-level, i.e. memory management, i/o access as well as thread       */
+-  /* synchronisation.                                                      */
+-  /*                                                                       */
+-  /*************************************************************************/
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* Maintained by Detlef Würkner <TetiSoft@apg.lahn.de>                   */
+-  /*                                                                       */
+-  /* Based on the original ftsystem.c,                                     */
+-  /* modified to avoid fopen(), fclose(), fread(), fseek(), ftell(),       */
+-  /* malloc(), realloc(), and free().                                      */
+-  /*                                                                       */
+-  /* Those C library functions are often not thread-safe or cant be        */
+-  /* used in a shared Amiga library. If that's not a problem for you,       */
+-  /* you can of course use the default ftsystem.c with C library calls     */
+-  /* instead.                                                              */
+-  /*                                                                       */
+-  /* This implementation needs exec V39+ because it uses AllocPooled() etc */
+-  /*                                                                       */
+-  /*************************************************************************/
+-
+-#define __NOLIBBASE__
+-#define __NOGLOBALIFACE__
+-#define __USE_INLINE__
+-#include <proto/exec.h>
+-#include <dos/stdio.h>
+-#include <proto/dos.h>
+-#ifdef __amigaos4__
+-extern struct ExecIFace *IExec;
+-extern struct DOSIFace  *IDOS;
+-#else
+-extern struct Library   *SysBase;
+-extern struct Library   *DOSBase;
+-#endif
+-
+-#define IOBUF_SIZE 512
+-
+-/* structure that helps us to avoid
+- * useless calls of Seek() and Read()
+- */
+-struct SysFile
+-{
+-  BPTR  file;
+-  ULONG iobuf_start;
+-  ULONG iobuf_end;
+-  UBYTE iobuf[IOBUF_SIZE];
+-};
+-
+-#ifndef __amigaos4__
+-/* C implementation of AllocVecPooled (see autodoc exec/AllocPooled) */
+-APTR
+-Alloc_VecPooled( APTR   poolHeader,
+-                 ULONG  memSize )
+-{
+-  ULONG  newSize = memSize + sizeof ( ULONG );
+-  ULONG  *mem = AllocPooled( poolHeader, newSize );
+-
+-  if ( !mem )
+-    return NULL;
+-  *mem = newSize;
+-  return mem + 1;
+-}
+-
+-/* C implementation of FreeVecPooled (see autodoc exec/AllocPooled) */
+-void
+-Free_VecPooled( APTR  poolHeader,
+-                APTR  memory )
+-{
+-  ULONG  *realmem = (ULONG *)memory - 1;
+-
+-  FreePooled( poolHeader, realmem, *realmem );
+-}
+-#endif
+-
+-#include <ft2build.h>
+-#include FT_CONFIG_CONFIG_H
+-#include FT_INTERNAL_DEBUG_H
+-#include FT_SYSTEM_H
+-#include FT_ERRORS_H
+-#include FT_TYPES_H
+-
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <string.h>
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /*                       MEMORY MANAGEMENT INTERFACE                     */
+-  /*                                                                       */
+-  /*************************************************************************/
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* It is not necessary to do any error checking for the                  */
+-  /* allocation-related functions.  This is done by the higher level       */
+-  /* routines like ft_mem_alloc() or ft_mem_realloc().                     */
+-  /*                                                                       */
+-  /*************************************************************************/
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* <Function>                                                            */
+-  /*    ft_alloc                                                           */
+-  /*                                                                       */
+-  /* <Description>                                                         */
+-  /*    The memory allocation function.                                    */
+-  /*                                                                       */
+-  /* <Input>                                                               */
+-  /*    memory :: A pointer to the memory object.                          */
+-  /*                                                                       */
+-  /*    size   :: The requested size in bytes.                             */
+-  /*                                                                       */
+-  /* <Return>                                                              */
+-  /*    The address of newly allocated block.                              */
+-  /*                                                                       */
+-  FT_CALLBACK_DEF( void* )
+-  ft_alloc( FT_Memory  memory,
+-            long       size )
+-  {
+-#ifdef __amigaos4__
+-    return AllocVecPooled( memory->user, size );
+-#else
+-    return Alloc_VecPooled( memory->user, size );
+-#endif
+-  }
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* <Function>                                                            */
+-  /*    ft_realloc                                                         */
+-  /*                                                                       */
+-  /* <Description>                                                         */
+-  /*    The memory reallocation function.                                  */
+-  /*                                                                       */
+-  /* <Input>                                                               */
+-  /*    memory   :: A pointer to the memory object.                        */
+-  /*                                                                       */
+-  /*    cur_size :: The current size of the allocated memory block.        */
+-  /*                                                                       */
+-  /*    new_size :: The newly requested size in bytes.                     */
+-  /*                                                                       */
+-  /*    block    :: The current address of the block in memory.            */
+-  /*                                                                       */
+-  /* <Return>                                                              */
+-  /*    The address of the reallocated memory block.                       */
+-  /*                                                                       */
+-  FT_CALLBACK_DEF( void* )
+-  ft_realloc( FT_Memory  memory,
+-              long       cur_size,
+-              long       new_size,
+-              void*      block )
+-  {
+-    void* new_block;
+-
+-#ifdef __amigaos4__
+-    new_block = AllocVecPooled ( memory->user, new_size );
+-#else
+-    new_block = Alloc_VecPooled ( memory->user, new_size );
+-#endif
+-    if ( new_block != NULL )
+-    {
+-      CopyMem ( block, new_block,
+-                ( new_size > cur_size ) ? cur_size : new_size );
+-#ifdef __amigaos4__
+-      FreeVecPooled ( memory->user, block );
+-#else
+-      Free_VecPooled ( memory->user, block );
+-#endif
+-    }
+-    return new_block;
+-  }
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* <Function>                                                            */
+-  /*    ft_free                                                            */
+-  /*                                                                       */
+-  /* <Description>                                                         */
+-  /*    The memory release function.                                       */
+-  /*                                                                       */
+-  /* <Input>                                                               */
+-  /*    memory  :: A pointer to the memory object.                         */
+-  /*                                                                       */
+-  /*    block   :: The address of block in memory to be freed.             */
+-  /*                                                                       */
+-  FT_CALLBACK_DEF( void )
+-  ft_free( FT_Memory  memory,
+-           void*      block )
+-  {
+-#ifdef __amigaos4__
+-    FreeVecPooled( memory->user, block );
+-#else
+-    Free_VecPooled( memory->user, block );
+-#endif
+-  }
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /*                     RESOURCE MANAGEMENT INTERFACE                     */
+-  /*                                                                       */
+-  /*************************************************************************/
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+-  /* messages during execution.                                            */
+-  /*                                                                       */
+-#undef  FT_COMPONENT
+-#define FT_COMPONENT  trace_io
+-
+-  /* We use the macro STREAM_FILE for convenience to extract the       */
+-  /* system-specific stream handle from a given FreeType stream object */
+-#define STREAM_FILE( stream )  ( (struct SysFile *)stream->descriptor.pointer )
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* <Function>                                                            */
+-  /*    ft_amiga_stream_close                                              */
+-  /*                                                                       */
+-  /* <Description>                                                         */
+-  /*    The function to close a stream.                                    */
+-  /*                                                                       */
+-  /* <Input>                                                               */
+-  /*    stream :: A pointer to the stream object.                          */
+-  /*                                                                       */
+-  FT_CALLBACK_DEF( void )
+-  ft_amiga_stream_close( FT_Stream  stream )
+-  {
+-    struct SysFile* sysfile;
+-
+-    sysfile = STREAM_FILE( stream );
+-    Close ( sysfile->file );
+-    FreeMem ( sysfile, sizeof ( struct SysFile ));
+-
+-    stream->descriptor.pointer = NULL;
+-    stream->size               = 0;
+-    stream->base               = 0;
+-  }
+-
+-
+-  /*************************************************************************/
+-  /*                                                                       */
+-  /* <Function>                                                            */
+-  /*    ft_amiga_stream_io                                                 */
+-  /*                                                                       */
+-  /* <Description>                                                         */
+-  /*    The function to open a stream.                                     */
+-  /*                                                                       */
+-  /* <Input>                                                               */
+-  /*    stream :: A pointer to the stream object.                          */
+-  /*                                                                       */
+-  /*    offset :: The position in the data stream to start reading.        */
+-  /*                                                                       */
+-  /*    buffer :: The address of buffer to store the read data.            */
+-  /*                                                                       */
+-  /*    count  :: The number of bytes to read from the stream.             */
+-  /*                                                                       */
+-  /* <Return>                                                              */
+-  /*    The number of bytes actually read.                                 */
+-  /*                                                                       */
+-  FT_CALLBACK_DEF( unsigned long )
+-  ft_amiga_stream_io( FT_Stream       stream,
+-                      unsigned long   offset,
+-                      unsigned char*  buffer,
+-                      unsigned long   count )
+-  {
+-    struct SysFile* sysfile;
+-    unsigned long   read_bytes;
+-
+-    if ( count != 0 )
+-    {
+-      sysfile = STREAM_FILE( stream );
+-
+-      /* handle the seek */
+-      if ( (offset < sysfile->iobuf_start) || (offset + count > sysfile->iobuf_end) )
+-      {
+-        /* requested offset implies we need a buffer refill */
+-        if ( !sysfile->iobuf_end || offset != sysfile->iobuf_end )
+-        {
+-          /* a physical seek is necessary */
+-          Seek( sysfile->file, offset, OFFSET_BEGINNING );
+-        }
+-        sysfile->iobuf_start = offset;
+-        sysfile->iobuf_end = 0; /* trigger a buffer refill */
+-      }
+-
+-      /* handle the read */
+-      if ( offset + count <= sysfile->iobuf_end )
+-      {
+-        /* we have buffer and requested bytes are all inside our buffer */
+-        CopyMem( &sysfile->iobuf[offset - sysfile->iobuf_start], buffer, count );
+-        read_bytes = count;
+-      }
+-      else
+-      {
+-        /* (re)fill buffer */
+-        if ( count <= IOBUF_SIZE )
+-        {
+-          /* requested bytes is a subset of the buffer */
+-          read_bytes = Read( sysfile->file, sysfile->iobuf, IOBUF_SIZE );
+-          if ( read_bytes == -1UL )
+-          {
+-            /* error */
+-            read_bytes = 0;
+-          }
+-          else
+-          {
+-            sysfile->iobuf_end = offset + read_bytes;
+-            CopyMem( sysfile->iobuf, buffer, count );
+-            if ( read_bytes > count )
+-            {
+-              read_bytes = count;
+-            }
+-          }
+-        }
+-        else
+-        {
+-          /* we actually need more than our buffer can hold, so we decide
+-          ** to do a single big read, and then copy the last IOBUF_SIZE
+-          ** bytes of that to our internal buffer for later use */
+-          read_bytes = Read( sysfile->file, buffer, count );
+-          if ( read_bytes == -1UL )
+-          {
+-            /* error */
+-            read_bytes = 0;
+-          }
+-          else
+-          {
+-            ULONG bufsize;
+-
+-            bufsize = ( read_bytes > IOBUF_SIZE ) ? IOBUF_SIZE : read_bytes;
+-            sysfile->iobuf_end = offset + read_bytes;
+-            sysfile->iobuf_start = sysfile->iobuf_end - bufsize;
+-            CopyMem( &buffer[read_bytes - bufsize] , sysfile->iobuf, bufsize );
+-          }
+-        }
+-      }
+-    }
+-    else
+-    {
+-      read_bytes = 0;
+-    }
+-
+-    return read_bytes;
+-  }
+-
+-
+-  /* documentation is in ftobjs.h */
+-
+-  FT_BASE_DEF( FT_Error )
+-  FT_Stream_Open( FT_Stream    stream,
+-                  const char*  filepathname )
+-  {
+-    struct FileInfoBlock*  fib;
+-    struct SysFile*        sysfile;
+-
+-
+-    if ( !stream )
+-      return FT_THROW( Invalid_Stream_Handle );
+-
+-#ifdef __amigaos4__
+-    sysfile = AllocMem ( sizeof (struct SysFile ), MEMF_SHARED );
+-#else
+-    sysfile = AllocMem ( sizeof (struct SysFile ), MEMF_PUBLIC );
+-#endif
+-    if ( !sysfile )
+-    {
+-      FT_ERROR(( "FT_Stream_Open:" ));
+-      FT_ERROR(( " could not open `%s'\n", filepathname ));
+-
+-      return FT_THROW( Cannot_Open_Resource );
+-    }
+-    sysfile->file = Open( (STRPTR)filepathname, MODE_OLDFILE );
+-    if ( !sysfile->file )
+-    {
+-      FreeMem ( sysfile, sizeof ( struct SysFile ));
+-      FT_ERROR(( "FT_Stream_Open:" ));
+-      FT_ERROR(( " could not open `%s'\n", filepathname ));
+-
+-      return FT_THROW( Cannot_Open_Resource );
+-    }
+-
+-    fib = AllocDosObject( DOS_FIB, NULL );
+-    if ( !fib )
+-    {
+-      Close ( sysfile->file );
+-      FreeMem ( sysfile, sizeof ( struct SysFile ));
+-      FT_ERROR(( "FT_Stream_Open:" ));
+-      FT_ERROR(( " could not open `%s'\n", filepathname ));
+-
+-      return FT_THROW( Cannot_Open_Resource );
+-    }
+-    if ( !( ExamineFH( sysfile->file, fib ) ) )
+-    {
+-      FreeDosObject( DOS_FIB, fib );
+-      Close ( sysfile->file );
+-      FreeMem ( sysfile, sizeof ( struct SysFile ));
+-      FT_ERROR(( "FT_Stream_Open:" ));
+-      FT_ERROR(( " could not open `%s'\n", filepathname ));
+-
+-      return FT_THROW( Cannot_Open_Resource );
+-    }
+-    stream->size = fib->fib_Size;
+-    FreeDosObject( DOS_FIB, fib );
+-
+-    stream->descriptor.pointer = (void *)sysfile;
+-    stream->pathname.pointer   = (char*)filepathname;
+-    sysfile->iobuf_start       = 0;
+-    sysfile->iobuf_end         = 0;
+-    stream->pos                = 0;
+-
+-    stream->read  = ft_amiga_stream_io;
+-    stream->close = ft_amiga_stream_close;
+-
+-    if ( !stream->size )
+-    {
+-      ft_amiga_stream_close( stream );
+-      FT_ERROR(( "FT_Stream_Open:" ));
+-      FT_ERROR(( " opened `%s' but zero-sized\n", filepathname ));
+-      return FT_THROW( Cannot_Open_Stream );
+-    }
+-
+-    FT_TRACE1(( "FT_Stream_Open:" ));
+-    FT_TRACE1(( " opened `%s' (%ld bytes) successfully\n",
+-                filepathname, stream->size ));
+-
+-    return FT_Err_Ok;
+-  }
+-
+-
+-#ifdef FT_DEBUG_MEMORY
+-
+-  extern FT_Int
+-  ft_mem_debug_init( FT_Memory  memory );
+-
+-  extern void
+-  ft_mem_debug_done( FT_Memory  memory );
+-
+-#endif
+-
+-
+-  /* documentation is in ftobjs.h */
+-
+-  FT_BASE_DEF( FT_Memory )
+-  FT_New_Memory( void )
+-  {
+-    FT_Memory  memory;
+-
+-
+-#ifdef __amigaos4__
+-    memory = (FT_Memory)AllocVec( sizeof ( *memory ), MEMF_SHARED );
+-#else
+-    memory = (FT_Memory)AllocVec( sizeof ( *memory ), MEMF_PUBLIC );
+-#endif
+-    if ( memory )
+-    {
+-#ifdef __amigaos4__
+-      memory->user = CreatePool( MEMF_SHARED, 16384, 16384 );
+-#else
+-      memory->user = CreatePool( MEMF_PUBLIC, 16384, 16384 );
+-#endif
+-      if ( memory->user == NULL )
+-      {
+-        FreeVec( memory );
+-        memory = NULL;
+-      }
+-      else
+-      {
+-        memory->alloc   = ft_alloc;
+-        memory->realloc = ft_realloc;
+-        memory->free    = ft_free;
+-#ifdef FT_DEBUG_MEMORY
+-        ft_mem_debug_init( memory );
+-#endif
+-      }
+-    }
+-
+-    return memory;
+-  }
+-
+-
+-  /* documentation is in ftobjs.h */
+-
+-  FT_BASE_DEF( void )
+-  FT_Done_Memory( FT_Memory  memory )
+-  {
+-#ifdef FT_DEBUG_MEMORY
+-    ft_mem_debug_done( memory );
+-#endif
+-
+-    DeletePool( memory->user );
+-    FreeVec( memory );
+-  }
+-
+-/*
+-Local Variables:
+-coding: latin-1
+-End:
+-*/
+-/* END */
+-- 
+2.17.1 (Apple Git-112)
+
