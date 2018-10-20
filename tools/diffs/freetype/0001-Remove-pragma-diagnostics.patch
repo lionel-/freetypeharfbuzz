@@ -1,12 +1,15 @@
-From 1ee7ede8b408cc91e7092f0478a2975ef4fca8e8 Mon Sep 17 00:00:00 2001
+From 88ba941a9f2d939a94637a8ea7f6f9e16a4f2d29 Mon Sep 17 00:00:00 2001
 From: Lionel Henry <lionel.hry@gmail.com>
 Date: Tue, 21 Aug 2018 11:39:58 +0200
 Subject: [PATCH] Remove pragma diagnostics
 
 ---
- builds/unix/ftconfig.in | 1 -
- builds/vms/ftconfig.h   | 1 -
- 2 files changed, 2 deletions(-)
+ builds/unix/ftconfig.in            |  1 -
+ builds/unix/ltmain.sh              |  4 ----
+ builds/vms/ftconfig.h              |  1 -
+ include/freetype/internal/ftcalc.h |  9 ---------
+ src/truetype/ttinterp.c            | 22 ----------------------
+ 5 files changed, 37 deletions(-)
 
 diff --git a/builds/unix/ftconfig.in b/builds/unix/ftconfig.in
 index 5159693..070db2b 100644
@@ -20,6 +23,21 @@ index 5159693..070db2b 100644
  #define FT_LONG64
  #define FT_INT64   long long int
  #define FT_UINT64  unsigned long long int
+diff --git a/builds/unix/ltmain.sh b/builds/unix/ltmain.sh
+index 0f0a2da..f21c025 100644
+--- a/builds/unix/ltmain.sh
++++ b/builds/unix/ltmain.sh
+@@ -4599,10 +4599,6 @@ func_generate_dlsyms ()
+ extern \"C\" {
+ #endif
+ 
+-#if defined __GNUC__ && (((__GNUC__ == 4) && (__GNUC_MINOR__ >= 4)) || (__GNUC__ > 4))
+-#pragma GCC diagnostic ignored \"-Wstrict-prototypes\"
+-#endif
+-
+ /* Keep this code in sync between libtool.m4, ltmain, lt_system.h, and tests.  */
+ #if defined _WIN32 || defined __CYGWIN__ || defined _WIN32_WCE
+ /* DATA imports from DLLs on WIN32 can't be const, because runtime
 diff --git a/builds/vms/ftconfig.h b/builds/vms/ftconfig.h
 index fa4aa11..d7b66bd 100644
 --- a/builds/vms/ftconfig.h
@@ -32,6 +50,93 @@ index fa4aa11..d7b66bd 100644
  #define FT_LONG64
  #define FT_INT64   long long int
  #define FT_UINT64  unsigned long long int
+diff --git a/include/freetype/internal/ftcalc.h b/include/freetype/internal/ftcalc.h
+index 818a812..e293e18 100644
+--- a/include/freetype/internal/ftcalc.h
++++ b/include/freetype/internal/ftcalc.h
+@@ -185,12 +185,6 @@ FT_BEGIN_HEADER
+   FT_MulFix_x86_64( FT_Int32  a,
+                     FT_Int32  b )
+   {
+-    /* Temporarily disable the warning that C90 doesn't support */
+-    /* `long long'.                                             */
+-#if __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 6 )
+-#pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wlong-long"
+-#endif
+ 
+ #if 1
+     /* Technically not an assembly fragment, but GCC does a really good */
+@@ -229,9 +223,6 @@ FT_BEGIN_HEADER
+     return (FT_Int32)result;
+ #endif
+ 
+-#if __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 6 )
+-#pragma GCC diagnostic pop
+-#endif
+   }
+ 
+ #endif /* __GNUC__ && __x86_64__ */
+diff --git a/src/truetype/ttinterp.c b/src/truetype/ttinterp.c
+index d855aaa..c765e1d 100644
+--- a/src/truetype/ttinterp.c
++++ b/src/truetype/ttinterp.c
+@@ -1288,12 +1288,6 @@
+ 
+ #define TT_MulFix14  TT_MulFix14_long_long
+ 
+-  /* Temporarily disable the warning that C90 doesn't support `long long'. */
+-#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
+-#pragma GCC diagnostic push
+-#endif
+-#pragma GCC diagnostic ignored "-Wlong-long"
+-
+   /* This is declared `noinline' because inlining the function results */
+   /* in slower code.  The `pure' attribute indicates that the result   */
+   /* only depends on the parameters.                                   */
+@@ -1316,10 +1310,6 @@
+     return (FT_Int32)( ret >> 14 );
+   }
+ 
+-#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
+-#pragma GCC diagnostic pop
+-#endif
+-
+ #endif /* __GNUC__ && ( __i386__ || __x86_64__ ) */
+ 
+ 
+@@ -1369,20 +1359,12 @@
+ 
+ #define TT_DotFix14  TT_DotFix14_long_long
+ 
+-#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
+-#pragma GCC diagnostic push
+-#endif
+-#pragma GCC diagnostic ignored "-Wlong-long"
+-
+   static __attribute__(( pure )) FT_Int32
+   TT_DotFix14_long_long( FT_Int32  ax,
+                          FT_Int32  ay,
+                          FT_Int    bx,
+                          FT_Int    by )
+   {
+-    /* Temporarily disable the warning that C90 doesn't support */
+-    /* `long long'.                                             */
+-
+     long long  temp1 = (long long)ax * bx;
+     long long  temp2 = (long long)ay * by;
+ 
+@@ -1395,10 +1377,6 @@
+ 
+   }
+ 
+-#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
+-#pragma GCC diagnostic pop
+-#endif
+-
+ #endif /* __GNUC__ && (__arm__ || __i386__ || __x86_64__) */
+ 
+ 
 -- 
-2.15.2 (Apple Git-101.1)
+2.17.1 (Apple Git-112)
 
