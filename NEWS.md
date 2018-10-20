@@ -1,5 +1,11 @@
 
+# freetypeharfbuzz 0.2.4
+
+* Fix CRAN checks on Solaris
+
+
 # freetypeharfbuzz 0.2.3
+
 
 * Maintenance release for CRAN checks
 * Export `font_info()`, `str_info()` and `str_width()`.
