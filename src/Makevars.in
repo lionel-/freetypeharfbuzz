@@ -39,6 +39,9 @@ all: $(SHLIB)
 $(OBJECTS): $(FT_STATIC_LIB) $(HB_STATIC_LIB) $(INCLUDE_DIR)
 
 
+# Contains C99 flag
+include $(TOOLS_DIR)/config/Makefile
+
 # This must define FT_STATIC_LIB, HB_STATIC_LIB and INCLUDE_DIR targets
 include @MK_FILE@
 
