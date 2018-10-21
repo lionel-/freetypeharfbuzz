@@ -17,6 +17,14 @@ else
     MK_FILE="Makebuild"
 fi
 
-${SED} -e "s|@MK_FILE@|$MK_FILE|" src/Makevars.in > src/Makevars
+if [ $(uname) = SunOS ]; then
+    C99_FLAG="-xc99"
+else
+    C99_FLAG="-std=c99"
+fi
+
+${SED} -e "s|@C99_FLAG@|$C99_FLAG|" \
+       -e "s|@MK_FILE@|$MK_FILE|" \
+       src/Makevars.in > src/Makevars
 
 mkdir -p src/target

@@ -30,6 +30,7 @@ PKG_LIBS = \
 	$(FT_STATIC_LIB) \
 	-fPIC
 
+C99_FLAG = @C99_FLAG@
 
 .PHONY: all
 all: $(SHLIB)

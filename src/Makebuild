@@ -11,7 +11,7 @@ ARCHIVES = $(FT_ARCHIVE) $(HB_ARCHIVE)
 $(FT_ARCHIVE):
 	cd $(TOOLS_DIR) && $(MAKE)
 
-FT_CFLAGS = -DNDEBUG -g0 -std=c99 $(CFLAGS)
+FT_CFLAGS = -DNDEBUG -g0 $(C99_FLAG) $(CFLAGS)
 
 $(FT_STATIC_LIB): $(FT_ARCHIVE)
 	mkdir -p $(BUILD_DIR) && \
@@ -42,7 +42,7 @@ $(HB_BUILD_DIR): $(FT_ARCHIVE)
 	cd $(BUILD_DIR) && \
 	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz
 
-HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 -std=c99 $(CFLAGS)
+HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(C99_FLAG) $(CFLAGS)
 HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 -std=c++11 $(CXXFLAGS)
 HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
 
