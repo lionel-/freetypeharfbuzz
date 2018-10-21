@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+FTHB_VERSION=`cat tools/version`
+echo $FTHB_VERSION
+
 # We sed in SRC_DIR because Solaris `make` doesn't set SRC_DIR
 SRC_DIR="`pwd`"
 
@@ -20,7 +23,8 @@ pushd tools/config
 ./configure --silent
 popd
 
-sed -e "s|@SRC_DIR@|${SRC_DIR}/src|" \
+sed -e "s|@FTHB_VERSION@|${FTHB_VERSION}|" \
+    -e "s|@SRC_DIR@|${SRC_DIR}/src|" \
     -e "s|@MK_FILE@|$MK_FILE|" \
     src/Makevars.in > src/Makevars
 

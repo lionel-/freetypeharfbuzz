@@ -1,5 +1,5 @@
 
-FTHB_VERSION = 0.2.5
+FTHB_VERSION = `cat version`
 
 FT_VERSION ?= 2.9
 HB_VERSION ?= 1.7.6
