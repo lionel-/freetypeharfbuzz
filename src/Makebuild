@@ -43,7 +43,7 @@ $(HB_BUILD_DIR): $(FT_ARCHIVE)
 	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(HB)-patched.tar.gz
 
 HB_CFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(C99_FLAG) $(CFLAGS)
-HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 -std=c++11 $(CXXFLAGS)
+HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(CXX_FLAG) $(CXXFLAGS)
 HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
 
 $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(HB_BUILD_DIR)

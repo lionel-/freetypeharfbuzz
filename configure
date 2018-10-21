@@ -19,11 +19,14 @@ fi
 
 if [ $(uname) = SunOS ]; then
     C99_FLAG="-xc99"
+    CXX_FLAG=""
 else
     C99_FLAG="-std=c99"
+    CXX_FLAG="-std=c++11"
 fi
 
 ${SED} -e "s|@C99_FLAG@|$C99_FLAG|" \
+       -e "s|@CXX_FLAG@|$CXX_FLAG|" \
        -e "s|@MK_FILE@|$MK_FILE|" \
        src/Makevars.in > src/Makevars
 
