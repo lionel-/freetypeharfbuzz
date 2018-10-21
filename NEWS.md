@@ -1,5 +1,5 @@
 
-# freetypeharfbuzz 0.2.4
+# freetypeharfbuzz 0.2.5
 
 * Fix CRAN checks on Solaris
 
