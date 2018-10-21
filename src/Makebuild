@@ -8,6 +8,10 @@ HB_ARCHIVE = $(TOOLS_DIR)/$(HB)-patched.tar.gz
 ARCHIVES = $(FT_ARCHIVE) $(HB_ARCHIVE)
 
 
+# Fixes linker error on Solaris
+override SHLIB_LD = $(CXX)
+
+
 $(FT_ARCHIVE):
 	cd $(TOOLS_DIR) && $(MAKE)
 
