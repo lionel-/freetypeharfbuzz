@@ -13,11 +13,13 @@ $(FT_ARCHIVE):
 
 FT_CFLAGS = -DNDEBUG -g0 $(C99_FLAG) $(CFLAGS)
 
-$(FT_STATIC_LIB): $(FT_ARCHIVE)
+$(FT_BUILD_DIR): $(FT_ARCHIVE)
 	mkdir -p $(BUILD_DIR) && \
 	cd $(BUILD_DIR) && \
-	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-patched.tar.gz && \
-	cd freetype-$(FT_VERSION) && \
+	$(TOOLS_DIR)/untar.sh $(TOOLS_DIR)/$(FT)-patched.tar.gz
+
+$(FT_STATIC_LIB): $(FT_BUILD_DIR)
+	cd $(BUILD_DIR)/freetype-$(FT_VERSION) && \
 	AR="$(AR)"		&& export AR && \
 	CC="$(CC)"		&& export CC && \
 	CFLAGS="$(FT_CFLAGS)"	&& export CFLAGS && \
