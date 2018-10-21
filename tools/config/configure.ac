@@ -1,6 +1,16 @@
 AC_INIT
 AC_CONFIG_FILES([Makefile])
 
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+CC=`"${R_HOME}/bin/R" CMD config CC`
+CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+
+
 AC_PROG_CC_C99
 
 cat > conftest.c << EOF
