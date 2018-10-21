@@ -1,5 +1,5 @@
 
-FTHB_VERSION = 0.2.4
+FTHB_VERSION = 0.2.5
 
 FT_VERSION ?= 2.9
 HB_VERSION ?= 1.7.6
@@ -41,24 +41,24 @@ tarballs-freetype:
 
 .PHONY: tarballs-harfbuzz
 tarballs-harfbuzz:
-	./download.sh "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 $(HB).tar.bz2 && \
-	tar -xf $(HB).tar.bz2 && \
-	tar -zcf $(HB)-vanilla.tar.gz $(HB) && \
+	test -e $(HB).tar.bz2 || wget "https://github.com/harfbuzz/harfbuzz/releases/download/1.7.6/"$(HB).tar.bz2 && \
+	rm -rf $(HB) && \
+	tar -xf $(HB).tar.bz2 $(HB) && \
 	(cd $(HB) && \
-		patch -p1 < ../diffs/0001-Undefine-HB_PRINTF_FUNC.patch && \
-		patch -p1 < ../diffs/0002-Remove-unnecessary-trailing-semi-colon.patch && \
-		patch -p1 < ../diffs/0003-Initialise-offsets.patch && \
-		patch -p1 < ../diffs/0004-Cast-to-void-before-memset.patch && \
-		patch -p1 < ../diffs/0005-Silence-gcc-warning.patch && \
-		patch -p1 < ../diffs/0006-Remove-flags-causing-warnings-on-Solaris.patch && \
-		patch -p1 < ../diffs/0007-Silence-Solaris-warnings-about-symbol-hiding.patch && \
-		aclocal && \
+		patch -p1 < ../diffs/harfbuzz/0001-Undefine-HB_PRINTF_FUNC.patch && \
+		patch -p1 < ../diffs/harfbuzz/0002-Remove-unnecessary-trailing-semi-colon.patch && \
+		patch -p1 < ../diffs/harfbuzz/0003-Initialise-offsets.patch && \
+		patch -p1 < ../diffs/harfbuzz/0004-Cast-to-void-before-memset.patch && \
+		patch -p1 < ../diffs/harfbuzz/0005-Silence-gcc-warning.patch && \
+		patch -p1 < ../diffs/harfbuzz/0006-Remove-flags-causing-warnings-on-Solaris.patch && \
+		patch -p1 < ../diffs/harfbuzz/0007-Silence-Solaris-warnings-about-symbol-hiding.patch && \
+		patch -p1 < ../diffs/harfbuzz/0008-Reenable-CXX11.patch && \
+		cp ../m4/ax_cxx_compile_stdcxx.m4 ./m4 && \
 		NOCONFIGURE=true ./autogen.sh && \
-		patch < ../diffs/harfbuzz-flag.diff && \
-		patch < ../diffs/harfbuzz-pkgconfig.diff \
+		patch < ../diffs/harfbuzz/harfbuzz-flag.diff && \
+		patch < ../diffs/harfbuzz/harfbuzz-pkgconfig.diff \
 	) && \
-	tar -zcf $(HB)-patched.tar.gz $(HB) && \
-	$(MAKE) clean
+	tar -zcf $(HB)-patched.tar.gz $(HB)
 
 
 .PHONY: clean
