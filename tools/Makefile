@@ -45,13 +45,17 @@ tarballs-harfbuzz:
 	tar -xf $(HB).tar.bz2 && \
 	tar -zcf $(HB)-vanilla.tar.gz $(HB) && \
 	(cd $(HB) && \
-		patch < ../diffs/harfbuzz-flag.diff && \
-		patch < ../diffs/harfbuzz-pkgconfig.diff && \
 		patch -p1 < ../diffs/0001-Undefine-HB_PRINTF_FUNC.patch && \
 		patch -p1 < ../diffs/0002-Remove-unnecessary-trailing-semi-colon.patch && \
 		patch -p1 < ../diffs/0003-Initialise-offsets.patch && \
 		patch -p1 < ../diffs/0004-Cast-to-void-before-memset.patch && \
-		patch -p1 < ../diffs/0005-Silence-gcc-warning.patch \
+		patch -p1 < ../diffs/0005-Silence-gcc-warning.patch && \
+		patch -p1 < ../diffs/0006-Remove-flags-causing-warnings-on-Solaris.patch && \
+		patch -p1 < ../diffs/0007-Silence-Solaris-warnings-about-symbol-hiding.patch && \
+		aclocal && \
+		NOCONFIGURE=true ./autogen.sh && \
+		patch < ../diffs/harfbuzz-flag.diff && \
+		patch < ../diffs/harfbuzz-pkgconfig.diff \
 	) && \
 	tar -zcf $(HB)-patched.tar.gz $(HB) && \
 	$(MAKE) clean

@@ -1,0 +1,67 @@
+From fefa04ffd4c3a63fe9b01710df2fd52dcdf18c7e Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Sun, 21 Oct 2018 06:00:36 +0200
+Subject: [PATCH] Silence Solaris warnings about symbol hiding
+
+---
+ src/hb-ot-hdmx-table.hh | 8 ++++----
+ src/hb-ot-os2-table.hh  | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/hb-ot-hdmx-table.hh b/src/hb-ot-hdmx-table.hh
+index f08fe39d..96e2d77a 100644
+--- a/src/hb-ot-hdmx-table.hh
++++ b/src/hb-ot-hdmx-table.hh
+@@ -45,11 +45,11 @@ struct DeviceRecord
+     const DeviceRecord *source_device_record;
+     hb_subset_plan_t *subset_plan;
+ 
+-    inline void init(const DeviceRecord *source_device_record,
+-		     hb_subset_plan_t   *subset_plan)
++    inline void init(const DeviceRecord *source_device_record_,
++		     hb_subset_plan_t   *subset_plan_)
+     {
+-      this->source_device_record = source_device_record;
+-      this->subset_plan = subset_plan;
++      this->source_device_record = source_device_record_;
++      this->subset_plan = subset_plan_;
+     }
+ 
+     inline unsigned int len () const
+diff --git a/src/hb-ot-os2-table.hh b/src/hb-ot-os2-table.hh
+index 6cb8d494..680b6560 100644
+--- a/src/hb-ot-os2-table.hh
++++ b/src/hb-ot-os2-table.hh
+@@ -75,10 +75,10 @@ struct os2
+   }
+ 
+   inline void _update_unicode_ranges (const hb_prealloced_array_t<hb_codepoint_t> &codepoints,
+-                                      HBUINT32 ulUnicodeRange[4]) const
++                                      HBUINT32 ulUnicodeRange_[4]) const
+   {
+     for (unsigned int i = 0; i < 4; i++)
+-      ulUnicodeRange[i].set (0);
++      ulUnicodeRange_[i].set (0);
+ 
+     for (unsigned int i = 0; i < codepoints.len; i++)
+     {
+@@ -89,14 +89,14 @@ struct os2
+         unsigned int block = bit / 32;
+         unsigned int bit_in_block = bit % 32;
+         unsigned int mask = 1 << bit_in_block;
+-        ulUnicodeRange[block].set (ulUnicodeRange[block] | mask);
++        ulUnicodeRange_[block].set (ulUnicodeRange_[block] | mask);
+       }
+       if (cp >= 0x10000 && cp <= 0x110000)
+       {
+         /* the spec says that bit 57 ("Non Plane 0") implies that there's
+            at least one codepoint beyond the BMP; so I also include all
+            the non-BMP codepoints here */
+-        ulUnicodeRange[1].set (ulUnicodeRange[1] | (1 << 25));
++        ulUnicodeRange_[1].set (ulUnicodeRange_[1] | (1 << 25));
+       }
+     }
+   }
+-- 
+2.17.1 (Apple Git-112)
+

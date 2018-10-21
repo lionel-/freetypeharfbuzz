@@ -1,0 +1,31 @@
+From b02ea0278d69033813f7298a9dbe986d665860a4 Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Sun, 21 Oct 2018 05:29:48 +0200
+Subject: [PATCH] Remove flags causing warnings on Solaris
+
+---
+ src/Makefile.am | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index afa104b8..5003978d 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -31,14 +31,7 @@ HBSOURCES =  $(HB_BASE_sources)
+ HBSOURCES += $(HB_BASE_RAGEL_GENERATED_sources)
+ HBHEADERS = $(HB_BASE_headers)
+ 
+-if WITH_LIBSTDCXX
+ HBNOLIBCXXCFLAGS =
+-else
+-# Make sure we don't link to libstdc++
+-# No threadsafe statics in C++ as we do it ourselves
+-HBCFLAGS += -fno-exceptions
+-HBNOLIBCXXFLAGS = -fno-threadsafe-statics -fno-rtti
+-endif
+ 
+ if HAVE_OT
+ HBSOURCES += $(HB_OT_sources)
+-- 
+2.17.1 (Apple Git-112)
+
