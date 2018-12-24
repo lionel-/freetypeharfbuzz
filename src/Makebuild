@@ -3,7 +3,7 @@ BUILD_DIR = $(SRC_DIR)/build
 FT_BUILD_DIR = $(BUILD_DIR)/$(FT)
 HB_BUILD_DIR = $(BUILD_DIR)/$(HB)-CRAN
 
-FT_ARCHIVE = $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
+FT_ARCHIVE = $(TOOLS_DIR)/$(FT)-patched.tar.gz
 HB_ARCHIVE = $(TOOLS_DIR)/$(HB)-patched.tar.gz
 ARCHIVES = $(FT_ARCHIVE) $(HB_ARCHIVE)
 
