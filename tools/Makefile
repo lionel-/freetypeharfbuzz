@@ -22,7 +22,7 @@ $(HB)-vanilla.tar.gz:
 	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(HB)-vanilla.tar.gz" $(HB)-vanilla.tar.gz
 
 $(HB)-patched.tar.gz:
-	./download.sh "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/tools/$(HB)-patched.tar.gz" $(HB)-patched.tar.gz
+	./download.sh "https://github.com/lionel-/harfbuzz/archive/$(HB_VERSION)-CRAN.tar.gz" $(HB)-patched.tar.gz
 
 
 .PHONY: tarballs

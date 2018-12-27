@@ -1,9 +1,9 @@
 
 BUILD_DIR = $(SRC_DIR)/build
 FT_BUILD_DIR = $(BUILD_DIR)/$(FT)
-HB_BUILD_DIR = $(BUILD_DIR)/$(HB)
+HB_BUILD_DIR = $(BUILD_DIR)/$(HB)-CRAN
 
-FT_ARCHIVE = $(TOOLS_DIR)/$(FT)-vanilla.tar.gz
+FT_ARCHIVE = $(TOOLS_DIR)/$(FT)-patched.tar.gz
 HB_ARCHIVE = $(TOOLS_DIR)/$(HB)-patched.tar.gz
 ARCHIVES = $(FT_ARCHIVE) $(HB_ARCHIVE)
 
@@ -53,7 +53,7 @@ HB_CXXFLAGS = -I$(TARGET_DIR)/include/freetype2 -DNDEBUG -g0 $(CXXFLAGS)
 HB_LDFLAGS = -L$(TARGET_DIR)/lib $(LDFLAGS) -lfreetype $(LDFLAGS)
 
 $(HB_STATIC_LIB): $(FT_STATIC_LIB) $(HB_BUILD_DIR)
-	cd $(BUILD_DIR)/harfbuzz-$(HB_VERSION) && \
+	cd $(HB_BUILD_DIR) && \
 	AR="$(AR)"			&& export AR && \
 	CC="$(CC)"			&& export CC && \
 	CFLAGS="$(HB_CFLAGS)"		&& export CFLAGS && \
