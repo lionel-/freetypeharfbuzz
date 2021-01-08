@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 FTHB_VERSION=`cat tools/version`
 echo $FTHB_VERSION
@@ -7,21 +7,22 @@ echo $FTHB_VERSION
 SRC_DIR="`pwd`"
 
 # Set FTHB_BUILD to force a full build
-if [ -n "$FTHB_BUILD" ]; then
+if [ "$FTHB_BUILD" ]; then
     MK_FILE="Makebuild"
-elif [ $(uname) = Darwin ]; then
+elif [ `uname` = "Darwin" ] && [ `arch` = "arm64" ]; then
+    MK_FILE="Makestatic"
+    sed -e "s|@STATIC_FILE@|fthb-apple-arm-static.tar.gz|" src/Makestatic.in > src/Makestatic
+elif [ `uname` = "Darwin" ]; then
     MK_FILE="Makestatic"
     sed -e "s|@STATIC_FILE@|fthb-apple-static.tar.gz|" src/Makestatic.in > src/Makestatic
-elif [ $(uname) = LinuxDisabledForNow ] && [ $(arch) = x86_64 ]; then
+elif [ `uname` = "LinuxDisabledForNow" ] && [ `arch` = "x86_64" ]; then
     MK_FILE="Makestatic"
     sed -e "s|@STATIC_FILE@|fthb-linux-static.tar.gz|" src/Makestatic.in > src/Makestatic
 else
     MK_FILE="Makebuild"
 fi
 
-pushd tools/config
-./configure --silent
-popd
+( cd tools/config && ./configure --silent )
 
 sed -e "s|@FTHB_VERSION@|${FTHB_VERSION}|" \
     -e "s|@SRC_DIR@|${SRC_DIR}/src|" \
