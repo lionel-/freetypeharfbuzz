@@ -1,6 +1,6 @@
 Package: freetypeharfbuzz
 Title: Deterministic Computation of Text Box Metrics
-Version: 0.2.5.9000
+Version: 0.2.6
 Authors@R: c(
     person("Lionel", "Henry", ,"lionel@rstudio.com", c("aut", "cre")),
     person("RStudio", role = "cph"),
@@ -38,4 +38,4 @@ Encoding: UTF-8
 LazyData: true
 ByteCompile: true
 Biarch: true
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.1

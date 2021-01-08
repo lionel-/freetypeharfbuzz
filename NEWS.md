@@ -1,4 +1,4 @@
-# freetypeharfbuzz 0.2.5.9000
+# freetypeharfbuzz 0.2.6
 
 * Compatibility with Apple M1 (@jeroen)
 
