@@ -1,11 +1,10 @@
 
-This release should fix the Solaris build.
+This release fixes the M1 build. Other warnings from auxiliary checks are not fixed. They will be fixed for R 4.1 as discussed.
 
 
 ## Test environments
 
 * local OS X install, R release
-* local Solaris install, R 3.3
 * ubuntu 12.04 (on travis-ci), R 3.2, oldrel, release and devel
 * win-builder (devel and release)
 * r-hub platforms
