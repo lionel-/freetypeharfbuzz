@@ -1,7 +1,7 @@
 
 LIBS_ARCHIVE_FILE = @STATIC_FILE@
 
-STATIC_LIBS_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/src/target/$(LIBS_ARCHIVE_FILE)"
+STATIC_LIBS_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/master/src/target/$(LIBS_ARCHIVE_FILE)"
 
 # Extracted along HB_STATIC_LIB
 $(FT_STATIC_LIB):
@@ -14,7 +14,7 @@ $(HB_STATIC_LIB): $(LIBS_ARCHIVE_FILE)
 	$(TOOLS_DIR)/untar.sh $(LIBS_ARCHIVE_FILE)
 
 
-INCLUDE_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/v$(FTHB_VERSION)/src/target/include.tar.gz"
+INCLUDE_URL = "https://github.com/lionel-/freetypeharfbuzz/raw/master/src/target/include.tar.gz"
 INCLUDE_FILE = $(TARGET_DIR)/include.tar.gz
 
 $(INCLUDE_FILE):
